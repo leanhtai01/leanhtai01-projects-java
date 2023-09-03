@@ -254,6 +254,28 @@ public class ArchInstall {
         return process.exitValue() == 0;
     }
 
+    public void installAURPackages(List<String> packages) throws InterruptedException, IOException {
+        if (!isPackageInstalled("yay")) {
+            installYayAURHelper();
+        }
+
+        packages = packages.stream().filter(p -> {
+            try {
+                return !isPackageInstalled(p);
+            } catch (InterruptedException | IOException e) {
+                Thread.currentThread().interrupt();
+                return true;
+            }
+        }).toList();
+
+        new ProcessBuilder(Stream.concat(chrootUserExe.stream(),
+                List.of("bash", "-c", ("printf \"%s\" | sudo -S -i;"
+                        + "export HOME=\"/home/%s\";"
+                        + "yay -Syu --needed --noconfirm " + String.join(" ", packages))
+                        .formatted(userAccount.getPassword(), userAccount.getUsername())).stream())
+                .toList()).inheritIO().start().waitFor();
+    }
+
     public void installYayAURHelper() throws InterruptedException, IOException {
         installPackages(List.of("go"));
 
