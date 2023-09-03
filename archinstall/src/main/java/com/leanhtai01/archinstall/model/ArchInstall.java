@@ -245,6 +245,15 @@ public class ArchInstall {
         configureSystemdBootloader();
     }
 
+    public boolean isPackageInstalled(String packageName) throws InterruptedException, IOException {
+        List<String> command = Stream.concat(chrootUserExe.stream(), List.of("pacman", "-Qi", packageName).stream())
+                .toList();
+        Process process = new ProcessBuilder(command).start();
+        process.waitFor();
+
+        return process.exitValue() == 0;
+    }
+
     public void installYayAURHelper() throws InterruptedException, IOException {
         installPackages(List.of("go"));
 
