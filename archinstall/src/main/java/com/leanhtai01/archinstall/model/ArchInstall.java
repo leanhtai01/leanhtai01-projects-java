@@ -305,11 +305,11 @@ public class ArchInstall {
                 .toList()).inheritIO().start().waitFor();
     }
 
-    private void backupFile(String path) throws IOException {
+    public void backupFile(String path) throws IOException {
         Files.copy(Paths.get(path), Paths.get(path + "_" + LocalDateTime.now()), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private void installPackages(List<String> packages) throws InterruptedException, IOException {
+    public void installPackages(List<String> packages) throws InterruptedException, IOException {
         List<String> command = Stream.concat(
                 chrootExe.stream(), Stream.concat(
                         List.of("pacman", "-Syu", "--needed", "--noconfirm").stream(),
@@ -318,7 +318,7 @@ public class ArchInstall {
         new ProcessBuilder(command).inheritIO().start().waitFor();
     }
 
-    private void manageSystemService(String action, String service, boolean isRunInChroot)
+    public void manageSystemService(String action, String service, boolean isRunInChroot)
             throws InterruptedException, IOException {
         if (isRunInChroot) {
             new ProcessBuilder(
