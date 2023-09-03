@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.leanhtai01.archinstall.util.ShellUtil;
-
 public class Partition {
     private String diskName;
     private int partitionNumber;
@@ -99,6 +97,11 @@ public class Partition {
 
     public void mount() throws InterruptedException, IOException {
         Files.createDirectories(Paths.get(mountPoint));
-        ShellUtil.run("mount", getPathToPartition(), mountPoint);
+        new ProcessBuilder("mount", getPathToPartition(), mountPoint).inheritIO().start().waitFor();
+    }
+
+    public String getUUID() throws IOException {
+        ProcessBuilder builder = new ProcessBuilder("blkid", "-s", "UUID", "-o", "value", getPathToPartition());
+        return new String(builder.start().getInputStream().readAllBytes()).trim();
     }
 }

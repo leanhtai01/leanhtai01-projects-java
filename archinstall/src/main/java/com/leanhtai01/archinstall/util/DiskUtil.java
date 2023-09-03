@@ -11,23 +11,24 @@ public final class DiskUtil {
     }
 
     public static void eraseDisk(String pathToDisk) throws InterruptedException, IOException {
-        ShellUtil.run("wipefs", "-a", pathToDisk);
-        ShellUtil.run("sgdisk", "-Z", pathToDisk);
+        new ProcessBuilder("wipefs", "-a", pathToDisk).inheritIO().start().waitFor();
+        new ProcessBuilder("sgdisk", "-Z", pathToDisk).inheritIO().start().waitFor();
         TimeUnit.SECONDS.sleep(2);
     }
 
     public static void wipeDeviceSignature(String pathToDevice) throws InterruptedException, IOException {
-        ShellUtil.run("wipefs", "-a", pathToDevice);
+        new ProcessBuilder("wipefs", "-a", pathToDevice).inheritIO().start().waitFor();
     }
 
     public static Partition createPartition(Partition partition)
             throws InterruptedException, IOException {
-        ShellUtil.run("sgdisk",
+        new ProcessBuilder("sgdisk",
                 "-n", "0:0:" + (partition.getSize().getValue() == 0L ? "0"
                         : "+%d%s".formatted(partition.getSize().getValue(), partition.getSize().getUnit())),
                 "-t", "0:%s".formatted(partition.getType()),
                 "-c", "0:%s".formatted(partition.getGptName()),
-                partition.getPathToDisk());
+                partition.getPathToDisk())
+                .inheritIO().start().waitFor();
 
         return partition;
     }
@@ -69,15 +70,19 @@ public final class DiskUtil {
     }
 
     public static void makeSwap(String pathToDevice) throws InterruptedException, IOException {
-        ShellUtil.run("mkswap", pathToDevice);
-        ShellUtil.run("swapon", pathToDevice);
+        new ProcessBuilder("mkswap", pathToDevice).inheritIO().start().waitFor();
+        new ProcessBuilder("swapon", pathToDevice).inheritIO().start().waitFor();
     }
 
     public static void formatFAT32(String pathToDevice) throws InterruptedException, IOException {
-        ShellUtil.run("mkfs.vfat", "-F32", pathToDevice);
+        new ProcessBuilder("mkfs.vfat", "-F32", pathToDevice).inheritIO().start().waitFor();
     }
 
     public static void formatEXT4(String pathToDevice) throws InterruptedException, IOException {
-        ShellUtil.run("mkfs.ext4", pathToDevice);
+        new ProcessBuilder("mkfs.ext4", pathToDevice).inheritIO().start().waitFor();
+    }
+
+    public static String getPathToDisk(String diskName) {
+        return "/dev/%s".formatted(diskName);
     }
 }
