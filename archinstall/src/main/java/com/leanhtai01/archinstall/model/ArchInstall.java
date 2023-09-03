@@ -2,6 +2,7 @@ package com.leanhtai01.archinstall.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 
 public class ArchInstall {
     private static final List<String> chrootExe = List.of("arch-chroot", "/mnt");
+    private List<String> chrootUserExe;
 
     private UnencryptedPartitionLayout partitionLayout;
     private List<String> mirrors;
@@ -26,6 +28,7 @@ public class ArchInstall {
 
     public ArchInstall(UnencryptedPartitionLayout partitionLayout, List<String> mirrors, String hostname,
             String rootPassword, UserAccount userAccount) {
+        chrootUserExe = List.of("arch-chroot", "-u", userAccount.getUsername(), "/mnt");
         this.partitionLayout = partitionLayout;
         this.mirrors = mirrors;
         this.hostname = hostname;
@@ -171,6 +174,34 @@ public class ArchInstall {
         process.waitFor();
     }
 
+    public void allowUserInWheelGroupExecuteAnyCommand() throws IOException {
+        String sudoersPath = "/mnt/etc/sudoers";
+
+        backupFile(sudoersPath);
+
+        // comment out lines contain the config
+        List<String> lines = Files.readAllLines(Paths.get(sudoersPath));
+        int lineNumber = lines.indexOf("# %wheel ALL=(ALL:ALL) ALL");
+        lines.set(lineNumber, lines.get(lineNumber).replace("# ", ""));
+
+        try (var writer = new PrintWriter(sudoersPath)) {
+            for (String line : lines) {
+                writer.println(line);
+            }
+        }
+    }
+
+    public void disableSudoPasswordPromptTimeout() throws IOException {
+        String sudoersPath = "/mnt/etc/sudoers";
+
+        backupFile(sudoersPath);
+
+        try (var writer = new PrintWriter(new FileOutputStream(sudoersPath, true))) {
+            writer.append("\n## Disable password prompt timeout\n");
+            writer.append("Defaults passwd_timeout=0\n");
+        }
+    }
+
     public void configureSystemdBootloader() throws InterruptedException, IOException {
         installPackages(List.of("efibootmgr", "intel-ucode"));
 
@@ -209,7 +240,38 @@ public class ArchInstall {
         configureNetwork();
         setRootPassword();
         addNormalUser();
+        allowUserInWheelGroupExecuteAnyCommand();
+        disableSudoPasswordPromptTimeout();
         configureSystemdBootloader();
+    }
+
+    public void installYayAURHelper() throws InterruptedException, IOException {
+        installPackages(List.of("go"));
+
+        new ProcessBuilder(Stream.concat(
+                chrootUserExe.stream(),
+                List.of("mkdir", "/home/%s/tmp".formatted(userAccount.getUsername())).stream()).toList())
+                .inheritIO().start().waitFor();
+
+        new ProcessBuilder(Stream.concat(chrootUserExe.stream(),
+                List.of("curl", "-LJo", "/home/%s/tmp/yay.tar.gz".formatted(userAccount.getUsername()),
+                        "https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz").stream())
+                .toList())
+                .inheritIO().start().waitFor();
+
+        new ProcessBuilder(Stream.concat(chrootUserExe.stream(),
+                List.of("tar", "-xvf", "/home/%s/tmp/yay.tar.gz".formatted(userAccount.getUsername()), "-C",
+                        "/home/%s/tmp".formatted(userAccount.getUsername())).stream())
+                .toList()).inheritIO().start().waitFor();
+
+        new ProcessBuilder(Stream.concat(chrootUserExe.stream(),
+                List.of("bash", "-c", ("printf \"%s\" | sudo -S -i;"
+                        + "export GOCACHE=\"/home/%s/.cache/go-build\";"
+                        + "cd /home/%s/tmp/yay;"
+                        + "makepkg -sri --noconfirm").formatted(userAccount.getPassword(), userAccount.getUsername(),
+                                userAccount.getUsername()))
+                        .stream())
+                .toList()).inheritIO().start().waitFor();
     }
 
     private void backupFile(String path) throws IOException {
