@@ -17,6 +17,12 @@ public class Partition {
         this.partitionNumber = partitionNumber;
     }
 
+    public Partition(String diskName, int partitionNumber, String mountPoint) {
+        this.diskName = diskName;
+        this.partitionNumber = partitionNumber;
+        this.mountPoint = mountPoint;
+    }
+
     public Partition(String type, String gptName, StorageDeviceSize size) {
         this.type = type;
         this.gptName = gptName;
