@@ -245,6 +245,45 @@ public class ArchInstall {
         configureSystemdBootloader();
     }
 
+    public void installGNOMEDesktopEnvironment() throws InterruptedException, IOException {
+        installPackages(List.of("xorg-server", "baobab", "eog", "evince", "file-roller", "gdm", "gnome-calculator",
+                "gnome-calendar", "gnome-characters", "gnome-clocks", "gnome-color-manager", "gnome-control-center",
+                "gnome-font-viewer", "gnome-keyring", "gnome-screenshot", "gnome-shell-extensions",
+                "gnome-system-monitor", "gnome-terminal", "gnome-themes-extra", "gnome-video-effects", "nautilus",
+                "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "gnome-todo",
+                "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
+                "power-profiles-daemon", "seahorse", "seahorse-nautilus"));
+
+        manageSystemService("enable", "gdm", true);
+    }
+
+    public void installIntelDrivers() throws InterruptedException, IOException {
+        installPackages(List.of("lib32-vulkan-icd-loader", "vulkan-icd-loader", "vulkan-intel", "intel-media-driver",
+                "lib32-vulkan-intel", "lib32-mesa", "mesa", "ocl-icd", "lib32-ocl-icd", "intel-compute-runtime",
+                "libva-utils"));
+    }
+
+    public void installPipewire() throws InterruptedException, IOException {
+        installPackages(List.of("pipewire", "pipewire-pulse", "pipewire-alsa", "alsa-utils", "xdg-desktop-portal-gtk",
+                "gst-plugin-pipewire", "lib32-pipewire", "wireplumber"));
+
+        new ProcessBuilder(Stream.concat(chrootUserExe.stream(),
+                List.of("mkdir", "-p", "/home/%s/.config/pipewire".formatted(userAccount.getUsername())).stream())
+                .toList()).inheritIO().start().waitFor();
+
+        new ProcessBuilder(Stream.concat(chrootUserExe.stream(),
+                List.of("cp", "-r", "/usr/share/pipewire", "/home/%s/.config/".formatted(userAccount.getUsername()))
+                        .stream())
+                .toList()).inheritIO().start().waitFor();
+
+        new ProcessBuilder(Stream.concat(chrootUserExe.stream(),
+                List.of("sed", "-i", "'/resample.quality/s/#//; /resample.quality/s/4/15/'",
+                        "/home/%s/.config/pipewire/{client.conf,pipewire-pulse.conf}"
+                                .formatted(userAccount.getUsername()))
+                        .stream())
+                .toList()).inheritIO().start().waitFor();
+    }
+
     public boolean isPackageInstalled(String packageName) throws InterruptedException, IOException {
         List<String> command = Stream.concat(chrootUserExe.stream(), List.of("pacman", "-Qi", packageName).stream())
                 .toList();
