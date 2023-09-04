@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ArchInstall {
+    private static final String SYSTEMD_ENABLE = "enable";
     private static final List<String> chrootExe = List.of("arch-chroot", "/mnt");
     private List<String> chrootUserExe;
 
@@ -139,7 +140,7 @@ public class ArchInstall {
         }
 
         installPackages(List.of("networkmanager"));
-        manageSystemService("enable", "NetworkManager", true);
+        manageSystemService(SYSTEMD_ENABLE, "NetworkManager", true);
     }
 
     public void setRootPassword() throws IOException, InterruptedException {
@@ -245,6 +246,32 @@ public class ArchInstall {
         configureSystemdBootloader();
     }
 
+    public void installKVM() throws InterruptedException, IOException {
+        installPackages(List.of("virt-manager", "qemu", "vde2", "dnsmasq", "bridge-utils", "virt-viewer", "dmidecode",
+                "edk2-ovmf", "iptables-nft", "swtpm"));
+
+        manageSystemService(SYSTEMD_ENABLE, "libvirtd", true);
+
+        String libvirtdConfigPath = "/mnt/etc/libvirt/libvirtd.conf";
+        backupFile(libvirtdConfigPath);
+
+        List<String> lines = Files.readAllLines(Paths.get(libvirtdConfigPath));
+        int lineNumber = lines.indexOf("#unix_sock_group = \"libvirt\"");
+        lines.set(lineNumber, lines.get(lineNumber).replace("#", ""));
+
+        lineNumber = lines.indexOf("#unix_sock_rw_perms = \"0770\"");
+        lines.set(lineNumber, lines.get(lineNumber).replace("#", ""));
+
+        try (var writer = new PrintWriter(libvirtdConfigPath)) {
+            for (String line : lines) {
+                writer.println(line);
+            }
+        }
+
+        addUserToGroup(userAccount.getUsername(), "libvirt");
+        addUserToGroup(userAccount.getUsername(), "kvm");
+    }
+
     public void installGNOMEDesktopEnvironment() throws InterruptedException, IOException {
         installPackages(List.of("xorg-server", "baobab", "eog", "evince", "file-roller", "gdm", "gnome-calculator",
                 "gnome-calendar", "gnome-characters", "gnome-clocks", "gnome-color-manager", "gnome-control-center",
@@ -254,7 +281,7 @@ public class ArchInstall {
                 "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
                 "power-profiles-daemon", "seahorse", "seahorse-nautilus", "gnome-browser-connector"));
 
-        manageSystemService("enable", "gdm", true);
+        manageSystemService(SYSTEMD_ENABLE, "gdm", true);
     }
 
     public void installIntelDrivers() throws InterruptedException, IOException {
@@ -282,6 +309,13 @@ public class ArchInstall {
                                 .formatted(userAccount.getUsername()))
                         .stream())
                 .toList()).inheritIO().start().waitFor();
+    }
+
+    public void addUserToGroup(String username, String group) throws InterruptedException, IOException {
+        List<String> command = Stream.concat(chrootExe.stream(),
+                List.of("gpasswd", "-a", username, group).stream()).toList();
+
+        new ProcessBuilder(command).inheritIO().start().waitFor();
     }
 
     public boolean isPackageInstalled(String packageName) throws InterruptedException, IOException {
