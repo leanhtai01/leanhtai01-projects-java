@@ -252,7 +252,7 @@ public class ArchInstall {
                 "gnome-system-monitor", "gnome-terminal", "gnome-themes-extra", "gnome-video-effects", "nautilus",
                 "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "gnome-todo",
                 "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
-                "power-profiles-daemon", "seahorse", "seahorse-nautilus"));
+                "power-profiles-daemon", "seahorse", "seahorse-nautilus", "gnome-browser-connector"));
 
         manageSystemService("enable", "gdm", true);
     }
