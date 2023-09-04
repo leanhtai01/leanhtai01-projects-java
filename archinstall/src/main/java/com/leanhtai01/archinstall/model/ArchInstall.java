@@ -20,14 +20,14 @@ public class ArchInstall {
     private static final List<String> chrootExe = List.of("arch-chroot", "/mnt");
     private List<String> chrootUserExe;
 
-    private UnencryptedPartitionLayout partitionLayout;
+    private PartitionLayout partitionLayout;
     private List<String> mirrors;
     private String hostname;
     private String rootPassword;
 
     private UserAccount userAccount;
 
-    public ArchInstall(UnencryptedPartitionLayout partitionLayout, List<String> mirrors, String hostname,
+    public ArchInstall(PartitionLayout partitionLayout, List<String> mirrors, String hostname,
             String rootPassword, UserAccount userAccount) {
         chrootUserExe = List.of("arch-chroot", "-u", userAccount.getUsername(), "/mnt");
         this.partitionLayout = partitionLayout;
