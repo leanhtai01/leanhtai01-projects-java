@@ -346,6 +346,18 @@ public class ArchInstall {
         return process.exitValue() == 0;
     }
 
+    public boolean isFlatpakPackageInstall(String packageId) throws InterruptedException, IOException {
+        if (!isPackageInstalled("flatpak")) {
+            return false;
+        }
+
+        List<String> command = List.of("flatpak", "info", packageId);
+        Process process = new ProcessBuilder(command).start();
+        process.waitFor();
+
+        return process.exitValue() == 0;
+    }
+
     public void installAURPackages(List<String> packages) throws InterruptedException, IOException {
         if (!isPackageInstalled("yay")) {
             installYayAURHelper();
