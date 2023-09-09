@@ -424,6 +424,10 @@ public class ArchInstall {
                 .toList()).inheritIO().start().waitFor();
     }
 
+    public void gnomeGSettingsSet(String schema, String key, String value) throws InterruptedException, IOException {
+        new ProcessBuilder("gsettings", "set", schema, key, value).inheritIO().start().waitFor();
+    }
+
     public void backupFile(String path) throws IOException {
         Files.copy(Paths.get(path), Paths.get(path + "_" + LocalDateTime.now()), StandardCopyOption.REPLACE_EXISTING);
     }
