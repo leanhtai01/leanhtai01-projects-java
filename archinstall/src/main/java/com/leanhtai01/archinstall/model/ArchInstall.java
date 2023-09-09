@@ -204,6 +204,17 @@ public class ArchInstall {
         }
     }
 
+    public void disableSudoTimestampTimeout() throws IOException {
+        String sudoersPath = "/mnt/etc/sudoers";
+
+        backupFile(sudoersPath);
+
+        try (var writer = new PrintWriter(new FileOutputStream(sudoersPath, true))) {
+            writer.append("\n## Disable sudo timestamp timeout\n");
+            writer.append("Defaults timestamp_timeout=-1");
+        }
+    }
+
     public void configureSystemdBootloader() throws InterruptedException, IOException {
         installPackages(List.of("efibootmgr", "intel-ucode"));
 
@@ -244,6 +255,7 @@ public class ArchInstall {
         addNormalUser();
         allowUserInWheelGroupExecuteAnyCommand();
         disableSudoPasswordPromptTimeout();
+        disableSudoTimestampTimeout();
         configureSystemdBootloader();
     }
 
