@@ -480,6 +480,10 @@ public class ArchInstall {
         gnomeGSettingsSet("org.gnome.desktop.interface", "show-battery-percentage", "true");
     }
 
+    public void configureXDGDesktopPortal() throws InterruptedException, IOException {
+        installPackages(List.of("xdg-desktop-portal", "xdg-desktop-portal-gnome"));
+    }
+
     public void backupFile(String path) throws IOException {
         Files.copy(Paths.get(path), Paths.get(path + "_" + LocalDateTime.now()), StandardCopyOption.REPLACE_EXISTING);
     }
