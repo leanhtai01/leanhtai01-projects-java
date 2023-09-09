@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ArchInstall {
+    private static final String PATH_TO_SUDOERS = "/mnt/etc/sudoers";
     private static final String SYSTEMD_ENABLE = "enable";
     private static final List<String> chrootExe = List.of("arch-chroot", "/mnt");
     private List<String> chrootUserExe;
@@ -177,16 +178,14 @@ public class ArchInstall {
     }
 
     public void allowUserInWheelGroupExecuteAnyCommand() throws IOException {
-        String sudoersPath = "/mnt/etc/sudoers";
-
-        backupFile(sudoersPath);
+        backupFile(PATH_TO_SUDOERS);
 
         // comment out lines contain the config
-        List<String> lines = Files.readAllLines(Paths.get(sudoersPath));
+        List<String> lines = Files.readAllLines(Paths.get(PATH_TO_SUDOERS));
         int lineNumber = lines.indexOf("# %wheel ALL=(ALL:ALL) ALL");
         lines.set(lineNumber, lines.get(lineNumber).replace("# ", ""));
 
-        try (var writer = new PrintWriter(sudoersPath)) {
+        try (var writer = new PrintWriter(PATH_TO_SUDOERS)) {
             for (String line : lines) {
                 writer.println(line);
             }
@@ -194,22 +193,18 @@ public class ArchInstall {
     }
 
     public void disableSudoPasswordPromptTimeout() throws IOException {
-        String sudoersPath = "/mnt/etc/sudoers";
+        backupFile(PATH_TO_SUDOERS);
 
-        backupFile(sudoersPath);
-
-        try (var writer = new PrintWriter(new FileOutputStream(sudoersPath, true))) {
+        try (var writer = new PrintWriter(new FileOutputStream(PATH_TO_SUDOERS, true))) {
             writer.append("\n## Disable password prompt timeout\n");
             writer.append("Defaults passwd_timeout=0\n");
         }
     }
 
     public void disableSudoTimestampTimeout() throws IOException {
-        String sudoersPath = "/mnt/etc/sudoers";
+        backupFile(PATH_TO_SUDOERS);
 
-        backupFile(sudoersPath);
-
-        try (var writer = new PrintWriter(new FileOutputStream(sudoersPath, true))) {
+        try (var writer = new PrintWriter(new FileOutputStream(PATH_TO_SUDOERS, true))) {
             writer.append("\n## Disable sudo timestamp timeout\n");
             writer.append("Defaults timestamp_timeout=-1");
         }
