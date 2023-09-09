@@ -18,6 +18,10 @@ import java.util.stream.Stream;
 public class ArchInstall {
     private static final String PATH_TO_SUDOERS = "/mnt/etc/sudoers";
     private static final String SYSTEMD_ENABLE = "enable";
+    private static final String SYSTEMD_DISABLE = "disable";
+    private static final String SYSTEMD_START = "start";
+    private static final String SYSTEMD_STOP = "stop";
+
     private static final List<String> chrootExe = List.of("arch-chroot", "/mnt");
     private List<String> chrootUserExe;
 
@@ -39,10 +43,10 @@ public class ArchInstall {
     }
 
     public void disableAutoGenerateMirrors() throws InterruptedException, IOException {
-        manageSystemService("stop", "reflector.service", false);
-        manageSystemService("stop", "reflector.timer", false);
-        manageSystemService("disable", "reflector.service", false);
-        manageSystemService("disable", "reflector.timer", false);
+        manageSystemService(SYSTEMD_STOP, "reflector.service", false);
+        manageSystemService(SYSTEMD_STOP, "reflector.timer", false);
+        manageSystemService(SYSTEMD_DISABLE, "reflector.service", false);
+        manageSystemService(SYSTEMD_DISABLE, "reflector.timer", false);
     }
 
     public void enableNetworkTimeSynchronization() throws InterruptedException, IOException {
@@ -317,6 +321,13 @@ public class ArchInstall {
                                 .formatted(userAccount.getUsername()))
                         .stream())
                 .toList()).inheritIO().start().waitFor();
+    }
+
+    public void installDocker() throws InterruptedException, IOException {
+        installPackages(List.of("docker", "docker-compose"));
+        addUserToGroup(userAccount.getUsername(), "docker");
+        manageSystemService(SYSTEMD_ENABLE, "docker.service", true);
+        manageSystemService(SYSTEMD_START, "docker.service", true);
     }
 
     public void addUserToGroup(String username, String group) throws InterruptedException, IOException {
