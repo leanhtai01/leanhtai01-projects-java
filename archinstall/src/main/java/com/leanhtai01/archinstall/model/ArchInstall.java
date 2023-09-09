@@ -89,7 +89,8 @@ public class ArchInstall {
                 .toList();
         new ProcessBuilder(configureLocaltimeCommand).inheritIO().start().waitFor();
 
-        List<String> configureHWClockCommand = List.of("hwclock", "--systohc");
+        List<String> configureHWClockCommand = Stream
+                .concat(chrootExe.stream(), List.of("hwclock", "--systohc").stream()).toList();
         new ProcessBuilder(configureHWClockCommand).inheritIO().start().waitFor();
     }
 
