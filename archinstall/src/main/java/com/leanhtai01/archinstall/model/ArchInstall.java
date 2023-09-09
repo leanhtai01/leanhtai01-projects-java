@@ -21,6 +21,7 @@ public class ArchInstall {
     private static final String SYSTEMD_DISABLE = "disable";
     private static final String SYSTEMD_START = "start";
     private static final String SYSTEMD_STOP = "stop";
+    private static final String FLATPAK_COMMAND = "flatpak";
 
     private static final List<String> chrootExe = List.of("arch-chroot", "/mnt");
     private List<String> chrootUserExe;
@@ -347,15 +348,29 @@ public class ArchInstall {
     }
 
     public boolean isFlatpakPackageInstall(String packageId) throws InterruptedException, IOException {
-        if (!isPackageInstalled("flatpak")) {
+        if (!isPackageInstalled(FLATPAK_COMMAND)) {
             return false;
         }
 
-        List<String> command = List.of("flatpak", "info", packageId);
+        List<String> command = List.of(FLATPAK_COMMAND, "info", packageId);
         Process process = new ProcessBuilder(command).start();
         process.waitFor();
 
         return process.exitValue() == 0;
+    }
+
+    public void installFlatpakPackages(List<String> packageIds) throws InterruptedException, IOException {
+        if (!isPackageInstalled(FLATPAK_COMMAND)) {
+            installPackages(List.of(FLATPAK_COMMAND));
+        }
+
+        new ProcessBuilder(FLATPAK_COMMAND, "update", "-y").inheritIO().start().waitFor();
+
+        for (String id : packageIds) {
+            if (!isFlatpakPackageInstall(id)) {
+                new ProcessBuilder(FLATPAK_COMMAND, "install", id, "-y").inheritIO().start().waitFor();
+            }
+        }
     }
 
     public void installAURPackages(List<String> packages) throws InterruptedException, IOException {
