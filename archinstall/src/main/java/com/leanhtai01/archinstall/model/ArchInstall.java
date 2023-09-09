@@ -428,6 +428,58 @@ public class ArchInstall {
         new ProcessBuilder("gsettings", "set", schema, key, value).inheritIO().start().waitFor();
     }
 
+    public void configureGNOME() throws InterruptedException, IOException {
+        final String GNOME_DESKTOP_INTERFACE_SCHEMA = "org.gnome.desktop.interface";
+        final String CASCADIA_CODE_MONO_12_VALUE = "Cascadia Mono 12";
+        final String GNOME_POWER_SCHEMA = "org.gnome.settings-daemon.plugins.power";
+
+        if (!isPackageInstalled("ttf-cascadia-code")) {
+            installPackages(List.of("ttf-cascadia-code"));
+        }
+
+        // set default monospace font
+        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "monospace-font-name", CASCADIA_CODE_MONO_12_VALUE);
+
+        // set default interface font
+        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "font-name", CASCADIA_CODE_MONO_12_VALUE);
+
+        // set default legacy windows titles font
+        gnomeGSettingsSet("org.gnome.desktop.wm.preferences", "titlebar-font", "Cascadia Mono Bold 12");
+
+        // set default document font
+        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "document-font-name", CASCADIA_CODE_MONO_12_VALUE);
+
+        // set font-antialiasing to rgba
+        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "font-antialiasing", "rgba");
+
+        // show weekday
+        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "clock-show-weekday", "true");
+
+        // schedule night light
+        gnomeGSettingsSet("org.gnome.settings-daemon.plugins.color", "night-light-enabled", "true");
+        gnomeGSettingsSet("org.gnome.settings-daemon.plugins.color", "night-light-schedule-from", "18.0");
+
+        // empty favorite apps
+        gnomeGSettingsSet("org.gnome.shell", "favorite-apps", "[]");
+
+        // configure nautilus
+        gnomeGSettingsSet("org.gnome.nautilus.preferences", "default-folder-viewer", "list-view");
+        gnomeGSettingsSet("org.gnome.nautilus.list-view", "default-zoom-level", "large");
+
+        // disable suspend
+        gnomeGSettingsSet(GNOME_POWER_SCHEMA, "sleep-inactive-battery-type", "nothing");
+        gnomeGSettingsSet(GNOME_POWER_SCHEMA, "sleep-inactive-ac-type", "nothing");
+
+        // disable dim screen
+        gnomeGSettingsSet(GNOME_POWER_SCHEMA, "idle-dim", "false");
+
+        // disable screen blank
+        gnomeGSettingsSet("org.gnome.desktop.session", "idle-delay", "uint32 0");
+
+        // show battery percentage
+        gnomeGSettingsSet("org.gnome.desktop.interface", "show-battery-percentage", "true");
+    }
+
     public void backupFile(String path) throws IOException {
         Files.copy(Paths.get(path), Paths.get(path + "_" + LocalDateTime.now()), StandardCopyOption.REPLACE_EXISTING);
     }
