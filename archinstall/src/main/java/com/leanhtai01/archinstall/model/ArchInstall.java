@@ -542,6 +542,34 @@ public class ArchInstall {
         gnomeGSettingsReset(SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY);
     }
 
+    public void makeCustomGNOMEShortcuts() throws IOException, InterruptedException {
+        resetCustomGNOMEShortcuts();
+
+        if (isPackageInstalled("nautilus")) {
+            createCustomGNOMEShortcut("Nautilus", "<Super>e", "nautilus");
+        }
+
+        if (isPackageInstalled("gnome-terminal")) {
+            createCustomGNOMEShortcut("GNOME Terminal", "<Primary><Alt>t", "gnome-terminal");
+        }
+
+        if (isPackageInstalled("google-chrome")) {
+            createCustomGNOMEShortcut("Google Chrome", "<Primary><Alt>c", "google-chrome-stable");
+        }
+
+        if (isPackageInstalled("firefox-developer-edition")) {
+            createCustomGNOMEShortcut("Firefox Developer Edition", "<Primary><Alt>f", "firefox-developer-edition");
+        }
+
+        if (isPackageInstalled("keepassxc")) {
+            createCustomGNOMEShortcut("KeePassXC", "<Primary><Alt>p", "keepassxc");
+        }
+
+        if (isPackageInstalled("emacs")) {
+            createCustomGNOMEShortcut("Emacs", "<Primary><Alt>e", "emacs");
+        }
+    }
+
     public void backupFile(String path) throws IOException {
         Files.copy(Paths.get(path), Paths.get(path + "_" + LocalDateTime.now()), StandardCopyOption.REPLACE_EXISTING);
     }
