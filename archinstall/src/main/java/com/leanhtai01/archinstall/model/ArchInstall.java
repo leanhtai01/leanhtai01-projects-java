@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.ProcessBuilder.Redirect;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -80,7 +79,7 @@ public class ArchInstall {
         partitionLayout.mount();
     }
 
-    public void installBasePackages() throws InterruptedException, IOException, URISyntaxException {
+    public void installBasePackages() throws InterruptedException, IOException {
         List<String> packages = getPackagesFromFile("packages-info/base-packages.txt");
         List<String> command = Stream.concat(
                 List.of("pacstrap", "/mnt").stream(),
@@ -250,7 +249,7 @@ public class ArchInstall {
         }
     }
 
-    public void installBaseSystem() throws InterruptedException, IOException, URISyntaxException {
+    public void installBaseSystem() throws InterruptedException, IOException {
         disableAutoGenerateMirrors();
         enableNetworkTimeSynchronization();
         configureMirrors();
@@ -295,7 +294,7 @@ public class ArchInstall {
         addUserToGroup(userAccount.getUsername(), "kvm");
     }
 
-    public void installGNOMEDesktopEnvironment() throws InterruptedException, IOException, URISyntaxException {
+    public void installGNOMEDesktopEnvironment() throws InterruptedException, IOException {
         installPackages(getPackagesFromFile("packages-info/gnome-de.txt"));
         manageSystemService(SYSTEMD_ENABLE, "gdm", true);
     }
