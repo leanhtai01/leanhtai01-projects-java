@@ -80,7 +80,7 @@ public class ArchInstall {
     }
 
     public void installBasePackages() throws InterruptedException, IOException {
-        List<String> packages = getPackagesFromFile("packages-info/base-packages.txt");
+        List<String> packages = getPackagesFromFile("packages-info/base.txt");
         List<String> command = Stream.concat(
                 List.of("pacstrap", "/mnt").stream(),
                 packages.stream())
