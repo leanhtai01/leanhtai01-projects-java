@@ -17,6 +17,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import com.leanhtai01.archinstall.util.Pair;
+
 public class ArchInstall {
     private static final String SCHEMA_TO_LIST = "org.gnome.settings-daemon.plugins.media-keys";
     private static final String SCHEMA_TO_ITEM = "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding";
@@ -27,6 +29,8 @@ public class ArchInstall {
     private static final String SYSTEMD_START = "start";
     private static final String SYSTEMD_STOP = "stop";
     private static final String FLATPAK_COMMAND = "flatpak";
+    private static final String GSETTINGS_COMMAND = "gsettings";
+    private static final String GSETTINGS_CUSTOM_KEYBINDINGS_KEY = "custom-keybindings";
 
     private static final List<String> chrootExe = List.of("arch-chroot", "/mnt");
     private List<String> chrootUserExe;
@@ -430,7 +434,11 @@ public class ArchInstall {
     }
 
     public void gnomeGSettingsSet(String schema, String key, String value) throws InterruptedException, IOException {
-        new ProcessBuilder("gsettings", "set", schema, key, value).inheritIO().start().waitFor();
+        new ProcessBuilder(GSETTINGS_COMMAND, "set", schema, key, value).inheritIO().start().waitFor();
+    }
+
+    public void gnomeGSettingsReset(String schema, String key) throws InterruptedException, IOException {
+        new ProcessBuilder(GSETTINGS_COMMAND, "reset", schema, key).inheritIO().start().waitFor();
     }
 
     public void configureGNOME() throws InterruptedException, IOException {
@@ -489,14 +497,21 @@ public class ArchInstall {
         installPackages(List.of("xdg-desktop-portal", "xdg-desktop-portal-gnome"));
     }
 
-    public void createCustomGNOMEShortcut(String name, String keyBinding, String command)
-            throws IOException, InterruptedException {
-        ProcessBuilder builder = new ProcessBuilder("gsettings", "get", SCHEMA_TO_LIST, "custom-keybindings");
+    public Pair<String, List<Integer>> getGNOMEShortcutPathlistAndIndexes() throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(GSETTINGS_COMMAND, "get", SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY);
         String pathList = new String(builder.start().getInputStream().readAllBytes()).trim();
         List<Integer> indexes = pathList.equals("@as []") ? List.of()
                 : Pattern.compile("\\d+").matcher(pathList).results().map(MatchResult::group)
                         .map(Integer::valueOf).toList();
-        int index = indexes.size();
+
+        return new Pair<>(pathList, indexes);
+    }
+
+    public void createCustomGNOMEShortcut(String name, String keyBinding, String command)
+            throws IOException, InterruptedException {
+        Pair<String, List<Integer>> pathListAndIndexes = getGNOMEShortcutPathlistAndIndexes();
+        String pathList = pathListAndIndexes.getFirst();
+        int index = pathListAndIndexes.getSecond().size();
 
         final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
         gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "name", name);
@@ -510,7 +525,21 @@ public class ArchInstall {
             pathList = pathList.substring(0, pathList.length() - 2) + ", '%s%d/'".formatted(PATH_TO_CUSTOM_KEY, index);
         }
 
-        gnomeGSettingsSet(SCHEMA_TO_LIST, "custom-keybindings", pathList);
+        gnomeGSettingsSet(SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY, pathList);
+    }
+
+    public void resetCustomGNOMEShortcuts() throws IOException, InterruptedException {
+        List<Integer> indexes = getGNOMEShortcutPathlistAndIndexes().getSecond();
+
+        for (int index : indexes) {
+            final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
+
+            gnomeGSettingsReset(CUSTOM_SHORTCUT_SCHEMA, "name");
+            gnomeGSettingsReset(CUSTOM_SHORTCUT_SCHEMA, "binding");
+            gnomeGSettingsReset(CUSTOM_SHORTCUT_SCHEMA, "command");
+        }
+
+        gnomeGSettingsReset(SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY);
     }
 
     public void backupFile(String path) throws IOException {
