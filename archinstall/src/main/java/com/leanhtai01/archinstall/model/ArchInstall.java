@@ -1,12 +1,15 @@
 package com.leanhtai01.archinstall.model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.ProcessBuilder.Redirect;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -77,10 +80,8 @@ public class ArchInstall {
         partitionLayout.mount();
     }
 
-    public void installBasePackages() throws InterruptedException, IOException {
-        List<String> packages = List.of(
-                "base", "base-devel", "linux", "linux-headers",
-                "linux-firmware", "man-pages", "man-db", "iptables-nft");
+    public void installBasePackages() throws InterruptedException, IOException, URISyntaxException {
+        List<String> packages = getPackagesFromFile("packages-info/base-packages.txt");
         List<String> command = Stream.concat(
                 List.of("pacstrap", "/mnt").stream(),
                 packages.stream())
@@ -249,7 +250,7 @@ public class ArchInstall {
         }
     }
 
-    public void installBaseSystem() throws InterruptedException, IOException {
+    public void installBaseSystem() throws InterruptedException, IOException, URISyntaxException {
         disableAutoGenerateMirrors();
         enableNetworkTimeSynchronization();
         configureMirrors();
@@ -270,7 +271,7 @@ public class ArchInstall {
 
     public void installKVM() throws InterruptedException, IOException {
         installPackages(List.of("virt-manager", "qemu", "vde2", "dnsmasq", "bridge-utils", "virt-viewer", "dmidecode",
-                "edk2-ovmf", "iptables-nft", "swtpm"));
+                "edk2-ovmf", "iptables-nft", "swtpm", "qemu-hw-usb-host"));
 
         manageSystemService(SYSTEMD_ENABLE, "libvirtd", true);
 
@@ -294,15 +295,8 @@ public class ArchInstall {
         addUserToGroup(userAccount.getUsername(), "kvm");
     }
 
-    public void installGNOMEDesktopEnvironment() throws InterruptedException, IOException {
-        installPackages(List.of("xorg-server", "baobab", "eog", "evince", "file-roller", "gdm", "gnome-calculator",
-                "gnome-calendar", "gnome-characters", "gnome-clocks", "gnome-color-manager", "gnome-control-center",
-                "gnome-font-viewer", "gnome-keyring", "gnome-screenshot", "gnome-shell-extensions",
-                "gnome-system-monitor", "gnome-terminal", "gnome-themes-extra", "gnome-video-effects", "nautilus",
-                "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "gnome-todo",
-                "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
-                "power-profiles-daemon", "seahorse", "seahorse-nautilus", "gnome-browser-connector"));
-
+    public void installGNOMEDesktopEnvironment() throws InterruptedException, IOException, URISyntaxException {
+        installPackages(getPackagesFromFile("packages-info/gnome-de.txt"));
         manageSystemService(SYSTEMD_ENABLE, "gdm", true);
     }
 
@@ -498,7 +492,8 @@ public class ArchInstall {
     }
 
     public Pair<String, List<Integer>> getGNOMEShortcutPathlistAndIndexes() throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(GSETTINGS_COMMAND, "get", SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY);
+        ProcessBuilder builder = new ProcessBuilder(GSETTINGS_COMMAND, "get", SCHEMA_TO_LIST,
+                GSETTINGS_CUSTOM_KEYBINDINGS_KEY);
         String pathList = new String(builder.start().getInputStream().readAllBytes()).trim();
         List<Integer> indexes = pathList.equals("@as []") ? List.of()
                 : Pattern.compile("\\d+").matcher(pathList).results().map(MatchResult::group)
@@ -581,6 +576,11 @@ public class ArchInstall {
                         packages.stream()))
                 .toList();
         new ProcessBuilder(command).inheritIO().start().waitFor();
+    }
+
+    public List<String> getPackagesFromFile(String fileName) {
+        return new BufferedReader(new InputStreamReader(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName))).lines().toList();
     }
 
     public void manageSystemService(String action, String service, boolean isRunInChroot)
