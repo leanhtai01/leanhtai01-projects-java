@@ -18,6 +18,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class ArchInstall {
+    private static final String SCHEMA_TO_LIST = "org.gnome.settings-daemon.plugins.media-keys";
+    private static final String SCHEMA_TO_ITEM = "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding";
+    private static final String PATH_TO_CUSTOM_KEY = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom";
     private static final String PATH_TO_SUDOERS = "/mnt/etc/sudoers";
     private static final String SYSTEMD_ENABLE = "enable";
     private static final String SYSTEMD_DISABLE = "disable";
@@ -488,10 +491,6 @@ public class ArchInstall {
 
     public void createCustomGNOMEShortcut(String name, String keyBinding, String command)
             throws IOException, InterruptedException {
-        final String SCHEMA_TO_LIST = "org.gnome.settings-daemon.plugins.media-keys";
-        final String SCHEMA_TO_ITEM = "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding";
-        final String PATH_TO_CUSTOM_KEY = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom";
-
         ProcessBuilder builder = new ProcessBuilder("gsettings", "get", SCHEMA_TO_LIST, "custom-keybindings");
         String pathList = new String(builder.start().getInputStream().readAllBytes()).trim();
         List<Integer> indexes = pathList.equals("@as []") ? List.of()
