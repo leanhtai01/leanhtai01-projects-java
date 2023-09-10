@@ -13,6 +13,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class ArchInstall {
@@ -482,6 +484,34 @@ public class ArchInstall {
 
     public void configureXDGDesktopPortal() throws InterruptedException, IOException {
         installPackages(List.of("xdg-desktop-portal", "xdg-desktop-portal-gnome"));
+    }
+
+    public void createCustomGNOMEShortcut(String name, String keyBinding, String command)
+            throws IOException, InterruptedException {
+        final String SCHEMA_TO_LIST = "org.gnome.settings-daemon.plugins.media-keys";
+        final String SCHEMA_TO_ITEM = "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding";
+        final String PATH_TO_CUSTOM_KEY = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom";
+
+        ProcessBuilder builder = new ProcessBuilder("gsettings", "get", SCHEMA_TO_LIST, "custom-keybindings");
+        String pathList = new String(builder.start().getInputStream().readAllBytes()).trim();
+        List<Integer> indexes = pathList.equals("@as []") ? List.of()
+                : Pattern.compile("\\d+").matcher(pathList).results().map(MatchResult::group)
+                        .map(Integer::valueOf).toList();
+        int index = indexes.size();
+
+        final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
+        gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "name", name);
+        gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "binding", keyBinding);
+        gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "command", command);
+
+        // determine new pathList
+        if (index == 0) {
+            pathList = "['%s%d/']".formatted(PATH_TO_CUSTOM_KEY, index);
+        } else {
+            pathList = pathList.substring(0, pathList.length() - 2) + ", '%s%d/'".formatted(PATH_TO_CUSTOM_KEY, index);
+        }
+
+        gnomeGSettingsSet(SCHEMA_TO_LIST, "custom-keybindings", pathList);
     }
 
     public void backupFile(String path) throws IOException {
