@@ -1,4 +1,4 @@
-package com.leanhtai01.archinstall.model;
+package com.leanhtai01.archinstall.partition;
 
 import java.io.IOException;
 

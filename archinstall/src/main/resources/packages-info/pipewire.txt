@@ -1,0 +1,8 @@
+pipewire
+pipewire-pulse
+pipewire-alsa
+alsa-utils
+xdg-desktop-portal-gtk
+gst-plugin-pipewire
+lib32-pipewire
+wireplumber

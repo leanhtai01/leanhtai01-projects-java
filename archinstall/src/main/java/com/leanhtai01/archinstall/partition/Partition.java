@@ -1,8 +1,10 @@
-package com.leanhtai01.archinstall.model;
+package com.leanhtai01.archinstall.partition;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
 public class Partition {
     private String diskName;

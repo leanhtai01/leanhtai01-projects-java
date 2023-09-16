@@ -1,4 +1,4 @@
-package com.leanhtai01.archinstall.model;
+package com.leanhtai01.archinstall.systeminfo;
 
 import java.util.List;
 

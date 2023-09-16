@@ -1,4 +1,4 @@
-package com.leanhtai01.archinstall.model;
+package com.leanhtai01.archinstall.systeminfo;
 
 public class StorageDeviceSize {
     private Long value;

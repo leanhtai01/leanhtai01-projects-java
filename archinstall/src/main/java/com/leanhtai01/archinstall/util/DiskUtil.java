@@ -3,8 +3,8 @@ package com.leanhtai01.archinstall.util;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import com.leanhtai01.archinstall.model.Partition;
-import com.leanhtai01.archinstall.model.StorageDeviceSize;
+import com.leanhtai01.archinstall.partition.Partition;
+import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
 public final class DiskUtil {
     private DiskUtil() {

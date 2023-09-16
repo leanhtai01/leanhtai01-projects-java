@@ -1,8 +1,0 @@
-base
-base-devel
-linux
-linux-headers
-linux-firmware
-man-pages
-man-db
-iptables-nft

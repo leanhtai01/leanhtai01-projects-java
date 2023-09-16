@@ -34,3 +34,5 @@ power-profiles-daemon
 seahorse
 seahorse-nautilus
 gnome-browser-connector
+xdg-desktop-portal
+xdg-desktop-portal-gnome

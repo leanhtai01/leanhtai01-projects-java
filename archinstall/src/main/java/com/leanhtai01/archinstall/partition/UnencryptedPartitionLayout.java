@@ -1,11 +1,13 @@
-package com.leanhtai01.archinstall.model;
+package com.leanhtai01.archinstall.partition;
 
 import java.io.IOException;
 
+import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 import com.leanhtai01.archinstall.util.DiskUtil;
 
-public class UnencryptedDualBootWindowsPartitionLayout implements PartitionLayout {
+public class UnencryptedPartitionLayout implements PartitionLayout {
     private String diskName;
+    private StorageDeviceSize espSize;
     private StorageDeviceSize xbootldrSize;
     private StorageDeviceSize swapSize;
 
@@ -13,35 +15,40 @@ public class UnencryptedDualBootWindowsPartitionLayout implements PartitionLayou
     private Partition xbootldrPartition;
     private Partition rootPartition;
 
-    public UnencryptedDualBootWindowsPartitionLayout(String diskName, StorageDeviceSize xbootldrSize,
+    public UnencryptedPartitionLayout(
+            String diskName,
+            StorageDeviceSize espSize,
+            StorageDeviceSize xbootldrSize,
             StorageDeviceSize swapSize) {
         this.diskName = diskName;
+        this.espSize = espSize;
         this.xbootldrSize = xbootldrSize;
         this.swapSize = swapSize;
     }
 
-    @Override
-    public void create() throws InterruptedException, IOException {
-        espPartition = new Partition(diskName, 1, "/mnt/efi");
-        xbootldrPartition = DiskUtil.createXBOOTLDRPartition(diskName, 5, xbootldrSize, "/mnt/boot");
-        var swapPartition = DiskUtil.createSwapPartition(diskName, 6, swapSize, null);
-        rootPartition = DiskUtil.createLinuxRootPartition(diskName, 7, new StorageDeviceSize(0L, null), "/mnt");
+    public Partition getRootPartition() {
+        return rootPartition;
+    }
 
+    public void create() throws InterruptedException, IOException {
+        DiskUtil.eraseDisk(DiskUtil.getPathToDisk(diskName));
+
+        espPartition = DiskUtil.createEFIPartition(diskName, 1, espSize, "/mnt/efi");
+        xbootldrPartition = DiskUtil.createXBOOTLDRPartition(diskName, 2, xbootldrSize, "/mnt/boot");
+        var swapPartition = DiskUtil.createSwapPartition(diskName, 3, swapSize, null);
+        rootPartition = DiskUtil.createLinuxRootPartition(diskName, 4, new StorageDeviceSize(0L, null), "/mnt");
+
+        DiskUtil.wipeDeviceSignature(espPartition.getPathToPartition());
         DiskUtil.wipeDeviceSignature(xbootldrPartition.getPathToPartition());
         DiskUtil.wipeDeviceSignature(swapPartition.getPathToPartition());
         DiskUtil.wipeDeviceSignature(rootPartition.getPathToPartition());
 
+        DiskUtil.formatFAT32(espPartition.getPathToPartition());
         DiskUtil.formatFAT32(xbootldrPartition.getPathToPartition());
         DiskUtil.makeSwap(swapPartition.getPathToPartition());
         DiskUtil.formatEXT4(rootPartition.getPathToPartition());
     }
 
-    @Override
-    public Partition getRootPartition() {
-        return rootPartition;
-    }
-
-    @Override
     public void mount() throws InterruptedException, IOException {
         rootPartition.mount();
         espPartition.mount();
