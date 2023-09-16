@@ -49,7 +49,7 @@ public class PipeWireInstall extends SoftwareInstall {
                     : cpCfgCmd);
 
             List<String> cfgHighQuality = List.of("sed", "-i", "'/resample.quality/s/#//; /resample.quality/s/4/15/'",
-                    "/home/%s/.config/pipewire/{client.conf,pipewire-pulse.conf}"
+                    "/home/%s/.config/pipewire/{client.conf}"
                             .formatted(userAccount.getUsername()));
             runVerbose(chrootDir != null
                     ? getCommandRunChrootAsUser(cfgHighQuality, userAccount.getUsername(), chrootDir)
