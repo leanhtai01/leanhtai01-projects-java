@@ -1,6 +1,9 @@
 package com.leanhtai01.archinstall.systeminfo;
 
 import java.io.IOException;
+import java.util.List;
+
+import com.leanhtai01.archinstall.util.ShellUtil;
 
 public class WirelessNetwork {
     private String ssid;
@@ -16,7 +19,7 @@ public class WirelessNetwork {
     }
 
     public void connect() throws InterruptedException, IOException {
-        new ProcessBuilder("iwctl", "--passphrase=%s".formatted(password), "station", device,
-                isHidden ? "connect-hidden" : "connect", ssid).inheritIO().start().waitFor();
+        ShellUtil.runVerbose(List.of("iwctl", "--passphrase=%s".formatted(password), "station", device,
+                isHidden ? "connect-hidden" : "connect", ssid));
     }
 }
