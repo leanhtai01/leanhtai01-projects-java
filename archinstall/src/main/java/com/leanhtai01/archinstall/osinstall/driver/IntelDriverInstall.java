@@ -19,7 +19,7 @@ public class IntelDriverInstall extends SoftwareInstall {
     @Override
     public int install() throws InterruptedException, IOException {
         installPackages(List.of("mesa", "lib32-mesa", "ocl-icd", "lib32-ocl-icd", "intel-compute-runtime"), chrootDir);
-        installVAAPI();
+        installVulkan();
         installVAAPI();
         return 0;
     }
