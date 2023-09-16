@@ -3,8 +3,10 @@ package com.leanhtai01.archinstall.partition;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
+import com.leanhtai01.archinstall.util.ShellUtil;
 
 public class Partition {
     private String diskName;
@@ -105,11 +107,10 @@ public class Partition {
 
     public void mount() throws InterruptedException, IOException {
         Files.createDirectories(Paths.get(mountPoint));
-        new ProcessBuilder("mount", getPathToPartition(), mountPoint).inheritIO().start().waitFor();
+        ShellUtil.runVerbose(List.of("mount", getPathToPartition(), mountPoint));
     }
 
     public String getUUID() throws IOException {
-        ProcessBuilder builder = new ProcessBuilder("blkid", "-s", "UUID", "-o", "value", getPathToPartition());
-        return new String(builder.start().getInputStream().readAllBytes()).trim();
+        return ShellUtil.runGetOutput(List.of("blkid", "-s", "UUID", "-o", "value", getPathToPartition()));
     }
 }
