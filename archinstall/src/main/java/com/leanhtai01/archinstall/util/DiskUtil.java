@@ -1,6 +1,9 @@
 package com.leanhtai01.archinstall.util;
 
+import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
+
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.leanhtai01.archinstall.partition.Partition;
@@ -11,24 +14,23 @@ public final class DiskUtil {
     }
 
     public static void eraseDisk(String pathToDisk) throws InterruptedException, IOException {
-        new ProcessBuilder("wipefs", "-a", pathToDisk).inheritIO().start().waitFor();
-        new ProcessBuilder("sgdisk", "-Z", pathToDisk).inheritIO().start().waitFor();
+        runVerbose(List.of("wipefs", "-a", pathToDisk));
+        runVerbose(List.of("sgdisk", "-Z", pathToDisk));
         TimeUnit.SECONDS.sleep(2);
     }
 
     public static void wipeDeviceSignature(String pathToDevice) throws InterruptedException, IOException {
-        new ProcessBuilder("wipefs", "-a", pathToDevice).inheritIO().start().waitFor();
+        runVerbose(List.of("wipefs", "-a", pathToDevice));
     }
 
     public static Partition createPartition(Partition partition)
             throws InterruptedException, IOException {
-        new ProcessBuilder("sgdisk",
+        runVerbose(List.of("sgdisk",
                 "-n", "0:0:" + (partition.getSize().getValue() == 0L ? "0"
                         : "+%d%s".formatted(partition.getSize().getValue(), partition.getSize().getUnit())),
                 "-t", "0:%s".formatted(partition.getType()),
                 "-c", "0:%s".formatted(partition.getGptName()),
-                partition.getPathToDisk())
-                .inheritIO().start().waitFor();
+                partition.getPathToDisk()));
 
         return partition;
     }
@@ -70,16 +72,16 @@ public final class DiskUtil {
     }
 
     public static void makeSwap(String pathToDevice) throws InterruptedException, IOException {
-        new ProcessBuilder("mkswap", pathToDevice).inheritIO().start().waitFor();
-        new ProcessBuilder("swapon", pathToDevice).inheritIO().start().waitFor();
+        runVerbose(List.of("mkswap", pathToDevice));
+        runVerbose(List.of("swapon", pathToDevice));
     }
 
     public static void formatFAT32(String pathToDevice) throws InterruptedException, IOException {
-        new ProcessBuilder("mkfs.vfat", "-F32", pathToDevice).inheritIO().start().waitFor();
+        runVerbose(List.of("mkfs.vfat", "-F32", pathToDevice));
     }
 
     public static void formatEXT4(String pathToDevice) throws InterruptedException, IOException {
-        new ProcessBuilder("mkfs.ext4", pathToDevice).inheritIO().start().waitFor();
+        runVerbose(List.of("mkfs.ext4", pathToDevice));
     }
 
     public static String getPathToDisk(String diskName) {

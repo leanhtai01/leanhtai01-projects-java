@@ -1,5 +1,8 @@
 package com.leanhtai01.archinstall.util;
 
+import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChroot;
+import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,7 +17,7 @@ public final class ConfigUtil {
     public static int addUserToGroup(String username, String group, String chrootDir)
             throws InterruptedException, IOException {
         List<String> command = List.of("gpasswd", "-a", username, group);
-        return ShellUtil.runVerbose(chrootDir != null ? ShellUtil.getCommandRunChroot(command, chrootDir) : command);
+        return runVerbose(chrootDir != null ? getCommandRunChroot(command, chrootDir) : command);
     }
 
     public static void backupFile(String path) throws IOException {
@@ -40,6 +43,6 @@ public final class ConfigUtil {
     private static int manageSystemService(String action, String service, String chrootDir)
             throws InterruptedException, IOException {
         List<String> command = List.of("systemctl", action, service);
-        return ShellUtil.runVerbose(chrootDir != null ? ShellUtil.getCommandRunChroot(command, chrootDir) : command);
+        return runVerbose(chrootDir != null ? getCommandRunChroot(command, chrootDir) : command);
     }
 }

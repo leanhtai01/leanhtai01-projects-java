@@ -1,6 +1,6 @@
 package com.leanhtai01.archinstall.osinstall.driver;
 
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackageFromFile;
+import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChrootAsUser;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
@@ -29,7 +29,9 @@ public class PipeWireInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackageFromFile("packages-info/pipewire.txt", chrootDir);
+        installPackages(List.of("pipewire", "pipewire-pulse", "pipewire-alsa", "alsa-utils",
+                "gst-plugin-pipewire", "lib32-pipewire", "wireplumber"), chrootDir);
+
         return 0;
     }
 
@@ -48,9 +50,10 @@ public class PipeWireInstall extends SoftwareInstall {
                     ? getCommandRunChrootAsUser(cpCfgCmd, userAccount.getUsername(), chrootDir)
                     : cpCfgCmd);
 
-            List<String> cfgHighQuality = List.of("sed", "-i", "'/resample.quality/s/#//; /resample.quality/s/4/15/'",
-                    "/home/%s/.config/pipewire/{client.conf}"
-                            .formatted(userAccount.getUsername()));
+            List<String> cfgHighQuality = List.of("bash", "-c",
+                    "sed -i '/resample.quality/s/#//; /resample.quality/s/4/10/'" + " "
+                            + "/home/%s/.config/pipewire/{client.conf,pipewire-pulse.conf}"
+                                    .formatted(userAccount.getUsername()));
             runVerbose(chrootDir != null
                     ? getCommandRunChrootAsUser(cfgHighQuality, userAccount.getUsername(), chrootDir)
                     : cfgHighQuality);
