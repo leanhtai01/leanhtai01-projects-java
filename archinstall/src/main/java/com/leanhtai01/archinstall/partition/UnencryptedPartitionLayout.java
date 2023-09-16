@@ -1,9 +1,19 @@
 package com.leanhtai01.archinstall.partition;
 
+import static com.leanhtai01.archinstall.util.DiskUtil.createEFIPartition;
+import static com.leanhtai01.archinstall.util.DiskUtil.createLinuxRootPartition;
+import static com.leanhtai01.archinstall.util.DiskUtil.createSwapPartition;
+import static com.leanhtai01.archinstall.util.DiskUtil.createXBOOTLDRPartition;
+import static com.leanhtai01.archinstall.util.DiskUtil.eraseDisk;
+import static com.leanhtai01.archinstall.util.DiskUtil.formatEXT4;
+import static com.leanhtai01.archinstall.util.DiskUtil.formatFAT32;
+import static com.leanhtai01.archinstall.util.DiskUtil.getPathToDisk;
+import static com.leanhtai01.archinstall.util.DiskUtil.makeSwap;
+import static com.leanhtai01.archinstall.util.DiskUtil.wipeDeviceSignature;
+
 import java.io.IOException;
 
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
-import com.leanhtai01.archinstall.util.DiskUtil;
 
 public class UnencryptedPartitionLayout implements PartitionLayout {
     private String diskName;
@@ -31,22 +41,22 @@ public class UnencryptedPartitionLayout implements PartitionLayout {
     }
 
     public void create() throws InterruptedException, IOException {
-        DiskUtil.eraseDisk(DiskUtil.getPathToDisk(diskName));
+        eraseDisk(getPathToDisk(diskName));
 
-        espPartition = DiskUtil.createEFIPartition(diskName, 1, espSize, "/mnt/efi");
-        xbootldrPartition = DiskUtil.createXBOOTLDRPartition(diskName, 2, xbootldrSize, "/mnt/boot");
-        var swapPartition = DiskUtil.createSwapPartition(diskName, 3, swapSize, null);
-        rootPartition = DiskUtil.createLinuxRootPartition(diskName, 4, new StorageDeviceSize(0L, null), "/mnt");
+        espPartition = createEFIPartition(diskName, 1, espSize, "/mnt/efi");
+        xbootldrPartition = createXBOOTLDRPartition(diskName, 2, xbootldrSize, "/mnt/boot");
+        var swapPartition = createSwapPartition(diskName, 3, swapSize, null);
+        rootPartition = createLinuxRootPartition(diskName, 4, new StorageDeviceSize(0L, null), "/mnt");
 
-        DiskUtil.wipeDeviceSignature(espPartition.getPathToPartition());
-        DiskUtil.wipeDeviceSignature(xbootldrPartition.getPathToPartition());
-        DiskUtil.wipeDeviceSignature(swapPartition.getPathToPartition());
-        DiskUtil.wipeDeviceSignature(rootPartition.getPathToPartition());
+        wipeDeviceSignature(espPartition.getPathToPartition());
+        wipeDeviceSignature(xbootldrPartition.getPathToPartition());
+        wipeDeviceSignature(swapPartition.getPathToPartition());
+        wipeDeviceSignature(rootPartition.getPathToPartition());
 
-        DiskUtil.formatFAT32(espPartition.getPathToPartition());
-        DiskUtil.formatFAT32(xbootldrPartition.getPathToPartition());
-        DiskUtil.makeSwap(swapPartition.getPathToPartition());
-        DiskUtil.formatEXT4(rootPartition.getPathToPartition());
+        formatFAT32(espPartition.getPathToPartition());
+        formatFAT32(xbootldrPartition.getPathToPartition());
+        makeSwap(swapPartition.getPathToPartition());
+        formatEXT4(rootPartition.getPathToPartition());
     }
 
     public void mount() throws InterruptedException, IOException {
