@@ -3,7 +3,7 @@ package com.leanhtai01.archinstall.osinstall.virtualmachine;
 import static com.leanhtai01.archinstall.util.ConfigUtil.addUserToGroup;
 import static com.leanhtai01.archinstall.util.ConfigUtil.backupFile;
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackageFromFile;
+import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,7 +33,9 @@ public class KVMInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackageFromFile("packages-info/kvm.txt", chrootDir);
+        installPackages(List.of("virt-manager", "qemu", "vde2", "dnsmasq", "bridge-utils", "virt-viewer", "dmidecode",
+                "edk2-ovmf", "iptables-nft", "swtpm", "qemu-hw-usb-host"), chrootDir);
+
         return 0;
     }
 

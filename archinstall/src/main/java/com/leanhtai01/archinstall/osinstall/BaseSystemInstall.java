@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
@@ -46,10 +47,12 @@ public class BaseSystemInstall {
         stopService("reflector.timer", null);
         disableService("reflector.service", null);
         disableService("reflector.timer", null);
+        TimeUnit.SECONDS.sleep(10);
     }
 
     public void enableNetworkTimeSynchronization() throws InterruptedException, IOException {
         runVerbose(List.of("timedatectl", "set-ntp", "true"));
+        TimeUnit.SECONDS.sleep(10);
     }
 
     public void configureMirrors() throws FileNotFoundException {

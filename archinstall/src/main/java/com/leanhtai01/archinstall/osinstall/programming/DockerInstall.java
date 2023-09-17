@@ -37,7 +37,10 @@ public class DockerInstall extends SoftwareInstall {
     @Override
     public int config() throws IOException, InterruptedException {
         enableService("docker.service", chrootDir);
-        startService("docker.service", chrootDir);
+
+        if (chrootDir == null) {
+            startService("docker.service", chrootDir);
+        }
 
         if (userAccount != null) {
             addUserToGroup(userAccount.getUsername(), "docker", chrootDir);

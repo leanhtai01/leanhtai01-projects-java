@@ -1,7 +1,6 @@
 package com.leanhtai01.archinstall.osinstall.desktopenvironment;
 
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackageFromFile;
 import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
 import static com.leanhtai01.archinstall.util.PackageUtil.isPackageInstalled;
 import static com.leanhtai01.archinstall.util.ShellUtil.runGetOutput;
@@ -36,7 +35,15 @@ public class GNOMEInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackageFromFile("packages-info/gnome-de.txt", chrootDir);
+        installPackages(List.of("xorg-server", "baobab", "eog", "evince", "file-roller", "gdm", "gnome-calculator",
+                "gnome-calendar", "gnome-characters", "gnome-clocks", "gnome-color-manager", "gnome-control-center",
+                "gnome-font-viewer", "gnome-keyring", "gnome-screenshot", "gnome-shell-extensions",
+                "gnome-system-monitor", "gnome-terminal", "gnome-themes-extra", "gnome-video-effects", "nautilus",
+                "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "gnome-todo",
+                "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
+                "power-profiles-daemon", "seahorse", "seahorse-nautilus", "gnome-browser-connector",
+                "xdg-desktop-portal", "xdg-desktop-portal-gnome"), chrootDir);
+
         return 0;
     }
 
