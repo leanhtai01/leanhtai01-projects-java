@@ -3,10 +3,13 @@ package com.leanhtai01.archinstall.osinstall.desktopenvironment;
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
 import static com.leanhtai01.archinstall.util.PackageUtil.installAURPkgs;
 import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
+import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
 import static com.leanhtai01.archinstall.util.PackageUtil.isInMainRepos;
 import static com.leanhtai01.archinstall.util.PackageUtil.isPackageInstalled;
 import static com.leanhtai01.archinstall.util.ShellUtil.runGetOutput;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,11 +19,14 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+
 import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.Pair;
 
 public class GNOMEInstall extends SoftwareInstall {
+    private static final Logger LOGGER = getLogger(lookup().lookupClass());
     private static final String GSETTINGS_COMMAND = "gsettings";
 
     private static final String GSETTINGS_CUSTOM_KEYBINDINGS_KEY = "custom-keybindings";
@@ -52,8 +58,8 @@ public class GNOMEInstall extends SoftwareInstall {
                 "gnome-system-monitor", "gnome-terminal", "gnome-themes-extra", "gnome-video-effects", "nautilus",
                 "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "gnome-todo",
                 "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
-                "power-profiles-daemon", "seahorse", "seahorse-nautilus", "gnome-browser-connector",
-                "xdg-desktop-portal", "xdg-desktop-portal-gnome"), chrootDir);
+                "seahorse", "seahorse-nautilus", "gnome-browser-connector", "xdg-desktop-portal",
+                "xdg-desktop-portal-gnome"), chrootDir);
 
         return 0;
     }
@@ -64,12 +70,22 @@ public class GNOMEInstall extends SoftwareInstall {
         return 0;
     }
 
-    public int gnomeGSettingsSet(String schema, String key, String value) throws IOException, InterruptedException {
+    public int gSettingsSet(String schema, String key, String value) throws IOException, InterruptedException {
         return runVerbose(List.of(GSETTINGS_COMMAND, "set", schema, key, value));
     }
 
     public int gSettingsReset(String schema, String key) throws IOException, InterruptedException {
         return runVerbose(List.of(GSETTINGS_COMMAND, "reset", schema, key));
+    }
+
+    public void configureIbusBamboo() throws InterruptedException, IOException {
+        if (!isPackageInstalled("ibus-bamboo", chrootDir)) {
+            installPkgs(List.of("ibus-bamboo"), userAccount, chrootDir);
+            LOGGER.info("Please restart then run the configure for ibus-bamboo again.");
+            return;
+        }
+
+        gSettingsSet("org.gnome.desktop.input-sources", "sources", "[('xkb', 'us'), ('ibus', 'Bamboo')]");
     }
 
     public void configureDesktopInterface() throws InterruptedException, IOException {
@@ -82,46 +98,46 @@ public class GNOMEInstall extends SoftwareInstall {
         }
 
         // set default monospace font
-        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "monospace-font-name", CASCADIA_CODE_MONO_12_VALUE);
+        gSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "monospace-font-name", CASCADIA_CODE_MONO_12_VALUE);
 
         // set default interface font
-        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "font-name", CASCADIA_CODE_MONO_12_VALUE);
+        gSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "font-name", CASCADIA_CODE_MONO_12_VALUE);
 
         // set default legacy windows titles font
-        gnomeGSettingsSet("org.gnome.desktop.wm.preferences", "titlebar-font", "Cascadia Mono Bold 12");
+        gSettingsSet("org.gnome.desktop.wm.preferences", "titlebar-font", "Cascadia Mono Bold 12");
 
         // set default document font
-        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "document-font-name", CASCADIA_CODE_MONO_12_VALUE);
+        gSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "document-font-name", CASCADIA_CODE_MONO_12_VALUE);
 
         // set font-antialiasing to rgba
-        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "font-antialiasing", "rgba");
+        gSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "font-antialiasing", "rgba");
 
         // show weekday
-        gnomeGSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "clock-show-weekday", "true");
+        gSettingsSet(GNOME_DESKTOP_INTERFACE_SCHEMA, "clock-show-weekday", "true");
 
         // schedule night light
-        gnomeGSettingsSet("org.gnome.settings-daemon.plugins.color", "night-light-enabled", "true");
-        gnomeGSettingsSet("org.gnome.settings-daemon.plugins.color", "night-light-schedule-from", "18.0");
+        gSettingsSet("org.gnome.settings-daemon.plugins.color", "night-light-enabled", "true");
+        gSettingsSet("org.gnome.settings-daemon.plugins.color", "night-light-schedule-from", "18.0");
 
         // empty favorite apps
-        gnomeGSettingsSet("org.gnome.shell", "favorite-apps", "[]");
+        gSettingsSet("org.gnome.shell", "favorite-apps", "[]");
 
         // configure nautilus
-        gnomeGSettingsSet("org.gnome.nautilus.preferences", "default-folder-viewer", "list-view");
-        gnomeGSettingsSet("org.gnome.nautilus.list-view", "default-zoom-level", "large");
+        gSettingsSet("org.gnome.nautilus.preferences", "default-folder-viewer", "list-view");
+        gSettingsSet("org.gnome.nautilus.list-view", "default-zoom-level", "large");
 
         // disable suspend
-        gnomeGSettingsSet(GNOME_POWER_SCHEMA, "sleep-inactive-battery-type", "nothing");
-        gnomeGSettingsSet(GNOME_POWER_SCHEMA, "sleep-inactive-ac-type", "nothing");
+        gSettingsSet(GNOME_POWER_SCHEMA, "sleep-inactive-battery-type", "nothing");
+        gSettingsSet(GNOME_POWER_SCHEMA, "sleep-inactive-ac-type", "nothing");
 
         // disable dim screen
-        gnomeGSettingsSet(GNOME_POWER_SCHEMA, "idle-dim", "false");
+        gSettingsSet(GNOME_POWER_SCHEMA, "idle-dim", "false");
 
         // disable screen blank
-        gnomeGSettingsSet("org.gnome.desktop.session", "idle-delay", "uint32 0");
+        gSettingsSet("org.gnome.desktop.session", "idle-delay", "uint32 0");
 
         // show battery percentage
-        gnomeGSettingsSet("org.gnome.desktop.interface", "show-battery-percentage", "true");
+        gSettingsSet("org.gnome.desktop.interface", "show-battery-percentage", "true");
     }
 
     public void createCustomShortcut(List<GNOMEShortcut> shortcuts) throws IOException, InterruptedException {
@@ -147,9 +163,9 @@ public class GNOMEInstall extends SoftwareInstall {
         int index = pathListAndIndexes.getSecond().size();
 
         final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d/".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
-        gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "name", shortcut.getName());
-        gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "binding", shortcut.getKeybinding());
-        gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "command", shortcut.getCommand());
+        gSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "name", shortcut.getName());
+        gSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "binding", shortcut.getKeybinding());
+        gSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "command", shortcut.getCommand());
 
         // determine new pathList
         if (index == 0) {
@@ -158,7 +174,7 @@ public class GNOMEInstall extends SoftwareInstall {
             pathList = pathList.substring(0, pathList.length() - 1) + ", '%s%d/']".formatted(PATH_TO_CUSTOM_KEY, index);
         }
 
-        gnomeGSettingsSet(SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY, pathList);
+        gSettingsSet(SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY, pathList);
     }
 
     public List<GNOMEShortcut> readShortcutsFromFile(String fileName) {

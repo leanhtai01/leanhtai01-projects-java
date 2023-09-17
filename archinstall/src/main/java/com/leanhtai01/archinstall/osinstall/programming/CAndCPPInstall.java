@@ -8,16 +8,15 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class JavaInstall extends SoftwareInstall {
-    public JavaInstall(String chrootDir, UserAccount userAccount) {
+public class CAndCPPInstall extends SoftwareInstall {
+    public CAndCPPInstall(String chrootDir, UserAccount userAccount) {
         super(chrootDir, userAccount);
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPkgs(List.of("jdk-openjdk", "openjdk-doc", "openjdk-src", "java-openjfx", "java-openjfx-doc",
-                "java-openjfx-src", "jdk17-openjdk", "java17-openjfx", "jdk11-openjdk", "java11-openjfx",
-                "jdk8-openjdk", "maven", "gradle", "gradle-doc"), userAccount, chrootDir);
+        installPkgs(List.of("clang", "llvm", "lldb", "cmake", "qt6-base", "qt6-doc", "qtcreator", "kdevelop"),
+                userAccount, chrootDir);
 
         return 0;
     }

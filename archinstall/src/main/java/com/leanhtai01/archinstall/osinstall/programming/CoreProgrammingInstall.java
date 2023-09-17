@@ -8,16 +8,15 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class JavaInstall extends SoftwareInstall {
-    public JavaInstall(String chrootDir, UserAccount userAccount) {
+public class CoreProgrammingInstall extends SoftwareInstall {
+    public CoreProgrammingInstall(String chrootDir, UserAccount userAccount) {
         super(chrootDir, userAccount);
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPkgs(List.of("jdk-openjdk", "openjdk-doc", "openjdk-src", "java-openjfx", "java-openjfx-doc",
-                "java-openjfx-src", "jdk17-openjdk", "java17-openjfx", "jdk11-openjdk", "java11-openjfx",
-                "jdk8-openjdk", "maven", "gradle", "gradle-doc"), userAccount, chrootDir);
+        installPkgs(List.of("git", "github-cli", "kdiff3", "valgrind", "kruler", "sublime-merge",
+                "visual-studio-code-bin", "postman-bin"), userAccount, chrootDir);
 
         return 0;
     }

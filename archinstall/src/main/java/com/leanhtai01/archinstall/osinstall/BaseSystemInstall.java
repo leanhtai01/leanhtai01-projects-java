@@ -71,7 +71,7 @@ public class BaseSystemInstall {
     public void installEssentialPackages() throws InterruptedException, IOException {
         runVerbose(List.of("pacstrap", CHROOT_DIR, "base", "base-devel", "linux", "linux-headers", "linux-firmware",
                 "man-pages", "man-db", "iptables-nft", "pipewire", "pipewire-pulse", "pipewire-alsa", "alsa-utils",
-                "gst-plugin-pipewire", "wireplumber"));
+                "gst-plugin-pipewire", "wireplumber", "tlp"));
     }
 
     public void configureFstab() throws IOException, InterruptedException {

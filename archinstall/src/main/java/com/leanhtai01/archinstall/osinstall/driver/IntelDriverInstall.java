@@ -24,11 +24,6 @@ public class IntelDriverInstall extends SoftwareInstall {
         return 0;
     }
 
-    @Override
-    public int config() throws IOException, InterruptedException {
-        throw new UnsupportedOperationException();
-    }
-
     public void installVulkan() throws InterruptedException, IOException {
         installMainReposPkgs(List.of("vulkan-intel", "lib32-vulkan-intel",
                 "vulkan-icd-loader", "lib32-vulkan-icd-loader"),

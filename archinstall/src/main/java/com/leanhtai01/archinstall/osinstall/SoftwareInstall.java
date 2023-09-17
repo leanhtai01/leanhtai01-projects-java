@@ -26,9 +26,13 @@ public abstract class SoftwareInstall {
         return userAccount;
     }
 
-    public abstract int install() throws InterruptedException, IOException;
+    public int install() throws InterruptedException, IOException {
+        return 0;
+    }
 
-    public abstract int config() throws IOException, InterruptedException;
+    public int config() throws IOException, InterruptedException {
+        return 0;
+    }
 
     public String getPathPrefix() {
         return chrootDir != null ? chrootDir : "";

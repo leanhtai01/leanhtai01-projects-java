@@ -1,4 +1,4 @@
-package com.leanhtai01.archinstall.osinstall.util;
+package com.leanhtai01.archinstall.osinstall.tool;
 
 import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 
@@ -22,10 +22,5 @@ public class FontInstall extends SoftwareInstall {
                 "ttf-fira-code", "ttf-roboto-mono", "ttf-hack"), chrootDir);
 
         return 0;
-    }
-
-    @Override
-    public int config() throws IOException, InterruptedException {
-        throw new UnsupportedOperationException("Unimplemented method 'config'");
     }
 }
