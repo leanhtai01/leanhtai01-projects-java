@@ -3,7 +3,7 @@ package com.leanhtai01.archinstall.osinstall.programming;
 import static com.leanhtai01.archinstall.util.ConfigUtil.addUserToGroup;
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
 import static com.leanhtai01.archinstall.util.ConfigUtil.startService;
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +30,7 @@ public class DockerInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackages(List.of("docker", "docker-compose"), chrootDir);
+        installMainReposPkgs(List.of("docker", "docker-compose"), chrootDir);
         return 0;
     }
 

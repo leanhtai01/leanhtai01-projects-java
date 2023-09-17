@@ -1,8 +1,8 @@
 package com.leanhtai01.archinstall.osinstall.virtualmachine;
 
 import static com.leanhtai01.archinstall.util.ConfigUtil.addUserToGroup;
-import static com.leanhtai01.archinstall.util.PackageUtil.installAURPackages;
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+import static com.leanhtai01.archinstall.util.PackageUtil.installAURPkgs;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +21,8 @@ public class VirtualBoxInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackages(List.of("virtualbox", "virtualbox-guest-iso", "virtualbox-host-dkms"), chrootDir);
-        installAURPackages(List.of("virtualbox-ext-oracle"), userAccount, chrootDir);
+        installMainReposPkgs(List.of("virtualbox", "virtualbox-guest-iso", "virtualbox-host-dkms"), chrootDir);
+        installAURPkgs(List.of("virtualbox-ext-oracle"), userAccount, chrootDir);
         return 0;
     }
 

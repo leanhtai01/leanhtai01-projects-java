@@ -1,8 +1,8 @@
 package com.leanhtai01.archinstall.osinstall.desktopenvironment;
 
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
-import static com.leanhtai01.archinstall.util.PackageUtil.installAURPackages;
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+import static com.leanhtai01.archinstall.util.PackageUtil.installAURPkgs;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 import static com.leanhtai01.archinstall.util.PackageUtil.isInMainRepos;
 import static com.leanhtai01.archinstall.util.PackageUtil.isPackageInstalled;
 import static com.leanhtai01.archinstall.util.ShellUtil.runGetOutput;
@@ -46,7 +46,7 @@ public class GNOMEInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackages(List.of("xorg-server", "baobab", "eog", "evince", "file-roller", "gdm", "gnome-calculator",
+        installMainReposPkgs(List.of("xorg-server", "baobab", "eog", "evince", "file-roller", "gdm", "gnome-calculator",
                 "gnome-calendar", "gnome-characters", "gnome-clocks", "gnome-color-manager", "gnome-control-center",
                 "gnome-font-viewer", "gnome-keyring", "gnome-screenshot", "gnome-shell-extensions",
                 "gnome-system-monitor", "gnome-terminal", "gnome-themes-extra", "gnome-video-effects", "nautilus",
@@ -78,7 +78,7 @@ public class GNOMEInstall extends SoftwareInstall {
         final String GNOME_POWER_SCHEMA = "org.gnome.settings-daemon.plugins.power";
 
         if (!isPackageInstalled("ttf-cascadia-code", chrootDir)) {
-            installPackages(List.of("ttf-cascadia-code"), chrootDir);
+            installMainReposPkgs(List.of("ttf-cascadia-code"), chrootDir);
         }
 
         // set default monospace font
@@ -130,9 +130,9 @@ public class GNOMEInstall extends SoftwareInstall {
         for (GNOMEShortcut shortcut : shortcuts) {
             if (!isPackageInstalled(shortcut.getPackageName(), chrootDir)) {
                 if (isInMainRepos(shortcut.getPackageName(), chrootDir)) {
-                    installPackages(List.of(shortcut.getPackageName()), chrootDir);
+                    installMainReposPkgs(List.of(shortcut.getPackageName()), chrootDir);
                 } else {
-                    installAURPackages(List.of(shortcut.getPackageName()), userAccount, chrootDir);
+                    installAURPkgs(List.of(shortcut.getPackageName()), userAccount, chrootDir);
                 }
             }
 

@@ -1,6 +1,6 @@
 package com.leanhtai01.archinstall.osinstall.util;
 
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +18,7 @@ public class FontInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackages(List.of("ttf-dejavu", "ttf-liberation", "noto-fonts-emoji", "ttf-cascadia-code",
+        installMainReposPkgs(List.of("ttf-dejavu", "ttf-liberation", "noto-fonts-emoji", "ttf-cascadia-code",
                 "ttf-fira-code", "ttf-roboto-mono", "ttf-hack"), chrootDir);
 
         return 0;

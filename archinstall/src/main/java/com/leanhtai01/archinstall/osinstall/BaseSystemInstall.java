@@ -4,7 +4,7 @@ import static com.leanhtai01.archinstall.util.ConfigUtil.backupFile;
 import static com.leanhtai01.archinstall.util.ConfigUtil.disableService;
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
 import static com.leanhtai01.archinstall.util.ConfigUtil.stopService;
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChroot;
 import static com.leanhtai01.archinstall.util.ShellUtil.runAppendOutputToFile;
 import static com.leanhtai01.archinstall.util.ShellUtil.runSetInput;
@@ -133,7 +133,7 @@ public class BaseSystemInstall {
             writer.append("127.0.1.1\t%s.localdomain\t%s%n".formatted(hostname, hostname));
         }
 
-        installPackages(List.of("networkmanager"), CHROOT_DIR);
+        installMainReposPkgs(List.of("networkmanager"), CHROOT_DIR);
         enableService("NetworkManager", CHROOT_DIR);
     }
 
@@ -190,7 +190,7 @@ public class BaseSystemInstall {
     }
 
     public void configureSystemdBootloader() throws InterruptedException, IOException {
-        installPackages(List.of("efibootmgr", "intel-ucode"), CHROOT_DIR);
+        installMainReposPkgs(List.of("efibootmgr", "intel-ucode"), CHROOT_DIR);
 
         List<String> command = List.of("bootctl", "--esp-path=/efi", "--boot-path=/boot", "install");
         runVerbose(getCommandRunChroot(command, CHROOT_DIR));

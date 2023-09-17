@@ -41,14 +41,14 @@ public final class PackageUtil {
         return runSilent(command) == 0;
     }
 
-    public static int installPackages(List<String> packages, String chrootDir)
+    public static int installMainReposPkgs(List<String> packages, String chrootDir)
             throws InterruptedException, IOException {
         List<String> command = Stream.concat(
                 List.of(PACMAN, "-Syu", "--needed", "--noconfirm").stream(), packages.stream()).toList();
         return runVerbose(chrootDir != null ? getCommandRunChroot(command, chrootDir) : getCommandRunSudo(command));
     }
 
-    public static int installAURPackages(List<String> packages, UserAccount userAccount, String chrootDir)
+    public static int installAURPkgs(List<String> packages, UserAccount userAccount, String chrootDir)
             throws InterruptedException, IOException {
         if (!isPackageInstalled("yay", chrootDir)) {
             installYayAURHelper(userAccount, chrootDir);
@@ -76,7 +76,7 @@ public final class PackageUtil {
 
     public static void installFlatpakPackages(List<String> packageIds) throws InterruptedException, IOException {
         if (!isPackageInstalled(FLATPAK, null)) {
-            installPackages(List.of(FLATPAK), null);
+            installMainReposPkgs(List.of(FLATPAK), null);
         }
 
         runVerbose(List.of(FLATPAK, "update", "-y"));
@@ -90,7 +90,7 @@ public final class PackageUtil {
 
     private static void installYayAURHelper(UserAccount userAccount, String chrootDir)
             throws InterruptedException, IOException {
-        installPackages(List.of("go"), chrootDir);
+        installMainReposPkgs(List.of("go"), chrootDir);
 
         // create tmp to store yay.tar.gz package
         List<String> createTmpDirCmd = List.of("mkdir", "/home/%s/tmp".formatted(userAccount.getUsername()));
@@ -127,7 +127,7 @@ public final class PackageUtil {
 
     public static int installPackageFromFile(String filename, String chrootDir)
             throws InterruptedException, IOException {
-        return installPackages(getPackagesFromFile(filename), chrootDir);
+        return installMainReposPkgs(getPackagesFromFile(filename), chrootDir);
     }
 
     private static List<String> getPackagesFromFile(String fileName) {

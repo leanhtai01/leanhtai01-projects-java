@@ -1,6 +1,6 @@
 package com.leanhtai01.archinstall.osinstall.driver;
 
-import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChrootAsUser;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
@@ -29,7 +29,7 @@ public class PipeWireInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPackages(List.of("pipewire", "pipewire-pulse", "pipewire-alsa", "alsa-utils",
+        installMainReposPkgs(List.of("pipewire", "pipewire-pulse", "pipewire-alsa", "alsa-utils",
                 "gst-plugin-pipewire", "lib32-pipewire", "wireplumber"), chrootDir);
 
         return 0;
