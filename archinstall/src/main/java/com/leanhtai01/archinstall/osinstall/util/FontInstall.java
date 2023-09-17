@@ -1,0 +1,31 @@
+package com.leanhtai01.archinstall.osinstall.util;
+
+import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+
+import java.io.IOException;
+import java.util.List;
+
+import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
+
+public class FontInstall extends SoftwareInstall {
+    public FontInstall() {
+        super(null, null);
+    }
+
+    public FontInstall(String chrootDir) {
+        super(chrootDir, null);
+    }
+
+    @Override
+    public int install() throws InterruptedException, IOException {
+        installPackages(List.of("ttf-dejavu", "ttf-liberation", "noto-fonts-emoji", "ttf-cascadia-code",
+                "ttf-fira-code", "ttf-roboto-mono", "ttf-hack"), chrootDir);
+
+        return 0;
+    }
+
+    @Override
+    public int config() throws IOException, InterruptedException {
+        throw new UnsupportedOperationException("Unimplemented method 'config'");
+    }
+}
