@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
@@ -41,8 +42,32 @@ public final class PackageUtil {
         return runSilent(command) == 0;
     }
 
+    public static int installPkgs(List<String> packages, UserAccount userAccount, String chrootDir)
+            throws InterruptedException, IOException {
+        List<String> mainReposPkgs = packages.stream().filter(pkg -> {
+            try {
+                return isInMainRepos(pkg, chrootDir);
+            } catch (IOException | InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return true;
+            }
+        }).toList();
+
+        List<String> aurPkgs = packages.stream().collect(Collectors.toList());
+        aurPkgs.removeAll(mainReposPkgs);
+
+        installMainReposPkgs(mainReposPkgs, chrootDir);
+        installAURPkgs(aurPkgs, userAccount, chrootDir);
+
+        return 0;
+    }
+
     public static int installMainReposPkgs(List<String> packages, String chrootDir)
             throws InterruptedException, IOException {
+        if (packages.isEmpty()) {
+            return 0;
+        }
+
         List<String> command = Stream.concat(
                 List.of(PACMAN, "-Syu", "--needed", "--noconfirm").stream(), packages.stream()).toList();
         return runVerbose(chrootDir != null ? getCommandRunChroot(command, chrootDir) : getCommandRunSudo(command));
@@ -63,6 +88,10 @@ public final class PackageUtil {
                 return true;
             }
         }).toList();
+
+        if (packages.isEmpty()) {
+            return 0;
+        }
 
         List<String> installAURPkgCmd = List.of("bash", "-c", ("printf \"%s\" | sudo -S -i;"
                 + "export HOME=\"/home/%s\";"
