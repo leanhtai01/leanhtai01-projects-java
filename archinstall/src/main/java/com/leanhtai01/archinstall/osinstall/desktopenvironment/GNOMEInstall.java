@@ -1,7 +1,9 @@
 package com.leanhtai01.archinstall.osinstall.desktopenvironment;
 
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
+import static com.leanhtai01.archinstall.util.PackageUtil.installAURPackages;
 import static com.leanhtai01.archinstall.util.PackageUtil.installPackages;
+import static com.leanhtai01.archinstall.util.PackageUtil.isInMainRepos;
 import static com.leanhtai01.archinstall.util.PackageUtil.isPackageInstalled;
 import static com.leanhtai01.archinstall.util.ShellUtil.runGetOutput;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
@@ -15,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
+import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.Pair;
 
 public class GNOMEInstall extends SoftwareInstall {
@@ -31,6 +34,14 @@ public class GNOMEInstall extends SoftwareInstall {
 
     public GNOMEInstall(String chrootDir) {
         super(chrootDir, null);
+    }
+
+    public GNOMEInstall(UserAccount userAccount) {
+        super(null, userAccount);
+    }
+
+    public GNOMEInstall(String chrootDir, UserAccount userAccount) {
+        super(chrootDir, userAccount);
     }
 
     @Override
@@ -117,9 +128,15 @@ public class GNOMEInstall extends SoftwareInstall {
         resetCustomShortcuts();
 
         for (GNOMEShortcut shortcut : shortcuts) {
-            if (isPackageInstalled(shortcut.getPackageName(), chrootDir)) {
-                createCustomShortcut(shortcut);
+            if (!isPackageInstalled(shortcut.getPackageName(), chrootDir)) {
+                if (isInMainRepos(shortcut.getPackageName(), chrootDir)) {
+                    installPackages(List.of(shortcut.getPackageName()), chrootDir);
+                } else {
+                    installAURPackages(List.of(shortcut.getPackageName()), userAccount, chrootDir);
+                }
             }
+
+            createCustomShortcut(shortcut);
         }
     }
 
@@ -129,7 +146,7 @@ public class GNOMEInstall extends SoftwareInstall {
         String pathList = pathListAndIndexes.getFirst();
         int index = pathListAndIndexes.getSecond().size();
 
-        final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
+        final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d/".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
         gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "name", shortcut.getName());
         gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "binding", shortcut.getKeybinding());
         gnomeGSettingsSet(CUSTOM_SHORTCUT_SCHEMA, "command", shortcut.getCommand());
@@ -138,7 +155,7 @@ public class GNOMEInstall extends SoftwareInstall {
         if (index == 0) {
             pathList = "['%s%d/']".formatted(PATH_TO_CUSTOM_KEY, index);
         } else {
-            pathList = pathList.substring(0, pathList.length() - 2) + ", '%s%d/'".formatted(PATH_TO_CUSTOM_KEY, index);
+            pathList = pathList.substring(0, pathList.length() - 1) + ", '%s%d/']".formatted(PATH_TO_CUSTOM_KEY, index);
         }
 
         gnomeGSettingsSet(SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY, pathList);
@@ -157,7 +174,7 @@ public class GNOMEInstall extends SoftwareInstall {
         List<Integer> indexes = getGNOMEShortcutPathListAndIndexes().getSecond();
 
         for (int index : indexes) {
-            final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
+            final String CUSTOM_SHORTCUT_SCHEMA = "%s:%s%d/".formatted(SCHEMA_TO_ITEM, PATH_TO_CUSTOM_KEY, index);
 
             gSettingsReset(CUSTOM_SHORTCUT_SCHEMA, "name");
             gSettingsReset(CUSTOM_SHORTCUT_SCHEMA, "binding");

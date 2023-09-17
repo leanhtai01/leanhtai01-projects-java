@@ -56,6 +56,10 @@ public final class ShellUtil {
                 .start().waitFor();
     }
 
+    public static List<String> getCommandRunSudo(List<String> command) {
+        return Stream.concat(List.of("sudo").stream(), command.stream()).toList();
+    }
+
     public static List<String> getCommandRunChroot(List<String> command, String chrootDir) {
         return Stream.concat(List.of(ARCH_CHROOT_COMMAND, chrootDir).stream(), command.stream()).toList();
     }

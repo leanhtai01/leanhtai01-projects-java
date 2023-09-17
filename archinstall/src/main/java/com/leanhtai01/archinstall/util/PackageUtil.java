@@ -2,6 +2,7 @@ package com.leanhtai01.archinstall.util;
 
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChroot;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChrootAsUser;
+import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunSudo;
 import static com.leanhtai01.archinstall.util.ShellUtil.runSilent;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
@@ -14,15 +15,21 @@ import java.util.stream.Stream;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public final class PackageUtil {
+    private static final String PACMAN = "pacman";
     private static final String FLATPAK = "flatpak";
 
     private PackageUtil() {
     }
 
+    public static boolean isInMainRepos(String packageName, String chrootDir) throws IOException, InterruptedException {
+        List<String> command = List.of(PACMAN, "-Ss", "^%s$".formatted(packageName));
+        return runSilent(chrootDir != null ? getCommandRunChroot(command, chrootDir) : command) == 0;
+    }
+
     public static boolean isPackageInstalled(String packageName, String chrootDir)
             throws InterruptedException, IOException {
-        List<String> command = List.of("pacman", "-Qi", packageName);
-        return runSilent(chrootDir != null ? ShellUtil.getCommandRunChroot(command, chrootDir) : command) == 0;
+        List<String> command = List.of(PACMAN, "-Qi", packageName);
+        return runSilent(chrootDir != null ? getCommandRunChroot(command, chrootDir) : command) == 0;
     }
 
     public static boolean isFlatpakPackageInstall(String packageId) throws InterruptedException, IOException {
@@ -37,8 +44,8 @@ public final class PackageUtil {
     public static int installPackages(List<String> packages, String chrootDir)
             throws InterruptedException, IOException {
         List<String> command = Stream.concat(
-                List.of("pacman", "-Syu", "--needed", "--noconfirm").stream(), packages.stream()).toList();
-        return runVerbose(chrootDir != null ? getCommandRunChroot(command, chrootDir) : command);
+                List.of(PACMAN, "-Syu", "--needed", "--noconfirm").stream(), packages.stream()).toList();
+        return runVerbose(chrootDir != null ? getCommandRunChroot(command, chrootDir) : getCommandRunSudo(command));
     }
 
     public static int installAURPackages(List<String> packages, UserAccount userAccount, String chrootDir)
