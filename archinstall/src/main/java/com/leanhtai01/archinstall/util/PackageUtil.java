@@ -119,6 +119,10 @@ public final class PackageUtil {
 
     private static void installYayAURHelper(UserAccount userAccount, String chrootDir)
             throws InterruptedException, IOException {
+        if (!isPackageInstalled("yay", chrootDir)) {
+            return;
+        }
+
         installMainReposPkgs(List.of("go"), chrootDir);
 
         // create tmp to store yay.tar.gz package
