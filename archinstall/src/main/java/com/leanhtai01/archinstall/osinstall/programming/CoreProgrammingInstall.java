@@ -16,7 +16,7 @@ public class CoreProgrammingInstall extends SoftwareInstall {
     @Override
     public int install() throws InterruptedException, IOException {
         installPkgs(List.of("git", "github-cli", "kdiff3", "valgrind", "kruler", "sublime-merge",
-                "visual-studio-code-bin", "postman-bin"), userAccount, chrootDir);
+                "visual-studio-code-bin", "postman-bin", "emacs"), userAccount, chrootDir);
 
         return 0;
     }
