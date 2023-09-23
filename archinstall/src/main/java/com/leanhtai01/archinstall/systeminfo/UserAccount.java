@@ -8,6 +8,13 @@ public class UserAccount {
     private String password;
     private List<String> groups;
 
+    public UserAccount(String realName, String username, String password) {
+        this.realName = realName;
+        this.username = username;
+        this.password = password;
+        this.groups = List.of("wheel", "audio", "lp", "optical", "storage", "disk", "video", "power");
+    }
+
     public UserAccount(String realName, String username, String password, List<String> groups) {
         this.realName = realName;
         this.username = username;
