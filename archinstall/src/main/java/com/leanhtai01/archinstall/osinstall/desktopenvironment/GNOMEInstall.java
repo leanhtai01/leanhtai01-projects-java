@@ -59,7 +59,7 @@ public class GNOMEInstall extends SoftwareInstall {
                 "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "gnome-todo",
                 "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
                 "seahorse", "seahorse-nautilus", "gnome-browser-connector", "xdg-desktop-portal",
-                "xdg-desktop-portal-gnome"), chrootDir);
+                "xdg-desktop-portal-gnome", "gnome-remote-desktop"), chrootDir);
 
         return 0;
     }
