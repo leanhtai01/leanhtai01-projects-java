@@ -23,6 +23,7 @@ public final class InputValidation {
 
         while (!password.equals(reenterPassword)) {
             System.console().printf(errorMessage);
+
             System.console().printf(firstPrompt);
             password = String.valueOf(System.console().readPassword());
 
