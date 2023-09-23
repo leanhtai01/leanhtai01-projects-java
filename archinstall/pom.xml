@@ -23,4 +23,12 @@
         <mainClass>com.leanhtai01.archinstall.Main</mainClass>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.leanhtai01</groupId>
+            <artifactId>shared-library</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>
