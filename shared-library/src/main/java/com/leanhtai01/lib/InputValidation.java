@@ -14,7 +14,7 @@ public final class InputValidation {
         return number;
     }
 
-    public static String readPasswordFromConsole(String firstPrompt, String secondPrompt) {
+    public static String readPasswordFromConsole(String firstPrompt, String secondPrompt, String errorMessage) {
         System.console().printf(firstPrompt);
         String password = String.valueOf(System.console().readPassword());
 
@@ -22,7 +22,7 @@ public final class InputValidation {
         String reenterPassword = String.valueOf(System.console().readPassword());
 
         while (!password.equals(reenterPassword)) {
-            System.console().printf("Two password isn't the same. Please try again!");
+            System.console().printf(errorMessage);
             System.console().printf(firstPrompt);
             password = String.valueOf(System.console().readPassword());
 
