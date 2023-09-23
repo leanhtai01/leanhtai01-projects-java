@@ -32,4 +32,23 @@ public final class InputValidation {
 
         return password;
     }
+
+    public static int chooseIntegerOption(Runnable displayMenu, int minChoice, int maxChoice) {
+        boolean isValidChoice = false;
+        int choice = minChoice;
+
+        while (!isValidChoice) {
+            displayMenu.run();
+            try {
+                String input = System.console().readLine();
+                choice = isValidInteger(input, minChoice, maxChoice);
+                isValidChoice = true;
+            } catch (IllegalArgumentException e) {
+                isValidChoice = false;
+                System.console().printf(e.getMessage());
+            }
+        }
+
+        return choice;
+    }
 }
