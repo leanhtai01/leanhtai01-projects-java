@@ -78,6 +78,18 @@ public class GNOMEInstall extends SoftwareInstall {
         return runVerbose(List.of(GSETTINGS_COMMAND, "reset", schema, key));
     }
 
+    public int enableExtension(String uuid) throws IOException, InterruptedException {
+        return runVerbose(List.of("gnome-extensions", "enable", uuid));
+    }
+
+    public int enableExtension(List<String> uuidList) throws IOException, InterruptedException {
+        for (String uuid : uuidList) {
+            enableExtension(uuid);
+        }
+
+        return 0;
+    }
+
     public void configureIbusBamboo() throws InterruptedException, IOException {
         if (!isPackageInstalled("ibus-bamboo", chrootDir)) {
             installPkgs(List.of("ibus-bamboo"), userAccount, chrootDir);
