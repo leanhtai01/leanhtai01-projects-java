@@ -1,5 +1,10 @@
 package com.leanhtai01.archinstall.partition;
 
+import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
+
+import java.io.IOException;
+import java.util.List;
+
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 import com.leanhtai01.lib.InputValidation;
 
@@ -13,7 +18,9 @@ public final class PartitionLayoutMenu {
         System.console().printf("? ");
     }
 
-    public static PartitionLayout getPartitionLayout() {
+    public static PartitionLayout getPartitionLayout() throws IOException, InterruptedException {
+        runVerbose(List.of("lsblk"));
+
         System.console().printf("Enter disk's name (e.g. nvme0n1, sda): ");
         String diskName = System.console().readLine();
 
