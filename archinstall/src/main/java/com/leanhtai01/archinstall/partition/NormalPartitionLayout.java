@@ -36,7 +36,7 @@ public class NormalPartitionLayout implements PartitionLayout {
         this.swapSize = swapSize;
     }
 
-    public Partition getRootPartition() {
+    public Partition getRoot() {
         return rootPartition;
     }
 

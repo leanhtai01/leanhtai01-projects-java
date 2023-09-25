@@ -49,7 +49,7 @@ public class LVMOnLUKSPartitionLayout implements PartitionLayout {
     }
 
     @Override
-    public Partition getRootPartition() {
+    public Partition getRoot() {
         return linuxLUKSPartition;
     }
 

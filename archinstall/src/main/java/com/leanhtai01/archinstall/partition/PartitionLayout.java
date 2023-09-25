@@ -3,7 +3,7 @@ package com.leanhtai01.archinstall.partition;
 import java.io.IOException;
 
 public interface PartitionLayout {
-    Mountable getRootPartition();
+    Mountable getRoot();
 
     void create() throws InterruptedException, IOException;
 

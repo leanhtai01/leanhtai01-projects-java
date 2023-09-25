@@ -207,7 +207,7 @@ public class BaseSystemInstall {
             writer.println("linux /vmlinuz-linux");
             writer.println("initrd /intel-ucode.img");
             writer.println("initrd /initramfs-linux.img");
-            writer.println("options root=UUID=%s rw".formatted(partitionLayout.getRootPartition().getUUID()));
+            writer.println("options root=UUID=%s rw".formatted(partitionLayout.getRoot().getUUID()));
         }
     }
 

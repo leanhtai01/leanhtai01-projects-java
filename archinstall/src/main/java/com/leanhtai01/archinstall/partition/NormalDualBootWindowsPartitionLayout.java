@@ -45,7 +45,7 @@ public class NormalDualBootWindowsPartitionLayout implements PartitionLayout {
     }
 
     @Override
-    public Partition getRootPartition() {
+    public Partition getRoot() {
         return rootPartition;
     }
 
