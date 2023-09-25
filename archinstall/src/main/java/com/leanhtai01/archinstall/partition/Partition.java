@@ -1,14 +1,8 @@
 package com.leanhtai01.archinstall.partition;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
-import com.leanhtai01.archinstall.util.ShellUtil;
 
-public class Partition {
+public class Partition implements Mountable {
     private String diskName;
     private int partitionNumber;
     private String type;
@@ -88,10 +82,12 @@ public class Partition {
         this.size = size;
     }
 
+    @Override
     public String getMountPoint() {
         return mountPoint;
     }
 
+    @Override
     public void setMountPoint(String mountPoint) {
         this.mountPoint = mountPoint;
     }
@@ -100,17 +96,9 @@ public class Partition {
         return "/dev/%s".formatted(diskName);
     }
 
-    public String getPathToPartition() {
+    @Override
+    public String getPath() {
         return diskName.startsWith("nvme") ? "%sp%d".formatted(getPathToDisk(), partitionNumber)
                 : getPathToDisk() + partitionNumber;
-    }
-
-    public void mount() throws InterruptedException, IOException {
-        Files.createDirectories(Paths.get(mountPoint));
-        ShellUtil.runVerbose(List.of("mount", getPathToPartition(), mountPoint));
-    }
-
-    public String getUUID() throws IOException {
-        return ShellUtil.runGetOutput(List.of("blkid", "-s", "UUID", "-o", "value", getPathToPartition()));
     }
 }

@@ -15,6 +15,7 @@ public final class PartitionLayoutMenu {
     public static void displayPartitionLayoutSelectMenu() {
         System.console().printf("1. Unencrypted partition layout%n");
         System.console().printf("2. Unencrypted dual boot Windows partition layout%n");
+        System.console().printf("3. LVM on LUKS Partition Layout%n");
         System.console().printf("? ");
     }
 
@@ -27,7 +28,7 @@ public final class PartitionLayoutMenu {
         System.console().printf("Enter swap size: ");
         long swapSize = Long.parseLong(System.console().readLine());
 
-        int choice = InputValidation.chooseIntegerOption(PartitionLayoutMenu::displayPartitionLayoutSelectMenu, 1, 2);
+        int choice = InputValidation.chooseIntegerOption(PartitionLayoutMenu::displayPartitionLayoutSelectMenu, 1, 3);
         PartitionLayout partitionLayout = null;
 
         if (choice == 1) {
@@ -38,6 +39,14 @@ public final class PartitionLayoutMenu {
             partitionLayout = new UnencryptedDualBootWindowsPartitionLayout(
                     diskName, new StorageDeviceSize(550L, "M"),
                     new StorageDeviceSize(swapSize, "G"));
+        } else if (choice == 3) {
+            String password = InputValidation.readPasswordFromConsole(
+                    "LUKS's password: ",
+                    "Re-enter LUKS's password: ",
+                    "Two password isn't the same. Please try again!%n");
+            partitionLayout = new LVMOnLUKSPartitionLayout(diskName, new StorageDeviceSize(550L, "M"),
+                    new StorageDeviceSize(550L, "M"),
+                    new StorageDeviceSize(swapSize, "G"), password);
         }
 
         return partitionLayout;

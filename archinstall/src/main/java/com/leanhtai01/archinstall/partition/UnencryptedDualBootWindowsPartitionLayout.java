@@ -33,15 +33,15 @@ public class UnencryptedDualBootWindowsPartitionLayout implements PartitionLayou
         espPartition = new Partition(diskName, 1, "/mnt/efi");
         xbootldrPartition = createXBOOTLDRPartition(diskName, 5, xbootldrSize, "/mnt/boot");
         var swapPartition = createSwapPartition(diskName, 6, swapSize, null);
-        rootPartition = createLinuxRootPartition(diskName, 7, new StorageDeviceSize(0L, null), "/mnt");
+        rootPartition = createLinuxRootPartition(diskName, 7, null, "/mnt");
 
-        wipeDeviceSignature(xbootldrPartition.getPathToPartition());
-        wipeDeviceSignature(swapPartition.getPathToPartition());
-        wipeDeviceSignature(rootPartition.getPathToPartition());
+        wipeDeviceSignature(xbootldrPartition.getPath());
+        wipeDeviceSignature(swapPartition.getPath());
+        wipeDeviceSignature(rootPartition.getPath());
 
-        formatFAT32(xbootldrPartition.getPathToPartition());
-        makeSwap(swapPartition.getPathToPartition());
-        formatEXT4(rootPartition.getPathToPartition());
+        formatFAT32(xbootldrPartition.getPath());
+        makeSwap(swapPartition.getPath());
+        formatEXT4(rootPartition.getPath());
     }
 
     @Override

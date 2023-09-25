@@ -46,17 +46,17 @@ public class UnencryptedPartitionLayout implements PartitionLayout {
         espPartition = createEFIPartition(diskName, 1, espSize, "/mnt/efi");
         xbootldrPartition = createXBOOTLDRPartition(diskName, 2, xbootldrSize, "/mnt/boot");
         var swapPartition = createSwapPartition(diskName, 3, swapSize, null);
-        rootPartition = createLinuxRootPartition(diskName, 4, new StorageDeviceSize(0L, null), "/mnt");
+        rootPartition = createLinuxRootPartition(diskName, 4, null, "/mnt");
 
-        wipeDeviceSignature(espPartition.getPathToPartition());
-        wipeDeviceSignature(xbootldrPartition.getPathToPartition());
-        wipeDeviceSignature(swapPartition.getPathToPartition());
-        wipeDeviceSignature(rootPartition.getPathToPartition());
+        wipeDeviceSignature(espPartition.getPath());
+        wipeDeviceSignature(xbootldrPartition.getPath());
+        wipeDeviceSignature(swapPartition.getPath());
+        wipeDeviceSignature(rootPartition.getPath());
 
-        formatFAT32(espPartition.getPathToPartition());
-        formatFAT32(xbootldrPartition.getPathToPartition());
-        makeSwap(swapPartition.getPathToPartition());
-        formatEXT4(rootPartition.getPathToPartition());
+        formatFAT32(espPartition.getPath());
+        formatFAT32(xbootldrPartition.getPath());
+        makeSwap(swapPartition.getPath());
+        formatEXT4(rootPartition.getPath());
     }
 
     public void mount() throws InterruptedException, IOException {

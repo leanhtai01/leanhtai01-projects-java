@@ -8,7 +8,7 @@ public final class InputValidation {
         int number = Integer.parseInt(input);
 
         if (number < from || number > to) {
-            throw new IllegalArgumentException("The input must be in range [%d, %d]".formatted(from, to));
+            throw new IllegalArgumentException("The input must be in range [%d, %d]%n".formatted(from, to));
         }
 
         return number;
