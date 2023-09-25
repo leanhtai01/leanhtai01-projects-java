@@ -32,11 +32,11 @@ public final class PartitionLayoutMenu {
         PartitionLayout partitionLayout = null;
 
         if (choice == 1) {
-            partitionLayout = new UnencryptedPartitionLayout(diskName,
+            partitionLayout = new NormalPartitionLayout(diskName,
                     new StorageDeviceSize(550L, "M"), new StorageDeviceSize(550L, "M"),
                     new StorageDeviceSize(swapSize, "G"));
         } else if (choice == 2) {
-            partitionLayout = new UnencryptedDualBootWindowsPartitionLayout(
+            partitionLayout = new NormalDualBootWindowsPartitionLayout(
                     diskName, new StorageDeviceSize(550L, "M"),
                     new StorageDeviceSize(swapSize, "G"));
         } else if (choice == 3) {

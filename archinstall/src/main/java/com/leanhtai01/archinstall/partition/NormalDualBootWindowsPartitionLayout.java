@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
-public class UnencryptedDualBootWindowsPartitionLayout implements PartitionLayout {
+public class NormalDualBootWindowsPartitionLayout implements PartitionLayout {
     private String diskName;
     private StorageDeviceSize xbootldrSize;
     private StorageDeviceSize swapSize;
@@ -21,7 +21,7 @@ public class UnencryptedDualBootWindowsPartitionLayout implements PartitionLayou
     private Partition xbootldrPartition;
     private Partition rootPartition;
 
-    public UnencryptedDualBootWindowsPartitionLayout(String diskName, StorageDeviceSize xbootldrSize,
+    public NormalDualBootWindowsPartitionLayout(String diskName, StorageDeviceSize xbootldrSize,
             StorageDeviceSize swapSize) {
         this.diskName = diskName;
         this.xbootldrSize = xbootldrSize;

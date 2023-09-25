@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
-public class UnencryptedPartitionLayout implements PartitionLayout {
+public class NormalPartitionLayout implements PartitionLayout {
     private String diskName;
     private StorageDeviceSize espSize;
     private StorageDeviceSize xbootldrSize;
@@ -25,7 +25,7 @@ public class UnencryptedPartitionLayout implements PartitionLayout {
     private Partition xbootldrPartition;
     private Partition rootPartition;
 
-    public UnencryptedPartitionLayout(
+    public NormalPartitionLayout(
             String diskName,
             StorageDeviceSize espSize,
             StorageDeviceSize xbootldrSize,
