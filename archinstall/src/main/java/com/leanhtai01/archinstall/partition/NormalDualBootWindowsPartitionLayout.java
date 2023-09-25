@@ -19,6 +19,7 @@ public class NormalDualBootWindowsPartitionLayout implements PartitionLayout {
 
     private Partition espPartition;
     private Partition xbootldrPartition;
+    private Partition swapPartition;
     private Partition rootPartition;
 
     public NormalDualBootWindowsPartitionLayout(String diskName, StorageDeviceSize xbootldrSize,
@@ -29,10 +30,20 @@ public class NormalDualBootWindowsPartitionLayout implements PartitionLayout {
     }
 
     @Override
+    public Partition getRoot() {
+        return rootPartition;
+    }
+
+    @Override
+    public Partition getSwap() {
+        return swapPartition;
+    }
+
+    @Override
     public void create() throws InterruptedException, IOException {
         espPartition = new Partition(diskName, 1, "/mnt/efi");
         xbootldrPartition = createXBOOTLDRPartition(diskName, 5, xbootldrSize, "/mnt/boot");
-        var swapPartition = createSwapPartition(diskName, 6, swapSize, null);
+        swapPartition = createSwapPartition(diskName, 6, swapSize, null);
         rootPartition = createLinuxRootPartition(diskName, 7, null, "/mnt");
 
         wipeDeviceSignature(xbootldrPartition.getPath());
@@ -42,11 +53,6 @@ public class NormalDualBootWindowsPartitionLayout implements PartitionLayout {
         formatFAT32(xbootldrPartition.getPath());
         makeSwap(swapPartition.getPath());
         formatEXT4(rootPartition.getPath());
-    }
-
-    @Override
-    public Partition getRoot() {
-        return rootPartition;
     }
 
     @Override

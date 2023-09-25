@@ -3,8 +3,10 @@ package com.leanhtai01.archinstall.osinstall;
 import static com.leanhtai01.archinstall.util.ConfigUtil.backupFile;
 import static com.leanhtai01.archinstall.util.ConfigUtil.disableService;
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
+import static com.leanhtai01.archinstall.util.ConfigUtil.findAndReplaceInLine;
 import static com.leanhtai01.archinstall.util.ConfigUtil.stopService;
 import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
+import static com.leanhtai01.archinstall.util.PackageUtil.isPackageInstalled;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChroot;
 import static com.leanhtai01.archinstall.util.ShellUtil.runAppendOutputToFile;
 import static com.leanhtai01.archinstall.util.ShellUtil.runSetInput;
@@ -19,12 +21,15 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.leanhtai01.archinstall.partition.LVMOnLUKSPartitionLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class BaseSystemInstall {
     private static final String CHROOT_DIR = "/mnt";
     private static final String PATH_TO_SUDOERS = CHROOT_DIR + "/etc/sudoers";
+    private static final String PATH_TO_MKINITCPIO_CONFIG = CHROOT_DIR + "/etc/mkinitcpio.conf";
+    private static final String MKINITCPIO_HOOKS_LINE_PATTERN = "^HOOKS=\\(.*\\)$";
 
     private PartitionLayout partitionLayout;
     private List<String> mirrors;
@@ -189,6 +194,34 @@ public class BaseSystemInstall {
         }
     }
 
+    public void buildInitramfsImageMkinitcpio() throws IOException, InterruptedException {
+        runVerbose(getCommandRunChroot(List.of("mkinitcpio", "-p", "linux"), CHROOT_DIR));
+    }
+
+    public void configureMkinitcpioForHibernation() throws IOException, InterruptedException {
+        backupFile(PATH_TO_MKINITCPIO_CONFIG);
+        findAndReplaceInLine(PATH_TO_MKINITCPIO_CONFIG, MKINITCPIO_HOOKS_LINE_PATTERN,
+                "filesystems", "filesystems resume");
+        buildInitramfsImageMkinitcpio();
+    }
+
+    public void configureMkinitcpioForEncryptedRootFileSystem() throws IOException, InterruptedException {
+        if (!isPackageInstalled("lvm2", CHROOT_DIR)) {
+            installMainReposPkgs(List.of("lvm2"), CHROOT_DIR);
+        }
+
+        backupFile(PATH_TO_MKINITCPIO_CONFIG);
+
+        findAndReplaceInLine(PATH_TO_MKINITCPIO_CONFIG, MKINITCPIO_HOOKS_LINE_PATTERN,
+                " keyboard", "");
+        findAndReplaceInLine(PATH_TO_MKINITCPIO_CONFIG, MKINITCPIO_HOOKS_LINE_PATTERN,
+                "autodetect", "autodetect keyboard keymap");
+        findAndReplaceInLine(PATH_TO_MKINITCPIO_CONFIG, MKINITCPIO_HOOKS_LINE_PATTERN,
+                "block", "block encrypt lvm2");
+
+        buildInitramfsImageMkinitcpio();
+    }
+
     public void configureSystemdBootloader() throws InterruptedException, IOException {
         installMainReposPkgs(List.of("efibootmgr", "intel-ucode"), CHROOT_DIR);
 
@@ -207,7 +240,18 @@ public class BaseSystemInstall {
             writer.println("linux /vmlinuz-linux");
             writer.println("initrd /intel-ucode.img");
             writer.println("initrd /initramfs-linux.img");
-            writer.println("options root=UUID=%s rw".formatted(partitionLayout.getRoot().getUUID()));
+
+            configureMkinitcpioForHibernation();
+            if (partitionLayout instanceof LVMOnLUKSPartitionLayout layout) {
+                configureMkinitcpioForEncryptedRootFileSystem();
+                writer.print("options cryptdevice=UUID=%s:%s"
+                        .formatted(layout.getLinuxLUKSPartition().getUUID(), layout.getLUKSMapperName()));
+                writer.print(" root=%s".formatted(layout.getRoot().getPath()));
+                writer.println(" resume=UUID=%s rw".formatted(layout.getSwap().getUUID()));
+            } else {
+                writer.print("options root=UUID=%s".formatted(partitionLayout.getRoot().getUUID()));
+                writer.println(" resume=UUID=%s rw".formatted(partitionLayout.getSwap().getUUID()));
+            }
         }
     }
 

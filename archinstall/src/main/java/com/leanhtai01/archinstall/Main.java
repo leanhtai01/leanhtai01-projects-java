@@ -32,8 +32,10 @@ import com.leanhtai01.archinstall.osinstall.tool.OfficeInstall;
 import com.leanhtai01.archinstall.osinstall.tool.RemoteDesktopInstall;
 import com.leanhtai01.archinstall.osinstall.virtualmachine.KVMInstall;
 import com.leanhtai01.archinstall.osinstall.virtualmachine.VirtualBoxInstall;
+import com.leanhtai01.archinstall.partition.NormalPartitionLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayoutMenu;
+import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.systeminfo.WirelessNetwork;
 import com.leanhtai01.lib.InputValidation;
@@ -43,6 +45,8 @@ public class Main {
     private static final String HOST_NAME;
     private static final String ROOT_PASSWORD;
     private static final UserAccount USER_ACCOUNT;
+    private static final List<String> mirrors;
+    private static final BaseSystemInstall baseSystemInstall;
 
     static {
         System.console().printf("Hostname: ");
@@ -65,15 +69,33 @@ public class Main {
                 "Two password isn't the same. Please try again!%n");
 
         USER_ACCOUNT = new UserAccount(realName, username, userPassword);
+
+        PartitionLayout partitionLayout;
+        try {
+            partitionLayout = PartitionLayoutMenu.getPartitionLayout();
+        } catch (IOException | InterruptedException e) {
+            partitionLayout = new NormalPartitionLayout("sda",
+                    new StorageDeviceSize(550L, "M"), new StorageDeviceSize(550L, "M"),
+                    new StorageDeviceSize(1L, "G"));
+            Thread.currentThread().interrupt();
+        }
+
+        String[] mirrorsArray = new String[3];
+        Arrays.fill(mirrorsArray, "Server = https://mirror.xtom.com.hk/archlinux/$repo/os/$arch");
+        mirrors = Arrays.asList(mirrorsArray);
+
+        baseSystemInstall = new BaseSystemInstall(partitionLayout, mirrors, HOST_NAME,
+                ROOT_PASSWORD, USER_ACCOUNT);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        int choice = InputValidation.chooseIntegerOption(Main::displayMainMenu, 1, 3);
+        int choice = InputValidation.chooseIntegerOption(Main::displayMainMenu, 1, 4);
 
         switch (choice) {
-            case 1 -> installSystem();
+            case 1 -> baseSystemInstall.install();
             case 2 -> installLightweightSystem();
-            case 3 -> {
+            case 3 -> installFullSystem();
+            case 4 -> {
                 configureGNOME();
                 installFlatpakPkgs();
             }
@@ -83,21 +105,15 @@ public class Main {
 
     private static void displayMainMenu() {
         System.console().printf("Menu option:%n");
-        System.console().printf("1. Install system%n");
+        System.console().printf("1. Install base system%n");
         System.console().printf("2. Install lightweight system%n");
-        System.console().printf("3. Install Flatpak packages, configure GNOME%n");
+        System.console().printf("3. Install full system%n");
+        System.console().printf("4. Install Flatpak packages, configure GNOME%n");
         System.console().printf("? ");
     }
 
     public static void installLightweightSystem() throws IOException, InterruptedException {
         connectToWifi();
-
-        PartitionLayout partitionLayout = PartitionLayoutMenu.getPartitionLayout();
-        String[] mirrorsArray = new String[3];
-        Arrays.fill(mirrorsArray, "Server = https://mirror.xtom.com.hk/archlinux/$repo/os/$arch");
-        List<String> mirrors = Arrays.asList(mirrorsArray);
-        BaseSystemInstall baseSystemInstall = new BaseSystemInstall(partitionLayout, mirrors, HOST_NAME,
-                ROOT_PASSWORD, USER_ACCOUNT);
 
         baseSystemInstall.install();
 
@@ -116,15 +132,8 @@ public class Main {
         installPkgs(List.of("firefox"), USER_ACCOUNT, CHROOT_DIR);
     }
 
-    private static void installSystem() throws InterruptedException, IOException {
+    private static void installFullSystem() throws InterruptedException, IOException {
         connectToWifi();
-
-        PartitionLayout partitionLayout = PartitionLayoutMenu.getPartitionLayout();
-        String[] mirrorsArray = new String[3];
-        Arrays.fill(mirrorsArray, "Server = https://mirror.xtom.com.hk/archlinux/$repo/os/$arch");
-        List<String> mirrors = Arrays.asList(mirrorsArray);
-        BaseSystemInstall baseSystemInstall = new BaseSystemInstall(partitionLayout, mirrors, HOST_NAME,
-                ROOT_PASSWORD, USER_ACCOUNT);
 
         baseSystemInstall.install();
 

@@ -8,8 +8,6 @@ import static com.leanhtai01.archinstall.util.PackageUtil.isInMainRepos;
 import static com.leanhtai01.archinstall.util.PackageUtil.isPackageInstalled;
 import static com.leanhtai01.archinstall.util.ShellUtil.runGetOutput;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
-import static java.lang.invoke.MethodHandles.lookup;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,14 +17,11 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-
 import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.Pair;
 
 public class GNOMEInstall extends SoftwareInstall {
-    private static final Logger LOGGER = getLogger(lookup().lookupClass());
     private static final String GSETTINGS_COMMAND = "gsettings";
 
     private static final String GSETTINGS_CUSTOM_KEYBINDINGS_KEY = "custom-keybindings";
@@ -93,7 +88,7 @@ public class GNOMEInstall extends SoftwareInstall {
     public void configureIbusBamboo() throws InterruptedException, IOException {
         if (!isPackageInstalled("ibus-bamboo", chrootDir)) {
             installPkgs(List.of("ibus-bamboo"), userAccount, chrootDir);
-            LOGGER.info("Please restart then run the configure for ibus-bamboo again.");
+            System.console().printf("Please restart then run the configure for ibus-bamboo again.");
             return;
         }
 

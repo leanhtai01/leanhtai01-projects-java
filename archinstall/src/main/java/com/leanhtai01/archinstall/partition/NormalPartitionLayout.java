@@ -23,6 +23,7 @@ public class NormalPartitionLayout implements PartitionLayout {
 
     private Partition espPartition;
     private Partition xbootldrPartition;
+    private Partition swapPartition;
     private Partition rootPartition;
 
     public NormalPartitionLayout(
@@ -36,8 +37,14 @@ public class NormalPartitionLayout implements PartitionLayout {
         this.swapSize = swapSize;
     }
 
+    @Override
     public Partition getRoot() {
         return rootPartition;
+    }
+
+    @Override
+    public Partition getSwap() {
+        return swapPartition;
     }
 
     public void create() throws InterruptedException, IOException {
@@ -45,7 +52,7 @@ public class NormalPartitionLayout implements PartitionLayout {
 
         espPartition = createEFIPartition(diskName, 1, espSize, "/mnt/efi");
         xbootldrPartition = createXBOOTLDRPartition(diskName, 2, xbootldrSize, "/mnt/boot");
-        var swapPartition = createSwapPartition(diskName, 3, swapSize, null);
+        swapPartition = createSwapPartition(diskName, 3, swapSize, null);
         rootPartition = createLinuxRootPartition(diskName, 4, null, "/mnt");
 
         wipeDeviceSignature(espPartition.getPath());

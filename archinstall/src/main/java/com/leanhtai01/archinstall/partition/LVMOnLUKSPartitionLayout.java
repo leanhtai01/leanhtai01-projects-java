@@ -32,6 +32,7 @@ public class LVMOnLUKSPartitionLayout implements PartitionLayout {
     private static final String LUKS_MAPPER_NAME = "encrypt-lvm";
     private static final String VG_NAME = "vg-system";
     private static final String LUKS_MAPPER_DEVICE_PATH = "/dev/mapper/%s".formatted(LUKS_MAPPER_NAME);
+    private LogicalVolume swapVolume;
     private LogicalVolume rootVolume;
     private String password;
 
@@ -48,9 +49,22 @@ public class LVMOnLUKSPartitionLayout implements PartitionLayout {
         this.password = password;
     }
 
-    @Override
-    public Partition getRoot() {
+    public String getLUKSMapperName() {
+        return LUKS_MAPPER_NAME;
+    }
+
+    public Partition getLinuxLUKSPartition() {
         return linuxLUKSPartition;
+    }
+
+    @Override
+    public LogicalVolume getRoot() {
+        return rootVolume;
+    }
+
+    @Override
+    public LogicalVolume getSwap() {
+        return swapVolume;
     }
 
     @Override
@@ -60,7 +74,7 @@ public class LVMOnLUKSPartitionLayout implements PartitionLayout {
         espPartition = createEFIPartition(diskName, 1, espSize, "/mnt/efi");
         xbootldrPartition = createXBOOTLDRPartition(diskName, 2, xbootldrSize, "/mnt/boot");
         linuxLUKSPartition = createLinuxLUKSPartition(diskName, 3, null);
-        LogicalVolume swapVolume = new LogicalVolume(VG_NAME, "swap", swapSize, null);
+        swapVolume = new LogicalVolume(VG_NAME, "swap", swapSize, null);
         rootVolume = new LogicalVolume(VG_NAME, "root", null, "/mnt");
 
         wipeDeviceSignature(espPartition.getPath());
