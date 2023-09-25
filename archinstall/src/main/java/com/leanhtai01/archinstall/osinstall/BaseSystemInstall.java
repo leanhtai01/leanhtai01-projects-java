@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.leanhtai01.archinstall.partition.LVMOnLUKSPartitionLayout;
+import com.leanhtai01.archinstall.partition.LVMOnLUKSLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
@@ -242,15 +242,15 @@ public class BaseSystemInstall {
             writer.println("initrd /initramfs-linux.img");
 
             configureMkinitcpioForHibernation();
-            if (partitionLayout instanceof LVMOnLUKSPartitionLayout layout) {
+            if (partitionLayout instanceof LVMOnLUKSLayout layout) {
                 configureMkinitcpioForEncryptedRootFileSystem();
                 writer.print("options cryptdevice=UUID=%s:%s"
                         .formatted(layout.getLinuxLUKSPartition().getUUID(), layout.getLUKSMapperName()));
                 writer.print(" root=%s".formatted(layout.getRoot().getPath()));
                 writer.println(" resume=UUID=%s rw".formatted(layout.getSwap().getUUID()));
-            } else {
-                writer.print("options root=UUID=%s".formatted(partitionLayout.getRoot().getUUID()));
-                writer.println(" resume=UUID=%s rw".formatted(partitionLayout.getSwap().getUUID()));
+            } else if (partitionLayout instanceof PartitionLayout layout) {
+                writer.print("options root=UUID=%s".formatted(layout.getRoot().getUUID()));
+                writer.println(" resume=UUID=%s rw".formatted(layout.getSwap().getUUID()));
             }
         }
     }
