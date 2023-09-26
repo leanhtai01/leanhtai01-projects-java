@@ -59,9 +59,9 @@ public final class InputValidation {
         return choice;
     }
 
-    public static List<Integer> parseRangeIntegerChoice(String input) {
+    public static List<Integer> parseRangeIntegerChoice(String input, int minChoice, int maxChoice) {
         List<Integer> choices = new ArrayList<>();
-        Pattern enumeratePattern = Pattern.compile("^\\d[\\s+\\d]+");
+        Pattern enumeratePattern = Pattern.compile("^\\d[\\s\\d]*");
         Pattern rangePattern = Pattern.compile("^\\d-\\d");
 
         if (enumeratePattern.matcher(input).matches()) {
@@ -76,6 +76,13 @@ public final class InputValidation {
                 for (int i = min; i <= max; i++) {
                     choices.add(i);
                 }
+            }
+        }
+
+        for (Integer choice : choices) {
+            if (choice < minChoice || choice > maxChoice) {
+                choices = List.of();
+                break;
             }
         }
 
