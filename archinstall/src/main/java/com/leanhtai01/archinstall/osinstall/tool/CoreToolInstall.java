@@ -18,7 +18,7 @@ public class CoreToolInstall extends SoftwareInstall {
         installPkgs(List.of("keepassxc", "expect", "pacman-contrib", "dosfstools", "p7zip", "unarchiver",
                 "bash-completion", "flatpak", "tree", "archiso", "rclone", "rsync", "transmission-gtk", "lm_sensors",
                 "ntfs-3g", "gparted", "exfatprogs", "pdftk", "youtube-dl", "ufw", "ufw-extras", "filezilla",
-                "texlive-most", "krusader", "ibus-bamboo"), userAccount, chrootDir);
+                "texlive-most", "krusader", "ibus-bamboo", "gptfdisk"), userAccount, chrootDir);
 
         return 0;
     }

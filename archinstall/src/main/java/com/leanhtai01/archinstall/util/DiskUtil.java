@@ -4,6 +4,8 @@ import static com.leanhtai01.archinstall.util.ShellUtil.runSetInput;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +14,7 @@ import com.leanhtai01.archinstall.partition.Partition;
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
 public final class DiskUtil {
+    private static final String CRYPTSETUP = "cryptsetup";
     private DiskUtil() {
     }
 
@@ -100,7 +103,7 @@ public final class DiskUtil {
 
     public static Partition createLUKSContainer(Partition partition, String password)
             throws IOException, InterruptedException {
-        runSetInput(List.of("cryptsetup", "luksFormat", "--type", "luks2", partition.getPath()),
+        runSetInput(List.of(CRYPTSETUP, "luksFormat", "--type", "luks2", partition.getPath()),
                 List.of(password));
 
         return partition;
@@ -108,9 +111,34 @@ public final class DiskUtil {
 
     public static Partition openLUKSContainer(Partition partition, String luksMapperName, String password)
             throws IOException, InterruptedException {
-        runSetInput(List.of("cryptsetup", "open", partition.getPath(), luksMapperName), List.of(password));
+        runSetInput(List.of(CRYPTSETUP, "open", partition.getPath(), luksMapperName), List.of(password));
 
         return partition;
+    }
+
+    public static Partition encryptDiskUsingLUKS(String diskName, String luksMapperName, String luksPassword)
+            throws InterruptedException, IOException {
+        final String LUKS_MAPPER_DEVICE_PATH = "/dev/mapper/%s".formatted(luksMapperName);
+
+        eraseDisk("/dev/%s".formatted(diskName));
+
+        Partition linuxLUKSPartition = createLinuxLUKSPartition(diskName, 1, null);
+        wipeDeviceSignature(linuxLUKSPartition.getPath());
+
+        createLUKSContainer(linuxLUKSPartition, luksPassword);
+        openLUKSContainer(linuxLUKSPartition, luksMapperName, luksPassword);
+
+        wipeDeviceSignature(LUKS_MAPPER_DEVICE_PATH);
+        formatEXT4(LUKS_MAPPER_DEVICE_PATH);
+
+        runVerbose(List.of(CRYPTSETUP, "close", luksMapperName));
+
+        return linuxLUKSPartition;
+    }
+
+    public static void mount(String pathToDevice, String mountPoint) throws IOException, InterruptedException {
+        Files.createDirectories(Paths.get(mountPoint));
+        runVerbose(List.of("mount", pathToDevice, mountPoint));
     }
 
     public static void makeSwap(String pathToDevice) throws InterruptedException, IOException {

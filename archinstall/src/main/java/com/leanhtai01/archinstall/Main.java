@@ -1,8 +1,10 @@
 package com.leanhtai01.archinstall;
 
+import static com.leanhtai01.archinstall.util.DiskUtil.encryptDiskUsingLUKS;
 import static com.leanhtai01.archinstall.util.PackageUtil.installFlatpakPackages;
 import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
 import static com.leanhtai01.archinstall.util.ShellUtil.runSilent;
+import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -89,7 +91,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        int choice = InputValidation.chooseIntegerOption(Main::displayMainMenu, 1, 4);
+        int choice = InputValidation.chooseIntegerOption(Main::displayMainMenu, 1, 5);
 
         switch (choice) {
             case 1 -> baseSystemInstall.install();
@@ -99,6 +101,7 @@ public class Main {
                 configureGNOME();
                 installFlatpakPkgs();
             }
+            case 5 -> encryptDisk();
             default -> System.console().printf("Invalid choice!");
         }
     }
@@ -109,6 +112,7 @@ public class Main {
         System.console().printf("2. Install lightweight system%n");
         System.console().printf("3. Install full system%n");
         System.console().printf("4. Install Flatpak packages, configure GNOME%n");
+        System.console().printf("5. Encrypt disk%n");
         System.console().printf("? ");
     }
 
@@ -224,6 +228,23 @@ public class Main {
         VirtualBoxInstall virtualBoxInstall = new VirtualBoxInstall(CHROOT_DIR, USER_ACCOUNT);
         virtualBoxInstall.install();
         virtualBoxInstall.config();
+    }
+
+    public static void encryptDisk() throws InterruptedException, IOException {
+        runVerbose(List.of("lsblk"));
+
+        System.console().printf("Enter disk name: ");
+        String diskName = System.console().readLine();
+
+        System.console().printf("Enter mapper name: ");
+        String mapperName = System.console().readLine();
+
+        String password = InputValidation.readPasswordFromConsole(
+                "Enter password: ",
+                "Re-enter password: ",
+                "Two password isn't the same. Please try again!");
+
+        encryptDiskUsingLUKS(diskName, mapperName, password);
     }
 
     public static void connectToWifi() throws InterruptedException, IOException {
