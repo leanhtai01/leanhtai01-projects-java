@@ -74,7 +74,8 @@ public class Main {
 
         PartitionLayout partitionLayout;
         try {
-            partitionLayout = PartitionLayoutMenu.getPartitionLayout();
+            PartitionLayoutMenu partitionLayoutMenu = new PartitionLayoutMenu();
+            partitionLayout = partitionLayoutMenu.getPartitionLayout();
         } catch (IOException | InterruptedException e) {
             partitionLayout = new NormalPartitionLayout("sda",
                     new StorageDeviceSize(550L, "M"), new StorageDeviceSize(550L, "M"),

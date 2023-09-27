@@ -1,7 +1,7 @@
 package com.leanhtai01.lib;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -10,7 +10,14 @@ public final class InputValidation {
     private InputValidation() {
     }
 
-    public static int isValidInteger(String input, int from, int to) {
+    public static void displayMenu(List<String> menu, String promptMessage) {
+        for (int i = 0; i < menu.size(); i++) {
+            System.console().printf("%d. %s%n", i + 1, menu.get(i));
+        }
+        System.console().printf(promptMessage);
+    }
+
+    public static int parseIntegerChoice(String input, int from, int to) {
         int number = Integer.parseInt(input);
 
         if (number < from || number > to) {
@@ -48,7 +55,7 @@ public final class InputValidation {
             displayMenu.run();
             try {
                 String input = System.console().readLine();
-                choice = isValidInteger(input, minChoice, maxChoice);
+                choice = parseIntegerChoice(input, minChoice, maxChoice);
                 isValidChoice = true;
             } catch (IllegalArgumentException e) {
                 isValidChoice = false;
@@ -59,14 +66,23 @@ public final class InputValidation {
         return choice;
     }
 
-    public static List<Integer> parseRangeIntegerChoice(String input, int minChoice, int maxChoice) {
-        List<Integer> choices = new ArrayList<>();
+    public static boolean isValidIntegerChoices(Set<Integer> choices, int min, int max) {
+        for (Integer choice : choices) {
+            if (choice < min || choice > max) {
+                return false;
+            }
+        }
+
+        return !choices.isEmpty();
+    }
+
+    public static Set<Integer> parseRangeIntegerChoice(String input, int minChoice, int maxChoice) {
+        Set<Integer> choices = new HashSet<>();
         Pattern enumeratePattern = Pattern.compile("^\\d[\\s\\d]*");
         Pattern rangePattern = Pattern.compile("^\\d-\\d");
 
         if (enumeratePattern.matcher(input).matches()) {
-            choices = new ArrayList<>(
-                    Set.copyOf(Arrays.asList(input.split(" ")).stream().map(Integer::parseInt).toList()));
+            choices = new HashSet<>(Arrays.asList(input.split(" ")).stream().map(Integer::parseInt).toList());
         } else if (rangePattern.matcher(input).matches()) {
             String[] minMax = input.split("-");
             int min = Integer.parseInt(minMax[0]);
@@ -77,15 +93,12 @@ public final class InputValidation {
                     choices.add(i);
                 }
             }
-        }
-
-        for (Integer choice : choices) {
-            if (choice < minChoice || choice > maxChoice) {
-                choices = List.of();
-                break;
+        } else if (input.trim().isBlank()) {
+            for (int i = minChoice; i <= maxChoice; i++) {
+                choices.add(i);
             }
         }
 
-        return choices;
+        return isValidIntegerChoices(choices, minChoice, maxChoice) ? choices : new HashSet<>();
     }
 }

@@ -3,24 +3,24 @@ package com.leanhtai01.archinstall.partition;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
-import com.leanhtai01.lib.InputValidation;
+import static com.leanhtai01.lib.InputValidation.*;
 
 public final class PartitionLayoutMenu {
-    private PartitionLayoutMenu() {
+    private List<String> menu;
+
+    public PartitionLayoutMenu() {
+        menu = new ArrayList<>();
+        menu.add("Normal partition layout");
+        menu.add("Normal dual boot Windows partition layout");
+        menu.add("LVM on LUKS partition layout");
+        menu.add("LVM on LUKS dual boot Windows partition layout");
     }
 
-    public static void displayPartitionLayoutSelectMenu() {
-        System.console().printf("1. Normal partition layout%n");
-        System.console().printf("2. Normal dual boot Windows partition layout%n");
-        System.console().printf("3. LVM on LUKS partition layout%n");
-        System.console().printf("4. LVM on LUKS dual boot Windows partition layout%n");
-        System.console().printf("? ");
-    }
-
-    public static PartitionLayout getPartitionLayout() throws IOException, InterruptedException {
+    public PartitionLayout getPartitionLayout() throws IOException, InterruptedException {
         runVerbose(List.of("lsblk"));
 
         System.console().printf("Enter disk's name (e.g. nvme0n1, sda): ");
@@ -29,7 +29,7 @@ public final class PartitionLayoutMenu {
         System.console().printf("Enter swap size: ");
         long swapSize = Long.parseLong(System.console().readLine());
 
-        int choice = InputValidation.chooseIntegerOption(PartitionLayoutMenu::displayPartitionLayoutSelectMenu, 1, 4);
+        int choice = chooseIntegerOption(() -> displayMenu(menu, "? "), 1, menu.size());
         PartitionLayout partitionLayout = null;
 
         switch (choice) {
@@ -63,8 +63,8 @@ public final class PartitionLayoutMenu {
         return partitionLayout;
     }
 
-    private static String getLUKSPassword() {
-        return InputValidation.readPasswordFromConsole(
+    private String getLUKSPassword() {
+        return readPasswordFromConsole(
                 "LUKS's password: ",
                 "Re-enter LUKS's password: ",
                 "Two password isn't the same. Please try again!%n");
