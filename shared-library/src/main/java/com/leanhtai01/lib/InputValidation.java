@@ -66,9 +66,52 @@ public final class InputValidation {
         return choice;
     }
 
-    public static boolean isValidIntegerChoices(Set<Integer> choices, int min, int max) {
+    public static Set<Integer> chooseRangeIntegerOption(List<String> menu, String promptMessage,
+            Set<Integer> choices, int minChoice, int maxChoice, int exitOption) {
+        displayMenu(menu, promptMessage);
+        String input = System.console().readLine();
+        while (!input.trim().equals(String.valueOf(exitOption))) {
+            Set<Integer> newChoices = parseRangeIntegerChoice(input, minChoice, maxChoice);
+            Set<Integer> removedChoices = getRemovedChoices(choices, newChoices);
+            choices.removeAll(removedChoices);
+            newChoices.removeAll(removedChoices);
+
+            choices.addAll(newChoices);
+            updateMenuOption(menu, choices);
+
+            System.console().printf("%n");
+            displayMenu(menu, promptMessage);
+            input = System.console().readLine();
+        }
+
+        return choices;
+    }
+
+    private static Set<Integer> getRemovedChoices(Set<Integer> currentChoices, Set<Integer> newChoices) {
+        Set<Integer> removedChoices = new HashSet<>();
+
+        for (Integer choice : newChoices) {
+            if (currentChoices.contains(choice)) {
+                removedChoices.add(choice);
+            }
+        }
+
+        return removedChoices;
+    }
+
+    private static void updateMenuOption(List<String> menu, Set<Integer> choices) {
+        for (int i = 0; i < menu.size(); i++) {
+            menu.set(i, menu.get(i).replace(" *", ""));
+        }
+
         for (Integer choice : choices) {
-            if (choice < min || choice > max) {
+            menu.set(choice - 1, menu.get(choice - 1).concat(" *"));
+        }
+    }
+
+    public static boolean isValidIntegerChoices(Set<Integer> choices, int minChoice, int maxChoice) {
+        for (Integer choice : choices) {
+            if (choice < minChoice || choice > maxChoice) {
                 return false;
             }
         }
