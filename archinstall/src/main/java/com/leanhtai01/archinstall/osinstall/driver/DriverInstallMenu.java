@@ -1,7 +1,6 @@
 package com.leanhtai01.archinstall.osinstall.driver;
 
 import java.io.IOException;
-import java.util.Set;
 
 import com.leanhtai01.archinstall.osinstall.InstallMenu;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
@@ -15,8 +14,7 @@ public class DriverInstallMenu extends InstallMenu {
     }
 
     @Override
-    public void install()
-            throws IOException, InterruptedException {
+    public void install() throws IOException, InterruptedException {
         for (Integer choice : choices) {
             switch (choice) {
                 case 1 -> {
@@ -39,13 +37,5 @@ public class DriverInstallMenu extends InstallMenu {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        DriverInstallMenu driverInstallMenu = new DriverInstallMenu(null, null);
-        driverInstallMenu.getChoices();
-        driverInstallMenu.setChoices(Set.of(1, 2, 3));
-        driverInstallMenu.getChoices();
-        System.console().printf("%s%n", driverInstallMenu.getInstallSummary());
     }
 }
