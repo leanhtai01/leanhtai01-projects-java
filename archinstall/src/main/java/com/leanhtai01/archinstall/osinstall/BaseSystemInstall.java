@@ -19,32 +19,36 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.leanhtai01.archinstall.partition.LVMOnLUKSLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
+import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class BaseSystemInstall {
+public class BaseSystemInstall extends InstallMenu {
     private static final String CHROOT_DIR = "/mnt";
     private static final String PATH_TO_SUDOERS = CHROOT_DIR + "/etc/sudoers";
     private static final String PATH_TO_MKINITCPIO_CONFIG = CHROOT_DIR + "/etc/mkinitcpio.conf";
     private static final String MKINITCPIO_HOOKS_LINE_PATTERN = "^HOOKS=\\(.*\\)$";
 
-    private PartitionLayout partitionLayout;
-    private List<String> mirrors;
-    private String hostname;
-    private String rootPassword;
+    private SystemInfo systemInfo;
 
-    private UserAccount userAccount;
+    public BaseSystemInstall(SystemInfo systemInfo, UserAccount userAccount) {
+        super(CHROOT_DIR, userAccount);
+        this.systemInfo = systemInfo;
+        menu.add("Install Base System");
+        setChoices(Set.of(1));
+    }
 
-    public BaseSystemInstall(PartitionLayout partitionLayout, List<String> mirrors, String hostname,
-            String rootPassword, UserAccount userAccount) {
-        this.partitionLayout = partitionLayout;
-        this.mirrors = mirrors;
-        this.hostname = hostname;
-        this.rootPassword = rootPassword;
-        this.userAccount = userAccount;
+    @Override
+    public Set<Integer> selectOptions() {
+        return choices;
+    }
+
+    public void setSystemInfo(SystemInfo systemInfo) {
+        this.systemInfo = systemInfo;
     }
 
     public void disableAutoGenerateMirrors() throws InterruptedException, IOException {
@@ -62,15 +66,15 @@ public class BaseSystemInstall {
 
     public void configureMirrors() throws FileNotFoundException {
         try (var writer = new PrintWriter("/etc/pacman.d/mirrorlist")) {
-            for (var mirror : mirrors) {
+            for (var mirror : systemInfo.getMirrors()) {
                 writer.println(mirror);
             }
         }
     }
 
     public void prepareDisk() throws InterruptedException, IOException {
-        partitionLayout.create();
-        partitionLayout.mount();
+        systemInfo.getPartitionLayout().create();
+        systemInfo.getPartitionLayout().mount();
     }
 
     public void installEssentialPackages() throws InterruptedException, IOException {
@@ -129,13 +133,14 @@ public class BaseSystemInstall {
 
     public void configureNetwork() throws IOException, InterruptedException {
         try (var writer = new PrintWriter(CHROOT_DIR + "/etc/hostname")) {
-            writer.println(hostname);
+            writer.println(systemInfo.getHostname());
         }
 
         try (var writer = new PrintWriter(CHROOT_DIR + "/etc/hosts")) {
             writer.append("127.0.0.1\tlocalhost\n");
             writer.append("::1\tlocalhost\n");
-            writer.append("127.0.1.1\t%s.localdomain\t%s%n".formatted(hostname, hostname));
+            writer.append(
+                    "127.0.1.1\t%s.localdomain\t%s%n".formatted(systemInfo.getHostname(), systemInfo.getHostname()));
         }
 
         installMainReposPkgs(List.of("networkmanager"), CHROOT_DIR);
@@ -144,7 +149,8 @@ public class BaseSystemInstall {
 
     public void setRootPassword() throws IOException, InterruptedException {
         List<String> command = List.of("passwd");
-        runSetInput(getCommandRunChroot(command, CHROOT_DIR), List.of(rootPassword, rootPassword));
+        runSetInput(getCommandRunChroot(command, CHROOT_DIR),
+                List.of(systemInfo.getRootPassword(), systemInfo.getRootPassword()));
     }
 
     public void addNormalUser() throws InterruptedException, IOException {
@@ -242,19 +248,20 @@ public class BaseSystemInstall {
             writer.println("initrd /initramfs-linux.img");
 
             configureMkinitcpioForHibernation();
-            if (partitionLayout instanceof LVMOnLUKSLayout layout) {
+            if (systemInfo.getPartitionLayout() instanceof LVMOnLUKSLayout layout) {
                 configureMkinitcpioForEncryptedRootFileSystem();
                 writer.print("options cryptdevice=UUID=%s:%s"
                         .formatted(layout.getLinuxLUKSPartition().getUUID(), layout.getLUKSMapperName()));
                 writer.print(" root=%s".formatted(layout.getRoot().getPath()));
                 writer.println(" resume=UUID=%s rw".formatted(layout.getSwap().getUUID()));
-            } else if (partitionLayout instanceof PartitionLayout layout) {
+            } else if (systemInfo.getPartitionLayout() instanceof PartitionLayout layout) {
                 writer.print("options root=UUID=%s".formatted(layout.getRoot().getUUID()));
                 writer.println(" resume=UUID=%s rw".formatted(layout.getSwap().getUUID()));
             }
         }
     }
 
+    @Override
     public void install() throws InterruptedException, IOException {
         disableAutoGenerateMirrors();
         enableNetworkTimeSynchronization();

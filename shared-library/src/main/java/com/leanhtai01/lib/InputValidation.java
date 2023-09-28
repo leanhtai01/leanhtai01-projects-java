@@ -10,21 +10,16 @@ public final class InputValidation {
     private InputValidation() {
     }
 
+    public static boolean isAnswerYes(String answer) {
+        Pattern pattern = Pattern.compile("y|yes", Pattern.CASE_INSENSITIVE);
+        return pattern.matcher(answer).matches() || answer.isBlank();
+    }
+
     public static void displayMenu(List<String> menu, String promptMessage) {
         for (int i = 0; i < menu.size(); i++) {
             System.console().printf("%d. %s%n", i + 1, menu.get(i));
         }
         System.console().printf(promptMessage);
-    }
-
-    public static int parseIntegerChoice(String input, int from, int to) {
-        int number = Integer.parseInt(input);
-
-        if (number < from || number > to) {
-            throw new IllegalArgumentException("The input must be in range [%d, %d]%n".formatted(from, to));
-        }
-
-        return number;
     }
 
     public static String readPasswordFromConsole(String firstPrompt, String secondPrompt, String errorMessage) {
@@ -47,20 +42,26 @@ public final class InputValidation {
         return password;
     }
 
-    public static int chooseIntegerOption(Runnable displayMenu, int minChoice, int maxChoice) {
-        boolean isValidChoice = false;
-        int choice = minChoice;
+    public static int chooseIntegerOption(Runnable displayMenu, int minChoice, int maxChoice, int exitOption) {
+        int choice = -1;
 
-        while (!isValidChoice) {
-            displayMenu.run();
+        displayMenu.run();
+        String input = System.console().readLine();
+        while (!input.trim().equals(String.valueOf(exitOption))) {
             try {
-                String input = System.console().readLine();
-                choice = parseIntegerChoice(input, minChoice, maxChoice);
-                isValidChoice = true;
-            } catch (IllegalArgumentException e) {
-                isValidChoice = false;
-                System.console().printf(e.getMessage());
+                choice = Integer.parseInt(input);
+
+                if (isValidIntegerChoice(choice, minChoice, maxChoice)) {
+                    break;
+                } else {
+                    System.console().printf("Choice must be in range [%d, %d]%n", minChoice, maxChoice);
+                }
+            } catch (NumberFormatException e) {
+                System.console().printf("Choice must be an integer.%n");
             }
+
+            displayMenu.run();
+            input = System.console().readLine();
         }
 
         return choice;
@@ -101,22 +102,46 @@ public final class InputValidation {
 
     private static void updateMenuOption(List<String> menu, Set<Integer> choices) {
         for (int i = 0; i < menu.size(); i++) {
-            menu.set(i, menu.get(i).replace(" *", ""));
+            unmarkInstall(menu, i);
         }
 
         for (Integer choice : choices) {
-            menu.set(choice - 1, menu.get(choice - 1).concat(" *"));
+            markInstall(menu, choice - 1);
         }
+    }
+
+    public static void markInstall(List<String> menu, int index) {
+        menu.set(index, menu.get(index).concat(" *"));
+    }
+
+    public static void unmarkInstall(List<String> menu, int index) {
+        menu.set(index, menu.get(index).replace(" *", ""));
     }
 
     public static boolean isValidIntegerChoices(Set<Integer> choices, int minChoice, int maxChoice) {
         for (Integer choice : choices) {
-            if (choice < minChoice || choice > maxChoice) {
+            if (!isValidIntegerChoice(choice, minChoice, maxChoice)) {
                 return false;
             }
         }
 
         return !choices.isEmpty();
+    }
+
+    public static boolean isValidIntegerChoice(int choice, int minChoice, int maxChoice) {
+        return choice >= minChoice && choice <= maxChoice;
+    }
+
+    public static Set<Integer> getAllIntegerChoices(int minChoice, int maxChoice) {
+        Set<Integer> choices = new HashSet<>();
+
+        if (minChoice < maxChoice) {
+            for (int i = minChoice; i <= maxChoice; i++) {
+                choices.add(i);
+            }
+        }
+
+        return choices;
     }
 
     public static Set<Integer> parseRangeIntegerChoice(String input, int minChoice, int maxChoice) {

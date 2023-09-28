@@ -12,8 +12,6 @@ import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.lib.InputValidation;
 
 public abstract class InstallMenu {
-    private static final int EXIT = -1;
-
     protected final String chrootDir;
     protected final UserAccount userAccount;
     protected List<String> menu;
@@ -24,6 +22,10 @@ public abstract class InstallMenu {
         this.userAccount = userAccount;
         menu = new ArrayList<>();
         choices = new HashSet<>();
+    }
+
+    public int getExitOption() {
+        return -1;
     }
 
     public int getMinChoice() {
@@ -39,8 +41,12 @@ public abstract class InstallMenu {
     }
 
     public Set<Integer> getChoices() {
+        return choices;
+    }
+
+    public Set<Integer> selectOptions() {
         InputValidation.chooseRangeIntegerOption(menu, getPromptMessage(),
-                choices, getMinChoice(), getMaxChoice(), EXIT);
+                choices, getMinChoice(), getMaxChoice(), getExitOption());
 
         return choices;
     }

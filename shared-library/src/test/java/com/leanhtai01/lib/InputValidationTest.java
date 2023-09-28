@@ -9,6 +9,41 @@ import org.junit.jupiter.api.Test;
 
 class InputValidationTest {
     @Test
+    void testIsAnswerYesSingleLowercaseCharacter() {
+        assertThat(isAnswerYes("y")).isTrue();
+    }
+
+    @Test
+    void testIsAnswerYesSingleUppercaseCharacter() {
+        assertThat(isAnswerYes("Y")).isTrue();
+    }
+
+    @Test
+    void testIsAnswerYesFullTextLowercase() {
+        assertThat(isAnswerYes("yes")).isTrue();
+    }
+
+    @Test
+    void testIsAnswerYesFullTextUppercase() {
+        assertThat(isAnswerYes("YES")).isTrue();
+    }
+
+    @Test 
+    void testIsAnswerYesAnswerNo() {
+        assertThat(isAnswerYes("no")).isFalse();
+    }
+
+    @Test
+    void testIsAnswerYesBlank() {
+        assertThat(isAnswerYes("")).isTrue();
+    }
+
+    @Test
+    void testIsAnswerYesRandomInput() {
+        assertThat(isAnswerYes("abc")).isFalse();
+    }
+
+    @Test
     void testIsValidIntegerChoicesTrue() {
         assertThat(isValidIntegerChoices(Set.of(1, 2, 3), 1, 3)).isTrue();
     }
@@ -41,5 +76,15 @@ class InputValidationTest {
     @Test
     void testParseRangeIntegerChoiceBlankInput() {
         assertThat(parseRangeIntegerChoice("", 1, 5)).hasSize(5).contains(1, 2, 3, 4, 5);
+    }
+
+    @Test
+    void testGetAllIntegerChoicesSuccess() {
+        assertThat(getAllIntegerChoices(1, 5)).hasSize(5).contains(1, 2, 3, 4, 5);
+    }
+
+    @Test
+    void testGetAllIntegerChoicesFail() {
+        assertThat(getAllIntegerChoices(5, 1)).isEmpty();
     }
 }

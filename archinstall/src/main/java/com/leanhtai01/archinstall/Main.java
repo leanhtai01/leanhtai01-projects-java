@@ -38,6 +38,7 @@ import com.leanhtai01.archinstall.partition.NormalPartitionLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayoutMenu;
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
+import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.systeminfo.WirelessNetwork;
 import com.leanhtai01.lib.InputValidation;
@@ -87,12 +88,12 @@ public class Main {
         Arrays.fill(mirrorsArray, "Server = https://mirror.xtom.com.hk/archlinux/$repo/os/$arch");
         mirrors = Arrays.asList(mirrorsArray);
 
-        baseSystemInstall = new BaseSystemInstall(partitionLayout, mirrors, HOST_NAME,
-                ROOT_PASSWORD, USER_ACCOUNT);
+        SystemInfo systemInfo = new SystemInfo(HOST_NAME, ROOT_PASSWORD, mirrors, partitionLayout);
+        baseSystemInstall = new BaseSystemInstall(systemInfo, USER_ACCOUNT);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        int choice = InputValidation.chooseIntegerOption(Main::displayMainMenu, 1, 5);
+        int choice = InputValidation.chooseIntegerOption(Main::displayMainMenu, 1, 5, -1);
 
         switch (choice) {
             case 1 -> baseSystemInstall.install();

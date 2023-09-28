@@ -29,7 +29,7 @@ public final class PartitionLayoutMenu {
         System.console().printf("Enter swap size: ");
         long swapSize = Long.parseLong(System.console().readLine());
 
-        int choice = chooseIntegerOption(() -> displayMenu(menu, "? "), 1, menu.size());
+        int choice = chooseIntegerOption(() -> displayMenu(menu, "? "), 1, menu.size(), -1);
         PartitionLayout partitionLayout = null;
 
         switch (choice) {
