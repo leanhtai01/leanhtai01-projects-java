@@ -12,18 +12,6 @@ import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class DockerInstall extends SoftwareInstall {
-    public DockerInstall() {
-        super(null, null);
-    }
-
-    public DockerInstall(String chrootDir) {
-        super(chrootDir, null);
-    }
-
-    public DockerInstall(UserAccount userAccount) {
-        super(null, userAccount);
-    }
-
     public DockerInstall(String chrootDir, UserAccount userAccount) {
         super(chrootDir, userAccount);
     }

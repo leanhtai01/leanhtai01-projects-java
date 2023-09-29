@@ -6,14 +6,11 @@ import java.io.IOException;
 import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
+import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class IntelDriverInstall extends SoftwareInstall {
-    public IntelDriverInstall() {
-        super();
-    }
-
-    public IntelDriverInstall(String chrootDir) {
-        super(chrootDir, null);
+    public IntelDriverInstall(String chrootDir, UserAccount userAccount) {
+        super(chrootDir, userAccount);
     }
 
     @Override

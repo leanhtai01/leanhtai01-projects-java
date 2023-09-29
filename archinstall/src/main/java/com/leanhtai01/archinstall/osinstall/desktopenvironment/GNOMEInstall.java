@@ -29,18 +29,6 @@ public class GNOMEInstall extends SoftwareInstall {
     private static final String SCHEMA_TO_ITEM = "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding";
     private static final String PATH_TO_CUSTOM_KEY = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom";
 
-    public GNOMEInstall() {
-        super(null, null);
-    }
-
-    public GNOMEInstall(String chrootDir) {
-        super(chrootDir, null);
-    }
-
-    public GNOMEInstall(UserAccount userAccount) {
-        super(null, userAccount);
-    }
-
     public GNOMEInstall(String chrootDir, UserAccount userAccount) {
         super(chrootDir, userAccount);
     }

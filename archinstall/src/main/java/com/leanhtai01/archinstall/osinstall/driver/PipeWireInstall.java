@@ -11,18 +11,6 @@ import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class PipeWireInstall extends SoftwareInstall {
-    public PipeWireInstall() {
-        super(null, null);
-    }
-
-    public PipeWireInstall(String chrootDir) {
-        super(chrootDir, null);
-    }
-
-    public PipeWireInstall(UserAccount userAccount) {
-        super(null, userAccount);
-    }
-
     public PipeWireInstall(String chrootDir, UserAccount userAccount) {
         super(chrootDir, userAccount);
     }

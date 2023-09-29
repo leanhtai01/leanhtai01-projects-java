@@ -8,10 +8,6 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 
 public class FontInstall extends SoftwareInstall {
-    public FontInstall() {
-        super(null, null);
-    }
-
     public FontInstall(String chrootDir) {
         super(chrootDir, null);
     }

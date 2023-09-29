@@ -25,51 +25,6 @@ public final class InputValidation {
         System.console().printf(promptMessage);
     }
 
-    public static String readPasswordFromConsole(String firstPrompt, String secondPrompt, String errorMessage) {
-        System.console().printf(firstPrompt);
-        String password = String.valueOf(System.console().readPassword());
-
-        System.console().printf(secondPrompt);
-        String reenterPassword = String.valueOf(System.console().readPassword());
-
-        while (!password.equals(reenterPassword)) {
-            System.console().printf(errorMessage);
-
-            System.console().printf(firstPrompt);
-            password = String.valueOf(System.console().readPassword());
-
-            System.console().printf(secondPrompt);
-            reenterPassword = String.valueOf(System.console().readPassword());
-        }
-
-        return password;
-    }
-
-    public static int chooseIntegerOption(Runnable displayMenu, int minChoice, int maxChoice, int exitOption) {
-        int choice = -1;
-
-        displayMenu.run();
-        String input = System.console().readLine();
-        while (!input.trim().equals(String.valueOf(exitOption))) {
-            try {
-                choice = Integer.parseInt(input);
-
-                if (isValidIntegerChoice(choice, minChoice, maxChoice)) {
-                    break;
-                } else {
-                    System.console().printf("Choice must be in range [%d, %d]%n", minChoice, maxChoice);
-                }
-            } catch (NumberFormatException e) {
-                System.console().printf("Choice must be an integer.%n");
-            }
-
-            displayMenu.run();
-            input = System.console().readLine();
-        }
-
-        return choice;
-    }
-
     public static Set<Integer> chooseRangeIntegerOption(List<String> menu, String promptMessage,
             Set<Integer> choices, int minChoice, int maxChoice, int exitOption) {
         displayMenu(menu, promptMessage);

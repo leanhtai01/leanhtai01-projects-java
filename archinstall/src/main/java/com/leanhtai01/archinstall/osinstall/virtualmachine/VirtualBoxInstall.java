@@ -11,10 +11,6 @@ import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class VirtualBoxInstall extends SoftwareInstall {
-    public VirtualBoxInstall(UserAccount userAccount) {
-        super(null, userAccount);
-    }
-
     public VirtualBoxInstall(String chrootDir, UserAccount userAccount) {
         super(chrootDir, userAccount);
     }

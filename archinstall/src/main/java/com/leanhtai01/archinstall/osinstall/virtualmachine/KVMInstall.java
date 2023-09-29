@@ -15,18 +15,6 @@ import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class KVMInstall extends SoftwareInstall {
-    public KVMInstall() {
-        super(null, null);
-    }
-
-    public KVMInstall(String chrootDir) {
-        super(chrootDir, null);
-    }
-
-    public KVMInstall(UserAccount userAccount) {
-        super(null, userAccount);
-    }
-
     public KVMInstall(String chrootDir, UserAccount userAccount) {
         super(chrootDir, userAccount);
     }

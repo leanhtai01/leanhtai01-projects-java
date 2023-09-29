@@ -23,7 +23,7 @@ public class DriverInstallMenu extends InstallMenu {
                     pipeWireInstall.config();
                 }
                 case 2 -> {
-                    IntelDriverInstall intelDriverInstall = new IntelDriverInstall(chrootDir);
+                    IntelDriverInstall intelDriverInstall = new IntelDriverInstall(chrootDir, userAccount);
                     intelDriverInstall.install();
                     intelDriverInstall.config();
                 }
