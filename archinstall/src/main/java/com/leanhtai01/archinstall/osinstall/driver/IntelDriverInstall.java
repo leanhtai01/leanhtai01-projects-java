@@ -15,19 +15,10 @@ public class IntelDriverInstall extends SoftwareInstall {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("mesa", "lib32-mesa", "ocl-icd", "lib32-ocl-icd", "intel-compute-runtime"), chrootDir);
-        installVulkan();
-        installVAAPI();
+        installMainReposPkgs(List.of("mesa", "lib32-mesa", "ocl-icd", "lib32-ocl-icd", "intel-compute-runtime",
+                "vulkan-intel", "lib32-vulkan-intel", "vulkan-icd-loader", "lib32-vulkan-icd-loader",
+                "intel-media-driver", "libva-utils"), chrootDir);
+
         return 0;
-    }
-
-    public void installVulkan() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("vulkan-intel", "lib32-vulkan-intel",
-                "vulkan-icd-loader", "lib32-vulkan-icd-loader"),
-                chrootDir);
-    }
-
-    public void installVAAPI() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("intel-media-driver", "libva-utils"), chrootDir);
     }
 }
