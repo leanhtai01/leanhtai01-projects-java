@@ -19,7 +19,6 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.leanhtai01.archinstall.partition.LVMOnLUKSLayout;
@@ -39,17 +38,6 @@ public class BaseSystemInstall extends InstallMenu {
         super(CHROOT_DIR, userAccount);
         this.systemInfo = systemInfo;
         menu.add("Install Base System");
-    }
-
-    @Override
-    public Set<Integer> selectOptions() {
-        if (choices.isEmpty()) {
-            setChoices(Set.of(0));
-        } else {
-            choices.clear();
-        }
-
-        return choices;
     }
 
     public void setSystemInfo(SystemInfo systemInfo) {

@@ -50,6 +50,8 @@ public class OSInstallMenu extends InstallMenu {
         while (choice != getExitOption()) {
             if (isValidIntegerChoice(choice, getMinChoice(), getMaxChoice())) {
                 choices.add(choice);
+
+                System.console().printf("%n");
                 selectSubMenuOptions(choice);
             } else {
                 System.console().printf("Invalid choice. Please try again!%n");
