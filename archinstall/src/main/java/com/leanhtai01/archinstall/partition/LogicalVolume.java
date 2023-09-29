@@ -44,11 +44,6 @@ public class LogicalVolume implements Mountable {
         return mountPoint;
     }
 
-    @Override
-    public void setMountPoint(String mountPoint) {
-        this.mountPoint = mountPoint;
-    }
-
     public String getPath() {
         return "/dev/%s/%s".formatted(vgName, lvName);
     }

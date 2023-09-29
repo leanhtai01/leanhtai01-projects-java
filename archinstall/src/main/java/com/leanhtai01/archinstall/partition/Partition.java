@@ -87,11 +87,6 @@ public class Partition implements Mountable {
         return mountPoint;
     }
 
-    @Override
-    public void setMountPoint(String mountPoint) {
-        this.mountPoint = mountPoint;
-    }
-
     public String getPathToDisk() {
         return "/dev/%s".formatted(diskName);
     }

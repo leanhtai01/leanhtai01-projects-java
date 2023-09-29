@@ -11,8 +11,6 @@ import java.util.List;
 public interface Mountable {
     String getMountPoint();
 
-    void setMountPoint(String mountPoint);
-
     String getPath();
 
     default void mount() throws IOException, InterruptedException {
