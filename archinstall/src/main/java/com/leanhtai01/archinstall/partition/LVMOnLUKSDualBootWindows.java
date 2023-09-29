@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
-public class LVMOnLUKSDualBootWindowsPartitionLayout implements LVMOnLUKSLayout {
+public class LVMOnLUKSDualBootWindows implements LVMOnLUKSPartitionLayout {
     private String diskName;
     private StorageDeviceSize xbootldrSize;
     private StorageDeviceSize swapSize;
@@ -32,7 +32,7 @@ public class LVMOnLUKSDualBootWindowsPartitionLayout implements LVMOnLUKSLayout 
     private LogicalVolume rootVolume;
     private String password;
 
-    public LVMOnLUKSDualBootWindowsPartitionLayout(
+    public LVMOnLUKSDualBootWindows(
             String diskName,
             StorageDeviceSize xbootldrSize,
             StorageDeviceSize swapSize,

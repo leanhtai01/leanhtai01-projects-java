@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.leanhtai01.archinstall.partition.LVMOnLUKSLayout;
+import com.leanhtai01.archinstall.partition.LVMOnLUKSPartitionLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
@@ -241,7 +241,7 @@ public class BaseSystemInstall {
             writer.println("initrd /initramfs-linux.img");
 
             configureMkinitcpioForHibernation();
-            if (systemInfo.getPartitionLayout() instanceof LVMOnLUKSLayout layout) {
+            if (systemInfo.getPartitionLayout() instanceof LVMOnLUKSPartitionLayout layout) {
                 configureMkinitcpioForEncryptedRootFileSystem();
                 writer.print("options cryptdevice=UUID=%s:%s"
                         .formatted(layout.getLinuxLUKSPartition().getUUID(), layout.getLUKSMapperName()));
