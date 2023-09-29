@@ -53,7 +53,7 @@ public abstract class InstallMenu {
             }
 
             for (Integer choice : choices) {
-                markInstall(menu, choice, CHECK_MARK);
+                markInstall(menu, choice);
             }
 
             this.choices = new HashSet<>(choices);
@@ -85,13 +85,13 @@ public abstract class InstallMenu {
         }
 
         for (Integer choice : choices) {
-            markInstall(menu, choice, CHECK_MARK);
+            markInstall(menu, choice);
         }
     }
 
-    public void markInstall(List<String> menu, int index, String mark) {
+    public void markInstall(List<String> menu, int index) {
         unmarkInstall(menu, index);
-        menu.set(index, menu.get(index).concat(" %s".formatted(mark)));
+        menu.set(index, menu.get(index).concat(" %s".formatted(CHECK_MARK)));
     }
 
     public void unmarkInstall(List<String> menu, int index) {
