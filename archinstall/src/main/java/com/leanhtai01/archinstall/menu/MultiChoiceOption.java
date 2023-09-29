@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class InstallOption {
+public class MultiChoiceOption {
     private static final String CHECK_MARK = "[\u2713]";
 
     private int optionNumber;
@@ -12,7 +12,7 @@ public class InstallOption {
     private boolean isMarked;
     private Installable installable;
 
-    public InstallOption(String description, Installable installable, boolean isMarked) {
+    public MultiChoiceOption(String description, Installable installable, boolean isMarked) {
         this.description = description;
         this.installable = installable;
         this.isMarked = isMarked;

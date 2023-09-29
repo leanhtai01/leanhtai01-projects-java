@@ -8,26 +8,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class InstallMenu {
+public class MultiChoiceMenu {
     private static final int EXIT = -1;
     private static final int MIN_CHOICE = 0;
 
     private int optionCount;
-    private List<InstallOption> installOptions;
+    private List<MultiChoiceOption> installOptions;
 
-    public InstallMenu() {
+    public MultiChoiceMenu() {
         optionCount = MIN_CHOICE;
         installOptions = new ArrayList<>();
     }
 
-    public void addOption(InstallOption option) {
+    public void addOption(MultiChoiceOption option) {
         installOptions.add(option);
         option.setOptionNumber(optionCount);
         optionCount++;
     }
 
     public void displayMenu() {
-        for (InstallOption option : installOptions) {
+        for (MultiChoiceOption option : installOptions) {
             System.console().printf("%s\n", option);
         }
 
@@ -37,7 +37,7 @@ public class InstallMenu {
     }
 
     public void install() throws IOException, InterruptedException {
-        for (InstallOption option : installOptions) {
+        for (MultiChoiceOption option : installOptions) {
             option.install();
         }
     }
@@ -45,7 +45,7 @@ public class InstallMenu {
     public String getInstallSummary() {
         List<String> markedOptions = new ArrayList<>();
 
-        for (InstallOption option : installOptions) {
+        for (MultiChoiceOption option : installOptions) {
             if (option.isMarked()) {
                 markedOptions.add(option.getDescription());
             }
@@ -64,13 +64,13 @@ public class InstallMenu {
     }
 
     public void selectAll() {
-        for (InstallOption option : installOptions) {
+        for (MultiChoiceOption option : installOptions) {
             option.setMarked(true);
         }
     }
 
     public void clearAll() {
-        for (InstallOption option : installOptions) {
+        for (MultiChoiceOption option : installOptions) {
             option.setMarked(false);
         }
     }
