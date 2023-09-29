@@ -12,10 +12,4 @@ public class DriverInstallMenu extends InstallMenu {
         addOption(new InstallOption("PipeWire", new PipeWire(chrootDir, userAccount), false));
         addOption(new InstallOption("TLP", new TLP(chrootDir), false));
     }
-
-    @Override
-    public void displayMenu() {
-        System.console().printf("Driver install menu:%n");
-        super.displayMenu();
-    }
 }
