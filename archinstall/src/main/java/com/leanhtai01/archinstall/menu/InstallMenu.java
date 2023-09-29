@@ -96,9 +96,16 @@ public class InstallMenu {
             for (int i = MIN_CHOICE; i <= getMaxChoice(); i++) {
                 choices.add(i);
             }
+        } else {
+            System.console().printf("Invalid input format!%n");
         }
 
-        return isValidChoices(choices) ? choices : new HashSet<>();
+        if (!isValidChoices(choices)) {
+            System.console().printf("Invalid choices. Choice must be in range [%d, %d]%n", MIN_CHOICE, getMaxChoice());
+            choices.clear();
+        }
+
+        return choices;
     }
 
     private int getMaxChoice() {
