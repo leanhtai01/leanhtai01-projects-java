@@ -50,10 +50,6 @@ public class OSInstallMenu extends InstallMenu {
         while (choice != getExitOption()) {
             if (isValidIntegerChoice(choice, getMinChoice(), getMaxChoice())) {
                 choices.add(choice);
-
-                if (choice != 0) {
-                    System.console().printf("%n");
-                }
                 selectSubMenuOptions(choice);
             } else {
                 System.console().printf("Invalid choice. Please try again!%n");
@@ -67,14 +63,14 @@ public class OSInstallMenu extends InstallMenu {
         return choices;
     }
 
-    private void selectSubMenuOptions(int index) {
-        var installMenu = installMenus.get(index);
+    private void selectSubMenuOptions(int choice) {
+        var installMenu = installMenus.get(choice);
         installMenu.selectOptions();
         if (!installMenu.getChoices().isEmpty()) {
-            markInstall(menu, index, InputValidation.CHECK_MARK);
+            markInstall(menu, choice, InputValidation.CHECK_MARK);
         } else {
-            choices.remove(index);
-            unmarkInstall(menu, index);
+            choices.remove(choice);
+            unmarkInstall(menu, choice);
         }
     }
 
