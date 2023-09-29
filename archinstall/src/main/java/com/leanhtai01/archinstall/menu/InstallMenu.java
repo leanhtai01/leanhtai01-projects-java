@@ -54,9 +54,24 @@ public class InstallMenu {
         return getClass().getSimpleName() + "=" + markedOptions;
     }
 
+    public void setOptions(Set<Integer> choices) {
+        if (isValidChoices(choices)) {
+            clearAll();
+            for (Integer choice : choices) {
+                installOptions.get(choice).setMarked(true);
+            }
+        }
+    }
+
     public void selectAll() {
         for (InstallOption option : installOptions) {
             option.setMarked(true);
+        }
+    }
+
+    public void clearAll() {
+        for (InstallOption option : installOptions) {
+            option.setMarked(false);
         }
     }
 
