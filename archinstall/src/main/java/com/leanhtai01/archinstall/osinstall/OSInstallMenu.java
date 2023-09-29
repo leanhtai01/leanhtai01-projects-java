@@ -17,7 +17,6 @@ import com.leanhtai01.archinstall.osinstall.driver.DriverInstallMenu;
 import com.leanhtai01.archinstall.osinstall.programming.ProgrammingInstallMenu;
 import com.leanhtai01.archinstall.osinstall.tool.ToolInstallMenu;
 import com.leanhtai01.archinstall.osinstall.virtualmachine.VirtualMachineInstallMenu;
-import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.lib.InputValidation;
 
@@ -28,14 +27,12 @@ public class OSInstallMenu extends InstallMenu {
         super(chrootDir, userAccount);
 
         installMenus = new ArrayList<>();
-        installMenus.add(new BaseSystemInstall(null, userAccount));
         installMenus.add(new DesktopEnvironmentInstallMenu(chrootDir, userAccount));
         installMenus.add(new DriverInstallMenu(chrootDir, userAccount));
         installMenus.add(new ProgrammingInstallMenu(chrootDir, userAccount));
         installMenus.add(new ToolInstallMenu(chrootDir, userAccount));
         installMenus.add(new VirtualMachineInstallMenu(chrootDir, userAccount));
 
-        menu.add("Install Base System");
         menu.add("Install Desktop Environment");
         menu.add("Install Drivers");
         menu.add("Install Programming Environment");
@@ -80,25 +77,13 @@ public class OSInstallMenu extends InstallMenu {
     public void install() throws IOException, InterruptedException {
         System.console().printf("%s%n", getInstallSummary());
         for (InstallMenu installMenu : installMenus) {
-            if (!(installMenu instanceof BaseSystemInstall)) {
-                System.console().printf("%s%n", installMenu.getInstallSummary());
-            }
+            System.console().printf("%s%n", installMenu.getInstallSummary());
         }
 
         System.console().printf(":: Proceed with installation? [Y/n] ");
         String answer = System.console().readLine();
 
         if (isAnswerYes(answer)) {
-            if (choices.contains(0)) {
-                SystemInfo systemInfo = new SystemInfo();
-                systemInfo.getSystemInfo();
-
-                if (installMenus.get(0) instanceof BaseSystemInstall baseSystemInstall) {
-                    baseSystemInstall.setSystemInfo(systemInfo);
-                    baseSystemInstall.install();
-                }
-            }
-
             for (InstallMenu installMenu : installMenus) {
                 installMenu.install();
             }

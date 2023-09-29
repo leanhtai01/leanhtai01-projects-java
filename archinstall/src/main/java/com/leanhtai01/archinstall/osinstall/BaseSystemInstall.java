@@ -26,18 +26,18 @@ import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class BaseSystemInstall extends InstallMenu {
+public class BaseSystemInstall {
     private static final String CHROOT_DIR = "/mnt";
     private static final String PATH_TO_SUDOERS = CHROOT_DIR + "/etc/sudoers";
     private static final String PATH_TO_MKINITCPIO_CONFIG = CHROOT_DIR + "/etc/mkinitcpio.conf";
     private static final String MKINITCPIO_HOOKS_LINE_PATTERN = "^HOOKS=\\(.*\\)$";
 
     private SystemInfo systemInfo;
+    private UserAccount userAccount;
 
     public BaseSystemInstall(SystemInfo systemInfo, UserAccount userAccount) {
-        super(CHROOT_DIR, userAccount);
         this.systemInfo = systemInfo;
-        menu.add("Install Base System");
+        this.userAccount = userAccount;
     }
 
     public void setSystemInfo(SystemInfo systemInfo) {
@@ -254,7 +254,6 @@ public class BaseSystemInstall extends InstallMenu {
         }
     }
 
-    @Override
     public void install() throws InterruptedException, IOException {
         disableAutoGenerateMirrors();
         enableNetworkTimeSynchronization();
