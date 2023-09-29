@@ -11,18 +11,22 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
+import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class KVMInstall extends SoftwareInstall {
+public class KVMInstall implements Installable {
+    private String chrootDir;
+    private UserAccount userAccount;
+
     public KVMInstall(String chrootDir, UserAccount userAccount) {
-        super(chrootDir, userAccount);
+        this.chrootDir = chrootDir;
+        this.userAccount = userAccount;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("virt-manager", "qemu", "vde2", "dnsmasq", "bridge-utils", "virt-viewer", "dmidecode",
-                "edk2-ovmf", "iptables-nft", "swtpm", "qemu-hw-usb-host"), chrootDir);
+        installMainReposPkgs(List.of("virt-manager", "qemu", "vde2", "dnsmasq", "bridge-utils", "virt-viewer",
+                "dmidecode", "edk2-ovmf", "iptables-nft", "swtpm", "qemu-hw-usb-host"), chrootDir);
 
         return 0;
     }
@@ -31,7 +35,7 @@ public class KVMInstall extends SoftwareInstall {
     public int config() throws IOException, InterruptedException {
         enableService("libvirtd", chrootDir);
 
-        String libvirtdConfigPath = getPathPrefix() + "/etc/libvirt/libvirtd.conf";
+        String libvirtdConfigPath = chrootDir + "/etc/libvirt/libvirtd.conf";
         backupFile(libvirtdConfigPath);
 
         List<String> lines = Files.readAllLines(Paths.get(libvirtdConfigPath));

@@ -17,12 +17,12 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
+import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.GNOMEShortcut;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.Pair;
 
-public class GNOMEInstall extends SoftwareInstall {
+public class GNOMEInstall implements Installable {
     private static final String GSETTINGS = "gsettings";
 
     private static final String GSETTINGS_CUSTOM_KEYBINDINGS_KEY = "custom-keybindings";
@@ -30,8 +30,12 @@ public class GNOMEInstall extends SoftwareInstall {
     private static final String SCHEMA_TO_ITEM = "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding";
     private static final String PATH_TO_CUSTOM_KEY = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom";
 
+    private String chrootDir;
+    private UserAccount userAccount;
+
     public GNOMEInstall(String chrootDir, UserAccount userAccount) {
-        super(chrootDir, userAccount);
+        this.chrootDir = chrootDir;
+        this.userAccount = userAccount;
     }
 
     @Override

@@ -1,21 +1,22 @@
 package com.leanhtai01.archinstall.osinstall.tool;
 
-import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
-import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class RemoteDesktopInstall extends SoftwareInstall {
-    public RemoteDesktopInstall(String chrootDir, UserAccount userAccount) {
-        super(chrootDir, userAccount);
+public class RemoteDesktopInstall implements Installable {
+    private String chrootDir;
+
+    public RemoteDesktopInstall(String chrootDir) {
+        this.chrootDir = chrootDir;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPkgs(List.of("remmina", "freerdp", "spice-gtk", "libvncserver"), userAccount, chrootDir);
+        installMainReposPkgs(List.of("remmina", "freerdp", "spice-gtk", "libvncserver"), chrootDir);
         return 0;
     }
 }

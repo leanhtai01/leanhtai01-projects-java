@@ -8,12 +8,16 @@ import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 import java.io.IOException;
 import java.util.List;
 
-import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
+import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class DockerInstall extends SoftwareInstall {
+public class DockerInstall implements Installable {
+    private String chrootDir;
+    private UserAccount userAccount;
+
     public DockerInstall(String chrootDir, UserAccount userAccount) {
-        super(chrootDir, userAccount);
+        this.chrootDir = chrootDir;
+        this.userAccount = userAccount;
     }
 
     @Override

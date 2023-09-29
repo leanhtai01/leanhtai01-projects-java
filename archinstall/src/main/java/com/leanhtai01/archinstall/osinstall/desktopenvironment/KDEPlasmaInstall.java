@@ -6,12 +6,13 @@ import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 import java.io.IOException;
 import java.util.List;
 
-import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
-import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class KDEPlasmaInstall extends SoftwareInstall {
-    public KDEPlasmaInstall(String chrootDir, UserAccount userAccount) {
-        super(chrootDir, userAccount);
+public class KDEPlasmaInstall implements Installable {
+    private String chrootDir;
+
+    public KDEPlasmaInstall(String chrootDir) {
+        this.chrootDir = chrootDir;
     }
 
     @Override

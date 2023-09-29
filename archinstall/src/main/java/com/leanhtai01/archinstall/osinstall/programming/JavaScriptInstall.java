@@ -5,12 +5,16 @@ import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
 import java.io.IOException;
 import java.util.List;
 
-import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
+import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class JavaScriptInstall extends SoftwareInstall {
+public class JavaScriptInstall implements Installable {
+    private String chrootDir;
+    private UserAccount userAccount;
+
     public JavaScriptInstall(String chrootDir, UserAccount userAccount) {
-        super(chrootDir, userAccount);
+        this.chrootDir = chrootDir;
+        this.userAccount = userAccount;
     }
 
     @Override

@@ -1,21 +1,22 @@
 package com.leanhtai01.archinstall.osinstall.programming;
 
-import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
+import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.leanhtai01.archinstall.osinstall.SoftwareInstall;
-import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class GoInstall extends SoftwareInstall {
-    public GoInstall(String chrootDir, UserAccount userAccount) {
-        super(chrootDir, userAccount);
+public class GoInstall implements Installable {
+    private String chrootDir;
+
+    public GoInstall(String chrootDir) {
+        this.chrootDir = chrootDir;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPkgs(List.of("go", "go-tools", "gopls"), userAccount, chrootDir);
+        installMainReposPkgs(List.of("go", "go-tools", "gopls"), chrootDir);
         return 0;
     }
 }
