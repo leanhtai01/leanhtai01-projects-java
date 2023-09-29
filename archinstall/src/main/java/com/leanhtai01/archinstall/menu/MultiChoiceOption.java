@@ -1,7 +1,5 @@
 package com.leanhtai01.archinstall.menu;
 
-import java.io.IOException;
-
 import com.leanhtai01.archinstall.osinstall.Installable;
 
 public class MultiChoiceOption {
@@ -10,11 +8,11 @@ public class MultiChoiceOption {
     private int optionNumber;
     private String description;
     private boolean isMarked;
-    private Installable installable;
+    private Runnable runnable;
 
     public MultiChoiceOption(String description, Installable installable, boolean isMarked) {
         this.description = description;
-        this.installable = installable;
+        this.runnable = installable;
         this.isMarked = isMarked;
     }
 
@@ -38,10 +36,9 @@ public class MultiChoiceOption {
         this.optionNumber = optionNumber;
     }
 
-    public void install() throws IOException, InterruptedException {
+    public void doAction() {
         if (isMarked) {
-            installable.install();
-            installable.config();
+            runnable.run();
         }
     }
 

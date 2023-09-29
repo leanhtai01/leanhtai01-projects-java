@@ -1,6 +1,5 @@
 package com.leanhtai01.archinstall.menu;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,21 +12,21 @@ public class MultiChoiceMenu {
     private static final int MIN_CHOICE = 0;
 
     private int optionCount;
-    private List<MultiChoiceOption> installOptions;
+    private List<MultiChoiceOption> multiChoiceOptions;
 
     public MultiChoiceMenu() {
         optionCount = MIN_CHOICE;
-        installOptions = new ArrayList<>();
+        multiChoiceOptions = new ArrayList<>();
     }
 
     public void addOption(MultiChoiceOption option) {
-        installOptions.add(option);
+        multiChoiceOptions.add(option);
         option.setOptionNumber(optionCount);
         optionCount++;
     }
 
     public void displayMenu() {
-        for (MultiChoiceOption option : installOptions) {
+        for (MultiChoiceOption option : multiChoiceOptions) {
             System.console().printf("%s\n", option);
         }
 
@@ -36,16 +35,16 @@ public class MultiChoiceMenu {
                 "==> ");
     }
 
-    public void install() throws IOException, InterruptedException {
-        for (MultiChoiceOption option : installOptions) {
-            option.install();
+    public void doAction() {
+        for (MultiChoiceOption option : multiChoiceOptions) {
+            option.doAction();
         }
     }
 
     public String getInstallSummary() {
         List<String> markedOptions = new ArrayList<>();
 
-        for (MultiChoiceOption option : installOptions) {
+        for (MultiChoiceOption option : multiChoiceOptions) {
             if (option.isMarked()) {
                 markedOptions.add(option.getDescription());
             }
@@ -58,19 +57,19 @@ public class MultiChoiceMenu {
         if (isValidChoices(choices)) {
             clearAll();
             for (Integer choice : choices) {
-                installOptions.get(choice).setMarked(true);
+                multiChoiceOptions.get(choice).setMarked(true);
             }
         }
     }
 
     public void selectAll() {
-        for (MultiChoiceOption option : installOptions) {
+        for (MultiChoiceOption option : multiChoiceOptions) {
             option.setMarked(true);
         }
     }
 
     public void clearAll() {
-        for (MultiChoiceOption option : installOptions) {
+        for (MultiChoiceOption option : multiChoiceOptions) {
             option.setMarked(false);
         }
     }
@@ -81,7 +80,7 @@ public class MultiChoiceMenu {
         while (!input.trim().equals(String.valueOf(EXIT))) {
             Set<Integer> choices = parseChoice(input);
             for (Integer choice : choices) {
-                installOptions.get(choice).toggleMark();
+                multiChoiceOptions.get(choice).toggleMark();
             }
 
             System.console().printf("%n");
@@ -124,7 +123,7 @@ public class MultiChoiceMenu {
     }
 
     private int getMaxChoice() {
-        return installOptions.size() - 1;
+        return multiChoiceOptions.size() - 1;
     }
 
     private boolean isValidChoices(Set<Integer> choices) {
