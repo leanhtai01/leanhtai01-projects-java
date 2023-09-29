@@ -46,14 +46,28 @@ public abstract class InstallMenu {
         return choices;
     }
 
-    public void displayMenu(List<String> menu, String promptMessage) {
+    public void setChoices(Set<Integer> choices) {
+        if (isValidChoices(choices, getMinChoice(), getMaxChoice())) {
+            for (int i = 0; i < menu.size(); i++) {
+                unmarkInstall(menu, i);
+            }
+
+            for (Integer choice : choices) {
+                markInstall(menu, choice, CHECK_MARK);
+            }
+
+            this.choices = new HashSet<>(choices);
+        }
+    }
+
+    private void displayMenu(List<String> menu, String promptMessage) {
         for (int i = 0; i < menu.size(); i++) {
             System.console().printf("%d. %s%n", i, menu.get(i));
         }
         System.console().printf(promptMessage);
     }
 
-    public Set<Integer> getRemovedChoices(Set<Integer> currentChoices, Set<Integer> newChoices) {
+    private Set<Integer> getRemovedChoices(Set<Integer> currentChoices, Set<Integer> newChoices) {
         Set<Integer> removedChoices = new HashSet<>();
 
         for (Integer choice : newChoices) {
@@ -84,18 +98,14 @@ public abstract class InstallMenu {
         menu.set(index, menu.get(index).replaceAll(" \\[.\\]", ""));
     }
 
-    public static boolean isValidIntegerChoices(Set<Integer> choices, int minChoice, int maxChoice) {
+    public static boolean isValidChoices(Set<Integer> choices, int minChoice, int maxChoice) {
         for (Integer choice : choices) {
-            if (!isValidIntegerChoice(choice, minChoice, maxChoice)) {
+            if (choice < minChoice || choice > maxChoice) {
                 return false;
             }
         }
 
         return !choices.isEmpty();
-    }
-
-    public static boolean isValidIntegerChoice(int choice, int minChoice, int maxChoice) {
-        return choice >= minChoice && choice <= maxChoice;
     }
 
     public static Set<Integer> parseRangeIntegerChoice(String input, int minChoice, int maxChoice) {
@@ -121,7 +131,7 @@ public abstract class InstallMenu {
             }
         }
 
-        return isValidIntegerChoices(choices, minChoice, maxChoice) ? choices : new HashSet<>();
+        return isValidChoices(choices, minChoice, maxChoice) ? choices : new HashSet<>();
     }
 
     public Set<Integer> selectOptions() {
@@ -142,20 +152,6 @@ public abstract class InstallMenu {
         }
 
         return choices;
-    }
-
-    public void setChoices(Set<Integer> choices) {
-        if (isValidIntegerChoices(choices, getMinChoice(), getMaxChoice())) {
-            for (int i = 0; i < menu.size(); i++) {
-                unmarkInstall(menu, i);
-            }
-
-            for (Integer choice : choices) {
-                markInstall(menu, choice, CHECK_MARK);
-            }
-
-            this.choices = new HashSet<>(choices);
-        }
     }
 
     public String getInstallSummary() {
