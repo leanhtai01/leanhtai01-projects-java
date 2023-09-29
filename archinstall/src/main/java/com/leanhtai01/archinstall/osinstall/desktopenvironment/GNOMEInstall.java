@@ -23,7 +23,7 @@ import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.Pair;
 
 public class GNOMEInstall extends SoftwareInstall {
-    private static final String GSETTINGS_COMMAND = "gsettings";
+    private static final String GSETTINGS = "gsettings";
 
     private static final String GSETTINGS_CUSTOM_KEYBINDINGS_KEY = "custom-keybindings";
     private static final String SCHEMA_TO_LIST = "org.gnome.settings-daemon.plugins.media-keys";
@@ -55,11 +55,11 @@ public class GNOMEInstall extends SoftwareInstall {
     }
 
     public int gSettingsSet(String schema, String key, String value) throws IOException, InterruptedException {
-        return runVerbose(List.of(GSETTINGS_COMMAND, "set", schema, key, value));
+        return runVerbose(List.of(GSETTINGS, "set", schema, key, value));
     }
 
     public int gSettingsReset(String schema, String key) throws IOException, InterruptedException {
-        return runVerbose(List.of(GSETTINGS_COMMAND, "reset", schema, key));
+        return runVerbose(List.of(GSETTINGS, "reset", schema, key));
     }
 
     public int enableExtension(String uuid) throws IOException, InterruptedException {
@@ -198,7 +198,7 @@ public class GNOMEInstall extends SoftwareInstall {
 
     private Pair<String, List<Integer>> getGNOMEShortcutPathListAndIndexes() throws IOException {
         String pathList = runGetOutput(
-                List.of(GSETTINGS_COMMAND, "get", SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY));
+                List.of(GSETTINGS, "get", SCHEMA_TO_LIST, GSETTINGS_CUSTOM_KEYBINDINGS_KEY));
         List<Integer> indexes = pathList.equals("@as []") ? List.of()
                 : Pattern.compile("\\d+").matcher(pathList).results().map(MatchResult::group)
                         .map(Integer::valueOf).toList();
