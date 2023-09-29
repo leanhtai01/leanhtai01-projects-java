@@ -7,6 +7,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class InputValidation {
+    public static final String CHECK_MARK = "[\u2713]";
+    public static final String PARTIALLY_CHECK_MARK = "[-]";
+
     private InputValidation() {
     }
 
@@ -17,7 +20,7 @@ public final class InputValidation {
 
     public static void displayMenu(List<String> menu, String promptMessage) {
         for (int i = 0; i < menu.size(); i++) {
-            System.console().printf("%d. %s%n", i + 1, menu.get(i));
+            System.console().printf("%d. %s%n", i, menu.get(i));
         }
         System.console().printf(promptMessage);
     }
@@ -106,16 +109,17 @@ public final class InputValidation {
         }
 
         for (Integer choice : choices) {
-            markInstall(menu, choice - 1);
+            markInstall(menu, choice, CHECK_MARK);
         }
     }
 
-    public static void markInstall(List<String> menu, int index) {
-        menu.set(index, menu.get(index).concat(" *"));
+    public static void markInstall(List<String> menu, int index, String mark) {
+        unmarkInstall(menu, index);
+        menu.set(index, menu.get(index).concat(" %s".formatted(mark)));
     }
 
     public static void unmarkInstall(List<String> menu, int index) {
-        menu.set(index, menu.get(index).replace(" *", ""));
+        menu.set(index, menu.get(index).replaceAll(" \\[.\\]", ""));
     }
 
     public static boolean isValidIntegerChoices(Set<Integer> choices, int minChoice, int maxChoice) {

@@ -29,15 +29,15 @@ public abstract class InstallMenu {
     }
 
     public int getMinChoice() {
-        return 1;
+        return 0;
     }
 
     public int getMaxChoice() {
-        return menu.size();
+        return menu.size() - 1;
     }
 
     public String getPromptMessage() {
-        return "==> Enter your choice (e.g. '1', '1 2 3' or '1-3'), -1 to quit%n==> ";
+        return "==> Enter your choice (e.g. '0', '0 1 2' or '0-2'), -1 to quit%n==> ";
     }
 
     public Set<Integer> getChoices() {
@@ -54,11 +54,11 @@ public abstract class InstallMenu {
     public void setChoices(Set<Integer> choices) {
         if (InputValidation.isValidIntegerChoices(choices, getMinChoice(), getMaxChoice())) {
             for (int i = 0; i < menu.size(); i++) {
-                menu.set(i, menu.get(i).replace(" *", ""));
+                InputValidation.unmarkInstall(menu, i);
             }
 
             for (Integer choice : choices) {
-                menu.set(choice - 1, menu.get(choice - 1).concat(" *"));
+                InputValidation.markInstall(menu, choice, InputValidation.CHECK_MARK);
             }
 
             this.choices = new HashSet<>(choices);
@@ -67,10 +67,10 @@ public abstract class InstallMenu {
 
     public String getInstallSummary() {
         List<String> installSummary = new ArrayList<>();
-        Pattern pattern = Pattern.compile("^Install (.*) (\\*)");
+        Pattern pattern = Pattern.compile("^Install (.*) (.*)");
 
         for (int i = 0; i < menu.size(); i++) {
-            if (choices.contains(i + 1)) {
+            if (choices.contains(i)) {
                 Matcher matcher = pattern.matcher(menu.get(i));
                 if (matcher.matches()) {
                     installSummary.add(matcher.group(1));

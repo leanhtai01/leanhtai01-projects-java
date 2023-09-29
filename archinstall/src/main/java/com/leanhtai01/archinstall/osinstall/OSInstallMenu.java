@@ -19,6 +19,7 @@ import com.leanhtai01.archinstall.osinstall.tool.ToolInstallMenu;
 import com.leanhtai01.archinstall.osinstall.virtualmachine.VirtualMachineInstallMenu;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.lib.InputValidation;
 
 public class OSInstallMenu extends InstallMenu {
     private List<InstallMenu> installMenus;
@@ -50,10 +51,10 @@ public class OSInstallMenu extends InstallMenu {
             if (isValidIntegerChoice(choice, getMinChoice(), getMaxChoice())) {
                 choices.add(choice);
 
-                if (choice != 1) {
+                if (choice != 0) {
                     System.console().printf("%n");
                 }
-                selectSubMenuOptions(choice - 1);
+                selectSubMenuOptions(choice);
             } else {
                 System.console().printf("Invalid choice. Please try again!%n");
             }
@@ -70,8 +71,9 @@ public class OSInstallMenu extends InstallMenu {
         var installMenu = installMenus.get(index);
         installMenu.selectOptions();
         if (!installMenu.getChoices().isEmpty()) {
-            markInstall(menu, index);
+            markInstall(menu, index, InputValidation.CHECK_MARK);
         } else {
+            choices.remove(index);
             unmarkInstall(menu, index);
         }
     }
@@ -89,7 +91,7 @@ public class OSInstallMenu extends InstallMenu {
         String answer = System.console().readLine();
 
         if (isAnswerYes(answer)) {
-            if (choices.contains(1)) {
+            if (choices.contains(0)) {
                 SystemInfo systemInfo = new SystemInfo();
                 systemInfo.getSystemInfo();
 
