@@ -1,4 +1,4 @@
-package com.leanhtai01.archinstall.osinstall.desktopenvironment;
+package com.leanhtai01.archinstall.systeminfo;
 
 public class GNOMEShortcut {
     private String packageName;
