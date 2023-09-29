@@ -38,4 +38,10 @@ public class DriverInstallMenu extends InstallMenu {
             }
         }
     }
+
+    public static void main(String[] args) {
+        DriverInstallMenu driverInstallMenu = new DriverInstallMenu(null, null);
+        driverInstallMenu.selectOptions();
+        System.console().printf("%s%n", driverInstallMenu.getInstallSummary());
+    }
 }
