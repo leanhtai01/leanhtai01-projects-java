@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class DotNETInstall implements Installable {
+public class DotNET implements Installable {
     private String chrootDir;
 
-    public DotNETInstall(String chrootDir) {
+    public DotNET(String chrootDir) {
         this.chrootDir = chrootDir;
     }
 

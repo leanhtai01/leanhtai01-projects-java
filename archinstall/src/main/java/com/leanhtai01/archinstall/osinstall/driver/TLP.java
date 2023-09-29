@@ -9,10 +9,10 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class TLPInstall implements Installable {
+public class TLP implements Installable {
     private String chrootDir;
 
-    public TLPInstall(String chrootDir) {
+    public TLP(String chrootDir) {
         this.chrootDir = chrootDir;
     }
 

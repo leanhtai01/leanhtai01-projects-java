@@ -8,21 +8,19 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class JavaInstall implements Installable {
+public class CoreProgrammingTool implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public JavaInstall(String chrootDir, UserAccount userAccount) {
+    public CoreProgrammingTool(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPkgs(List.of("jdk-openjdk", "openjdk-doc", "openjdk-src", "java-openjfx", "java-openjfx-doc",
-                "java-openjfx-src", "jdk17-openjdk", "java17-openjfx", "jdk11-openjdk", "java11-openjfx",
-                "jdk8-openjdk", "maven", "gradle", "gradle-doc", "jetbrains-toolbox", "xorg-fonts-type1"),
-                userAccount, chrootDir);
+        installPkgs(List.of("git", "github-cli", "kdiff3", "valgrind", "kruler", "sublime-merge",
+                "visual-studio-code-bin", "postman-bin", "emacs-wayland"), userAccount, chrootDir);
 
         return 0;
     }

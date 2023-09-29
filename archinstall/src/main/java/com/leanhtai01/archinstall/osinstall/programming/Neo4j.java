@@ -8,20 +8,18 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class CoreProgrammingInstall implements Installable {
+public class Neo4j implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public CoreProgrammingInstall(String chrootDir, UserAccount userAccount) {
+    public Neo4j(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installPkgs(List.of("git", "github-cli", "kdiff3", "valgrind", "kruler", "sublime-merge",
-                "visual-studio-code-bin", "postman-bin", "emacs-wayland"), userAccount, chrootDir);
-
+        installPkgs(List.of("neo4j-desktop"), userAccount, chrootDir);
         return 0;
     }
 }

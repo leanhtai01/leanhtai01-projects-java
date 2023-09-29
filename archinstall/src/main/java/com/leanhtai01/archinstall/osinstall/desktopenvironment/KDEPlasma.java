@@ -8,10 +8,10 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class KDEPlasmaInstall implements Installable {
+public class KDEPlasma implements Installable {
     private String chrootDir;
 
-    public KDEPlasmaInstall(String chrootDir) {
+    public KDEPlasma(String chrootDir) {
         this.chrootDir = chrootDir;
     }
 

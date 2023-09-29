@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class IntelDriverInstall implements Installable {
+public class IntelDriver implements Installable {
     private String chrootDir;
 
-    public IntelDriverInstall(String chrootDir) {
+    public IntelDriver(String chrootDir) {
         this.chrootDir = chrootDir;
     }
 

@@ -7,17 +7,18 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class CAndCPPInstall implements Installable {
+public class Python implements Installable {
     private String chrootDir;
 
-    public CAndCPPInstall(String chrootDir) {
+    public Python(String chrootDir) {
         this.chrootDir = chrootDir;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("clang", "llvm", "lldb", "cmake", "qt6-base", "qt6-doc", "qtcreator", "kdevelop"),
-                chrootDir);
+        installMainReposPkgs(List.of("python", "jupyterlab", "python-nltk", "python-pandas", "python-pip",
+                "python-numpy", "python-scikit-learn", "tk", "python-matplotlib", "python-docs", "autopep8",
+                "python-requests", "python-beautifulsoup4", "python-pygame", "python-networkx"), chrootDir);
 
         return 0;
     }

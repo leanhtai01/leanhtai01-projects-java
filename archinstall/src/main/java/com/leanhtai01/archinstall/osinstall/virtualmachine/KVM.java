@@ -14,11 +14,11 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class KVMInstall implements Installable {
+public class KVM implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public KVMInstall(String chrootDir, UserAccount userAccount) {
+    public KVM(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }

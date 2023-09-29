@@ -8,11 +8,11 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class BrowserInstall implements Installable {
+public class Browser implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public BrowserInstall(String chrootDir, UserAccount userAccount) {
+    public Browser(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }

@@ -8,11 +8,11 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class JavaScriptInstall implements Installable {
+public class JavaScript implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public JavaScriptInstall(String chrootDir, UserAccount userAccount) {
+    public JavaScript(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }

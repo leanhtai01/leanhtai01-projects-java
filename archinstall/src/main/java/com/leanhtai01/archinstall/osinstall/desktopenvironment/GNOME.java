@@ -22,7 +22,7 @@ import com.leanhtai01.archinstall.systeminfo.GNOMEShortcut;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.Pair;
 
-public class GNOMEInstall implements Installable {
+public class GNOME implements Installable {
     private static final String GSETTINGS = "gsettings";
 
     private static final String GSETTINGS_CUSTOM_KEYBINDINGS_KEY = "custom-keybindings";
@@ -33,7 +33,7 @@ public class GNOMEInstall implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public GNOMEInstall(String chrootDir, UserAccount userAccount) {
+    public GNOME(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }

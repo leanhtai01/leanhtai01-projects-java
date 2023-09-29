@@ -10,11 +10,11 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class PipeWireInstall implements Installable {
+public class PipeWire implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public PipeWireInstall(String chrootDir, UserAccount userAccount) {
+    public PipeWire(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }

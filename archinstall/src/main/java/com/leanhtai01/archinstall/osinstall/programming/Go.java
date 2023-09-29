@@ -7,19 +7,16 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class PythonInstall implements Installable {
+public class Go implements Installable {
     private String chrootDir;
 
-    public PythonInstall(String chrootDir) {
+    public Go(String chrootDir) {
         this.chrootDir = chrootDir;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("python", "jupyterlab", "python-nltk", "python-pandas", "python-pip",
-                "python-numpy", "python-scikit-learn", "tk", "python-matplotlib", "python-docs", "autopep8",
-                "python-requests", "python-beautifulsoup4", "python-pygame", "python-networkx"), chrootDir);
-
+        installMainReposPkgs(List.of("go", "go-tools", "gopls"), chrootDir);
         return 0;
     }
 }

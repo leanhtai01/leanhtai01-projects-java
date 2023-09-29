@@ -7,18 +7,16 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.Installable;
 
-public class FontInstall implements Installable {
+public class RemoteDesktop implements Installable {
     private String chrootDir;
 
-    public FontInstall(String chrootDir) {
+    public RemoteDesktop(String chrootDir) {
         this.chrootDir = chrootDir;
     }
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("ttf-dejavu", "ttf-liberation", "noto-fonts-emoji", "ttf-cascadia-code",
-                "ttf-fira-code", "ttf-roboto-mono", "ttf-hack"), chrootDir);
-
+        installMainReposPkgs(List.of("remmina", "freerdp", "spice-gtk", "libvncserver"), chrootDir);
         return 0;
     }
 }

@@ -8,11 +8,11 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class OfficeInstall implements Installable {
+public class Office implements Installable {
     private String chrootDir;
     private UserAccount userAccount;
 
-    public OfficeInstall(String chrootDir, UserAccount userAccount) {
+    public Office(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
         this.userAccount = userAccount;
     }
