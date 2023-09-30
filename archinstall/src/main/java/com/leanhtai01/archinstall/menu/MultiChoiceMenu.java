@@ -6,10 +6,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class MultiChoiceMenu extends Menu {
-    public MultiChoiceMenu() {
-        super();
-    }
-
     @Override
     public String getPromptMessage() {
         return "==> Enter your choice (e.g. '0', '0 1 2' or '0-2'), -1 to quit%n==> ";
@@ -27,12 +23,6 @@ public class MultiChoiceMenu extends Menu {
     public void selectAll() {
         for (Option option : options) {
             option.setMarked(true);
-        }
-    }
-
-    public void clearAll() {
-        for (Option option : options) {
-            option.setMarked(false);
         }
     }
 

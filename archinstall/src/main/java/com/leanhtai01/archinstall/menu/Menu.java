@@ -27,6 +27,12 @@ public abstract class Menu {
         optionCount++;
     }
 
+    public void clearAll() {
+        for (Option option : options) {
+            option.setMarked(false);
+        }
+    }
+
     public void displayMenu() {
         for (Option option : options) {
             System.console().printf("%s\n", option);

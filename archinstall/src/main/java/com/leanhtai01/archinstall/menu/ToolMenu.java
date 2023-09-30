@@ -22,10 +22,4 @@ public class ToolMenu extends MultiChoiceMenu {
         addOption(new Option("Office", new Office(chrootDir, userAccount), false));
         addOption(new Option("Remote Desktop", new RemoteDesktop(chrootDir), false));
     }
-
-    public static void main(String[] args) {
-        ToolMenu toolMenu = new ToolMenu(null, null);
-        toolMenu.selectOption();
-        System.console().printf("%s%n", toolMenu.getActionSummary());
-    }
 }
