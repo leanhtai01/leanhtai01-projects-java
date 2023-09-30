@@ -16,7 +16,7 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Install System", new InstallSystem(), false));
         addOption(new Option("Configure System", new ConfigureSystem(), false));
 
-        Runnable encryptedDisk = () -> {
+        Runnable encryptDisk = () -> {
             try {
                 runVerbose(List.of("lsblk"));
                 System.console().printf("Enter disk name: ");
@@ -38,6 +38,6 @@ public class MainMenu extends SingleChoiceMenu {
                 Thread.currentThread().interrupt();
             }
         };
-        addOption(new Option("Encrypt disk", encryptedDisk, false));
+        addOption(new Option("Encrypt disk", encryptDisk, false));
     }
 }
