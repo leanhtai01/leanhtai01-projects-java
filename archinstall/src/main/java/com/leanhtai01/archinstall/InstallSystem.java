@@ -22,7 +22,7 @@ public class InstallSystem implements Runnable {
     private SystemInfo systemInfo;
     private UserAccount userAccount;
 
-    private void getInfo() {
+    private void getInfo() throws IOException, InterruptedException {
         String[] mirrorsArray = new String[3];
         Arrays.fill(mirrorsArray, "Server = https://mirror.xtom.com.hk/archlinux/$repo/os/$arch");
         List<String> mirrors = Arrays.asList(mirrorsArray);
@@ -52,38 +52,38 @@ public class InstallSystem implements Runnable {
 
     @Override
     public void run() {
-        getInfo();
+        try {
+            getInfo();
 
-        final String chrootDir = "/mnt";
-        BaseSystem baseSystem = new BaseSystem(systemInfo, userAccount);
+            final String chrootDir = "/mnt";
+            BaseSystem baseSystem = new BaseSystem(systemInfo, userAccount);
 
-        DesktopEnvironmentMenu desktopEnvironmentMenu = new DesktopEnvironmentMenu(chrootDir, userAccount);
-        desktopEnvironmentMenu.setOptions(Set.of(0));
+            DesktopEnvironmentMenu desktopEnvironmentMenu = new DesktopEnvironmentMenu(chrootDir, userAccount);
+            desktopEnvironmentMenu.setOptions(Set.of(0));
 
-        DriverMenu driverMenu = new DriverMenu(chrootDir, userAccount);
-        driverMenu.selectAll();
+            DriverMenu driverMenu = new DriverMenu(chrootDir, userAccount);
+            driverMenu.selectAll();
 
-        ProgrammingMenu programmingMenu = new ProgrammingMenu(chrootDir, userAccount);
-        programmingMenu.selectAll();
+            ProgrammingMenu programmingMenu = new ProgrammingMenu(chrootDir, userAccount);
+            programmingMenu.selectAll();
 
-        ToolMenu toolMenu = new ToolMenu(chrootDir, userAccount);
-        toolMenu.selectAll();
+            ToolMenu toolMenu = new ToolMenu(chrootDir, userAccount);
+            toolMenu.selectAll();
 
-        VirtualMachineMenu virtualMachineMenu = new VirtualMachineMenu(chrootDir, userAccount);
-        virtualMachineMenu.selectAll();
+            VirtualMachineMenu virtualMachineMenu = new VirtualMachineMenu(chrootDir, userAccount);
+            virtualMachineMenu.selectAll();
 
-        System.console().printf("Install summary:%n");
-        System.console().printf("%s%n", "[Base System]");
-        System.console().printf("%s%n", desktopEnvironmentMenu.getActionSummary());
-        System.console().printf("%s%n", driverMenu.getActionSummary());
-        System.console().printf("%s%n", programmingMenu.getActionSummary());
-        System.console().printf("%s%n", toolMenu.getActionSummary());
-        System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
+            System.console().printf("Install summary:%n");
+            System.console().printf("%s%n", "[Base System]");
+            System.console().printf("%s%n", desktopEnvironmentMenu.getActionSummary());
+            System.console().printf("%s%n", driverMenu.getActionSummary());
+            System.console().printf("%s%n", programmingMenu.getActionSummary());
+            System.console().printf("%s%n", toolMenu.getActionSummary());
+            System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
 
-        System.console().printf(":: Proceed with installation? [Y/n] ");
-        String answer = System.console().readLine();
-        if (IOUtil.isAnswerYes(answer)) {
-            try {
+            System.console().printf(":: Proceed with installation? [Y/n] ");
+            String answer = System.console().readLine();
+            if (IOUtil.isAnswerYes(answer)) {
                 NetworkUtil.connectToWifi();
                 baseSystem.install();
                 desktopEnvironmentMenu.doAction();
@@ -91,9 +91,9 @@ public class InstallSystem implements Runnable {
                 programmingMenu.doAction();
                 toolMenu.doAction();
                 virtualMachineMenu.doAction();
-            } catch (InterruptedException | IOException e) {
-                Thread.currentThread().interrupt();
             }
+        } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }

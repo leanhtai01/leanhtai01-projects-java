@@ -1,5 +1,10 @@
 package com.leanhtai01.archinstall.menu;
 
+import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
+
+import java.io.IOException;
+import java.util.List;
+
 import com.leanhtai01.archinstall.partition.LVMOnLUKS;
 import com.leanhtai01.archinstall.partition.LVMOnLUKSDualBootWindows;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
@@ -11,9 +16,10 @@ import com.leanhtai01.archinstall.util.IOUtil;
 public class PartitionLayoutMenu extends SingleChoiceMenu {
     private PartitionLayout partitionLayout;
 
-    public PartitionLayoutMenu() {
+    public PartitionLayoutMenu() throws IOException, InterruptedException {
         super();
 
+        runVerbose(List.of("lsblk"));
         System.console().printf("Enter disk's name (e.g. nvme0n1, sda): ");
         String diskName = System.console().readLine();
 
