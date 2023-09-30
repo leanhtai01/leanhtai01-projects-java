@@ -9,7 +9,7 @@ import com.leanhtai01.archinstall.osinstall.desktopenvironment.GNOME;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.IOUtil;
 
-public class ConfigSystem implements Runnable {
+public class ConfigureSystem implements Runnable {
     private UserAccount userAccount;
 
     private void getInfo() {
