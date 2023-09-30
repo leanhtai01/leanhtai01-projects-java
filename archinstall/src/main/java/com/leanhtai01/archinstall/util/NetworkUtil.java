@@ -1,5 +1,6 @@
 package com.leanhtai01.archinstall.util;
 
+import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
 import static com.leanhtai01.archinstall.util.ShellUtil.runSilent;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public final class NetworkUtil {
                 System.console().printf("SSID: ");
                 String ssid = System.console().readLine();
 
-                String password = IOUtil.readPassword("Wifi password: ", "Re-enter Wifi password: ");
+                String password = readPassword("Wifi password: ", "Re-enter Wifi password: ");
 
                 WirelessNetwork network = new WirelessNetwork(ssid, password, "wlan0", true);
                 network.connect();

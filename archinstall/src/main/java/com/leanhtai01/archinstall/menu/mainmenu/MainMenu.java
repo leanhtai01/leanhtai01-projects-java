@@ -8,6 +8,7 @@ public class MainMenu extends SingleChoiceMenu {
         super();
         addOption(new Option("Install System", new InstallSystem(), false));
         addOption(new Option("Configure System", new ConfigureSystem(), false));
-        addOption(new Option("Encrypt disk", new EncryptDisk(), false));
+        addOption(new Option("Encrypt Disk", new EncryptDisk(), false));
+        addOption(new Option("Erase Disk", new EraseDisk(), false));
     }
 }

@@ -1,5 +1,6 @@
 package com.leanhtai01.archinstall.menu;
 
+import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
@@ -11,7 +12,6 @@ import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.partition.Unencrypted;
 import com.leanhtai01.archinstall.partition.UnencryptedDualBootWindows;
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
-import com.leanhtai01.archinstall.util.IOUtil;
 
 public class PartitionLayoutMenu extends SingleChoiceMenu {
     private PartitionLayout partitionLayout;
@@ -54,7 +54,7 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
     }
 
     private String getLUKSPassword() {
-        return IOUtil.readPassword(
+        return readPassword(
                 "LUKS's password: ",
                 "Re-enter LUKS's password: ");
     }

@@ -1,5 +1,9 @@
 package com.leanhtai01.archinstall.menu.mainmenu;
 
+import static com.leanhtai01.archinstall.util.IOUtil.getConfirmation;
+import static com.leanhtai01.archinstall.util.IOUtil.isAnswerYes;
+import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +19,6 @@ import com.leanhtai01.archinstall.osinstall.BaseSystem;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
-import com.leanhtai01.archinstall.util.IOUtil;
 import com.leanhtai01.archinstall.util.NetworkUtil;
 
 public class InstallSystem implements Runnable {
@@ -30,7 +33,7 @@ public class InstallSystem implements Runnable {
         System.console().printf("Hostname: ");
         final String hostname = System.console().readLine();
 
-        final String rootPassword = IOUtil.readPassword(
+        final String rootPassword = readPassword(
                 "Root's password: ",
                 "Re-enter root's password: ");
 
@@ -40,7 +43,7 @@ public class InstallSystem implements Runnable {
         System.console().printf("Username: ");
         final String username = System.console().readLine();
 
-        final String userPassword = IOUtil.readPassword(
+        final String userPassword = readPassword(
                 "User's password: ",
                 "Re-enter User's password: ");
 
@@ -81,9 +84,7 @@ public class InstallSystem implements Runnable {
             System.console().printf("%s%n", toolMenu.getActionSummary());
             System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
 
-            System.console().printf(":: Proceed with installation? [Y/n] ");
-            String answer = System.console().readLine();
-            if (IOUtil.isAnswerYes(answer)) {
+            if (isAnswerYes(getConfirmation(":: Proceed with installation? [Y/n] "))) {
                 NetworkUtil.connectToWifi();
                 baseSystem.install();
                 desktopEnvironmentMenu.doAction();

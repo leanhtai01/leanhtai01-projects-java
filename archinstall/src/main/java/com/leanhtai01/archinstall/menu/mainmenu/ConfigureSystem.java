@@ -1,5 +1,8 @@
 package com.leanhtai01.archinstall.menu.mainmenu;
 
+import static com.leanhtai01.archinstall.util.IOUtil.getConfirmation;
+import static com.leanhtai01.archinstall.util.IOUtil.isAnswerYes;
+import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
 import static com.leanhtai01.archinstall.util.PackageUtil.installFlatpakPackages;
 
 import java.io.IOException;
@@ -7,7 +10,6 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.osinstall.desktopenvironment.GNOME;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
-import com.leanhtai01.archinstall.util.IOUtil;
 
 public class ConfigureSystem implements Runnable {
     private UserAccount userAccount;
@@ -16,7 +18,7 @@ public class ConfigureSystem implements Runnable {
         System.console().printf("Username: ");
         final String username = System.console().readLine();
 
-        final String userPassword = IOUtil.readPassword(
+        final String userPassword = readPassword(
                 "User's password: ",
                 "Re-enter User's password: ");
 
@@ -27,9 +29,7 @@ public class ConfigureSystem implements Runnable {
     public void run() {
         getInfo();
 
-        System.console().printf(":: Proceed with configuration? [Y/n] ");
-        String answer = System.console().readLine();
-        if (IOUtil.isAnswerYes(answer)) {
+        if (isAnswerYes(getConfirmation(":: Proceed with configuration? [Y/n] "))) {
             try {
                 configureGNOME();
                 installFlatpakPkgs();

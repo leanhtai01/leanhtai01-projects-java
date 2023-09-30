@@ -26,6 +26,11 @@ public final class IOUtil {
         return password;
     }
 
+    public static String getConfirmation(String promptMessage) {
+        System.console().printf(promptMessage);
+        return System.console().readLine();
+    }
+
     public static boolean isAnswerYes(String answer) {
         Pattern pattern = Pattern.compile("y|yes", Pattern.CASE_INSENSITIVE);
         return pattern.matcher(answer).matches() || answer.isBlank();
