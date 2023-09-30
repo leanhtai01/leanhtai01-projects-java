@@ -1,4 +1,4 @@
-package com.leanhtai01.archinstall;
+package com.leanhtai01.archinstall.menu.mainmenu;
 
 import java.io.IOException;
 import java.util.Arrays;
