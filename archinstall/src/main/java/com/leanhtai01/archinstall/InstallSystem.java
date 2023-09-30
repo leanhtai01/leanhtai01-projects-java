@@ -22,7 +22,7 @@ public class InstallSystem implements Runnable {
     private SystemInfo systemInfo;
     private UserAccount userAccount;
 
-    private void getInstallInfo() {
+    private void getInfo() {
         String[] mirrorsArray = new String[3];
         Arrays.fill(mirrorsArray, "Server = https://mirror.xtom.com.hk/archlinux/$repo/os/$arch");
         List<String> mirrors = Arrays.asList(mirrorsArray);
@@ -52,7 +52,7 @@ public class InstallSystem implements Runnable {
 
     @Override
     public void run() {
-        getInstallInfo();
+        getInfo();
 
         final String chrootDir = "/mnt";
         BaseSystem baseSystem = new BaseSystem(systemInfo, userAccount);
