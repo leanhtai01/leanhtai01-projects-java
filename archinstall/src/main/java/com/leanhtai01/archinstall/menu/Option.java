@@ -1,7 +1,7 @@
 package com.leanhtai01.archinstall.menu;
 
 public class Option {
-    private static final String CHECK_MARK = "[\u2713]";
+    private static final String CHECK_MARK = "[*]";
 
     private int optionNumber;
     private String description;
