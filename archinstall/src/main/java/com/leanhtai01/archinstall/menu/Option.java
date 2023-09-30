@@ -6,11 +6,11 @@ public class Option {
     private int optionNumber;
     private String description;
     private boolean isMarked;
-    private Runnable runnable;
+    private Runnable action;
 
-    public Option(String description, Runnable runnable, boolean isMarked) {
+    public Option(String description, Runnable action, boolean isMarked) {
         this.description = description;
-        this.runnable = runnable;
+        this.action = action;
         this.isMarked = isMarked;
     }
 
@@ -36,7 +36,7 @@ public class Option {
 
     public void doAction() {
         if (isMarked) {
-            runnable.run();
+            action.run();
         }
     }
 

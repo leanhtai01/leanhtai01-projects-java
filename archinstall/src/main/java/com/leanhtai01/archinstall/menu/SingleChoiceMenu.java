@@ -3,7 +3,7 @@ package com.leanhtai01.archinstall.menu;
 public class SingleChoiceMenu extends Menu {
     @Override
     public String getPromptMessage() {
-        return "==> ";
+        return "==> Enter your choice, -1 to quit%n==> ";
     }
 
     @Override
