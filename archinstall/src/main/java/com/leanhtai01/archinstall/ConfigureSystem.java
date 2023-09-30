@@ -27,7 +27,7 @@ public class ConfigureSystem implements Runnable {
     public void run() {
         getInfo();
 
-        System.console().printf(":: Proceed? [Y/n] ");
+        System.console().printf(":: Proceed with configuration? [Y/n] ");
         String answer = System.console().readLine();
         if (IOUtil.isAnswerYes(answer)) {
             try {
