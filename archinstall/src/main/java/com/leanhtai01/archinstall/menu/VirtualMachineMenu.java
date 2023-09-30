@@ -7,7 +7,7 @@ import com.leanhtai01.archinstall.systeminfo.UserAccount;
 public class VirtualMachineMenu extends MultiChoiceMenu {
     public VirtualMachineMenu(String chrootDir, UserAccount userAccount) {
         super();
-        addOption(new MultiChoiceOption("KVM", new KVM(chrootDir, userAccount), false));
-        addOption(new MultiChoiceOption("VirtualBox", new VirtualBox(chrootDir, userAccount), false));
+        addOption(new Option("KVM", new KVM(chrootDir, userAccount), false));
+        addOption(new Option("VirtualBox", new VirtualBox(chrootDir, userAccount), false));
     }
 }

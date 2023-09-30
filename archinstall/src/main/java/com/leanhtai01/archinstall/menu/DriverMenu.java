@@ -8,8 +8,8 @@ import com.leanhtai01.archinstall.systeminfo.UserAccount;
 public class DriverMenu extends MultiChoiceMenu {
     public DriverMenu(String chrootDir, UserAccount userAccount) {
         super();
-        addOption(new MultiChoiceOption("Intel Driver", new IntelDriver(chrootDir), false));
-        addOption(new MultiChoiceOption("PipeWire", new PipeWire(chrootDir, userAccount), false));
-        addOption(new MultiChoiceOption("TLP", new TLP(chrootDir), false));
+        addOption(new Option("Intel Driver", new IntelDriver(chrootDir), false));
+        addOption(new Option("PipeWire", new PipeWire(chrootDir, userAccount), false));
+        addOption(new Option("TLP", new TLP(chrootDir), false));
     }
 }

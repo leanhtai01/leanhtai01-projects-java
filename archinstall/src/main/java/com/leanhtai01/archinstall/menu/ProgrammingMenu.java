@@ -15,15 +15,15 @@ import com.leanhtai01.archinstall.systeminfo.UserAccount;
 public class ProgrammingMenu extends MultiChoiceMenu {
     public ProgrammingMenu(String chrootDir, UserAccount userAccount) {
         super();
-        addOption(new MultiChoiceOption("C And C++", new CAndCPP(chrootDir), false));
-        addOption(new MultiChoiceOption("Core Programming Tools", new CoreProgrammingTool(chrootDir, userAccount), false));
-        addOption(new MultiChoiceOption("Docker", new Docker(chrootDir, userAccount), false));
-        addOption(new MultiChoiceOption("DotNET", new DotNET(chrootDir), false));
-        addOption(new MultiChoiceOption("Go", new Go(chrootDir), false));
-        addOption(new MultiChoiceOption("GTK Programming Tools", new GTKProgrammingTool(chrootDir), false));
-        addOption(new MultiChoiceOption("Java", new Java(chrootDir, userAccount), false));
-        addOption(new MultiChoiceOption("JavaScript", new JavaScript(chrootDir, userAccount), false));
-        addOption(new MultiChoiceOption("Neo4j", new Neo4j(chrootDir, userAccount), false));
-        addOption(new MultiChoiceOption("Python", new Python(chrootDir), false));
+        addOption(new Option("C And C++", new CAndCPP(chrootDir), false));
+        addOption(new Option("Core Programming Tools", new CoreProgrammingTool(chrootDir, userAccount), false));
+        addOption(new Option("Docker", new Docker(chrootDir, userAccount), false));
+        addOption(new Option("DotNET", new DotNET(chrootDir), false));
+        addOption(new Option("Go", new Go(chrootDir), false));
+        addOption(new Option("GTK Programming Tools", new GTKProgrammingTool(chrootDir), false));
+        addOption(new Option("Java", new Java(chrootDir, userAccount), false));
+        addOption(new Option("JavaScript", new JavaScript(chrootDir, userAccount), false));
+        addOption(new Option("Neo4j", new Neo4j(chrootDir, userAccount), false));
+        addOption(new Option("Python", new Python(chrootDir), false));
     }
 }
