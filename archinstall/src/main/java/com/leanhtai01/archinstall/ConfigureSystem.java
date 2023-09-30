@@ -26,11 +26,16 @@ public class ConfigureSystem implements Runnable {
     @Override
     public void run() {
         getInfo();
-        try {
-            configureGNOME();
-            installFlatpakPkgs();
-        } catch (InterruptedException | IOException e) {
-            Thread.currentThread().interrupt();
+
+        System.console().printf(":: Proceed? [Y/n] ");
+        String answer = System.console().readLine();
+        if (IOUtil.isAnswerYes(answer)) {
+            try {
+                configureGNOME();
+                installFlatpakPkgs();
+            } catch (InterruptedException | IOException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 

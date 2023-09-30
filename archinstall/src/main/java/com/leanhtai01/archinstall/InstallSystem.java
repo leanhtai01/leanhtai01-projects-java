@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import com.leanhtai01.archinstall.menu.DesktopEnvironmentMenu;
 import com.leanhtai01.archinstall.menu.DriverMenu;
@@ -83,8 +82,7 @@ public class InstallSystem implements Runnable {
 
         System.console().printf(":: Proceed with installation? [Y/n] ");
         String answer = System.console().readLine();
-
-        if (isAnswerYes(answer)) {
+        if (IOUtil.isAnswerYes(answer)) {
             try {
                 NetworkUtil.connectToWifi();
                 baseSystem.install();
@@ -97,10 +95,5 @@ public class InstallSystem implements Runnable {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-    public boolean isAnswerYes(String answer) {
-        Pattern pattern = Pattern.compile("y|yes", Pattern.CASE_INSENSITIVE);
-        return pattern.matcher(answer).matches() || answer.isBlank();
     }
 }

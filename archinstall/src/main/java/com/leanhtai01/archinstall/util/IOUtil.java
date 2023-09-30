@@ -1,5 +1,7 @@
 package com.leanhtai01.archinstall.util;
 
+import java.util.regex.Pattern;
+
 public final class IOUtil {
     private IOUtil() {
     }
@@ -22,5 +24,10 @@ public final class IOUtil {
         }
 
         return password;
+    }
+
+    public static boolean isAnswerYes(String answer) {
+        Pattern pattern = Pattern.compile("y|yes", Pattern.CASE_INSENSITIVE);
+        return pattern.matcher(answer).matches() || answer.isBlank();
     }
 }
