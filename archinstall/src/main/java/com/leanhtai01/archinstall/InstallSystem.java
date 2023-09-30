@@ -16,6 +16,7 @@ import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.IOUtil;
+import com.leanhtai01.archinstall.util.NetworkUtil;
 
 public class InstallSystem implements Runnable {
     private SystemInfo systemInfo;
@@ -31,8 +32,7 @@ public class InstallSystem implements Runnable {
 
         final String rootPassword = IOUtil.readPassword(
                 "Root's password: ",
-                "Re-enter root's password: ",
-                "Two password isn't the same. Please try again!%n");
+                "Re-enter root's password: ");
 
         System.console().printf("User's real name: ");
         final String realName = System.console().readLine();
@@ -42,8 +42,7 @@ public class InstallSystem implements Runnable {
 
         final String userPassword = IOUtil.readPassword(
                 "User's password: ",
-                "Re-enter User's password: ",
-                "Two password isn't the same. Please try again!%n");
+                "Re-enter User's password: ");
 
         final PartitionLayout partitionLayout = new PartitionLayoutMenu().selectPartitionLayout();
 
@@ -74,6 +73,7 @@ public class InstallSystem implements Runnable {
         virtualMachineMenu.selectAll();
 
         try {
+            NetworkUtil.connectToWifi();
             baseSystem.install();
             desktopEnvironmentMenu.doAction();
             driverMenu.doAction();

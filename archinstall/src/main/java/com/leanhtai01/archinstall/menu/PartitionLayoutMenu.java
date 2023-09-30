@@ -50,7 +50,6 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
     private String getLUKSPassword() {
         return IOUtil.readPassword(
                 "LUKS's password: ",
-                "Re-enter LUKS's password: ",
-                "Two password isn't the same. Please try again!%n");
+                "Re-enter LUKS's password: ");
     }
 }

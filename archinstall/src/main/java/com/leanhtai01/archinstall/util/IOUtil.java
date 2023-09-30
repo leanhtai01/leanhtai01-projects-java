@@ -4,7 +4,7 @@ public final class IOUtil {
     private IOUtil() {
     }
 
-    public static String readPassword(String firstPrompt, String secondPrompt, String errorMessage) {
+    public static String readPassword(String firstPrompt, String secondPrompt) {
         System.console().printf(firstPrompt);
         String password = String.valueOf(System.console().readPassword());
 
@@ -12,7 +12,7 @@ public final class IOUtil {
         String reEnterPassword = String.valueOf(System.console().readPassword());
 
         while (!password.equals(reEnterPassword)) {
-            System.console().printf(errorMessage);
+            System.console().printf("Two password isn't the same. Please try again!%n");
 
             System.console().printf(firstPrompt);
             password = String.valueOf(System.console().readPassword());
