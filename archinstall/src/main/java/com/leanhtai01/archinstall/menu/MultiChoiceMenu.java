@@ -41,7 +41,7 @@ public class MultiChoiceMenu {
         }
     }
 
-    public String getInstallSummary() {
+    public String getActionSummary() {
         List<String> markedOptions = new ArrayList<>();
 
         for (MultiChoiceOption option : multiChoiceOptions) {

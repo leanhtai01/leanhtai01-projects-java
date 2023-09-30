@@ -1,7 +1,5 @@
 package com.leanhtai01.archinstall.menu;
 
-import com.leanhtai01.archinstall.osinstall.Installable;
-
 public class MultiChoiceOption {
     private static final String CHECK_MARK = "[\u2713]";
 
@@ -10,9 +8,9 @@ public class MultiChoiceOption {
     private boolean isMarked;
     private Runnable runnable;
 
-    public MultiChoiceOption(String description, Installable installable, boolean isMarked) {
+    public MultiChoiceOption(String description, Runnable runnable, boolean isMarked) {
         this.description = description;
-        this.runnable = installable;
+        this.runnable = runnable;
         this.isMarked = isMarked;
     }
 
