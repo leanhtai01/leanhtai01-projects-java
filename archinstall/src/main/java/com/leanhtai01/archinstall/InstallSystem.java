@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.leanhtai01.archinstall.menu.DesktopEnvironmentMenu;
 import com.leanhtai01.archinstall.menu.DriverMenu;
@@ -72,16 +73,34 @@ public class InstallSystem implements Runnable {
         VirtualMachineMenu virtualMachineMenu = new VirtualMachineMenu(chrootDir, userAccount);
         virtualMachineMenu.selectAll();
 
-        try {
-            NetworkUtil.connectToWifi();
-            baseSystem.install();
-            desktopEnvironmentMenu.doAction();
-            driverMenu.doAction();
-            programmingMenu.doAction();
-            toolMenu.doAction();
-            virtualMachineMenu.doAction();
-        } catch (InterruptedException | IOException e) {
-            Thread.currentThread().interrupt();
+        System.console().printf("Install summary:%n");
+        System.console().printf("%s%n", "[Base System]");
+        System.console().printf("%s%n", desktopEnvironmentMenu.getActionSummary());
+        System.console().printf("%s%n", driverMenu.getActionSummary());
+        System.console().printf("%s%n", programmingMenu.getActionSummary());
+        System.console().printf("%s%n", toolMenu.getActionSummary());
+        System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
+
+        System.console().printf(":: Proceed with installation? [Y/n] ");
+        String answer = System.console().readLine();
+
+        if (isAnswerYes(answer)) {
+            try {
+                NetworkUtil.connectToWifi();
+                baseSystem.install();
+                desktopEnvironmentMenu.doAction();
+                driverMenu.doAction();
+                programmingMenu.doAction();
+                toolMenu.doAction();
+                virtualMachineMenu.doAction();
+            } catch (InterruptedException | IOException e) {
+                Thread.currentThread().interrupt();
+            }
         }
+    }
+
+    public boolean isAnswerYes(String answer) {
+        Pattern pattern = Pattern.compile("y|yes", Pattern.CASE_INSENSITIVE);
+        return pattern.matcher(answer).matches() || answer.isBlank();
     }
 }
