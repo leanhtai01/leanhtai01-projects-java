@@ -26,7 +26,7 @@ import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
-public class BaseSystemInstall {
+public class BaseSystem {
     private static final String CHROOT_DIR = "/mnt";
     private static final String PATH_TO_SUDOERS = CHROOT_DIR + "/etc/sudoers";
     private static final String PATH_TO_MKINITCPIO_CONFIG = CHROOT_DIR + "/etc/mkinitcpio.conf";
@@ -35,7 +35,7 @@ public class BaseSystemInstall {
     private SystemInfo systemInfo;
     private UserAccount userAccount;
 
-    public BaseSystemInstall(SystemInfo systemInfo, UserAccount userAccount) {
+    public BaseSystem(SystemInfo systemInfo, UserAccount userAccount) {
         this.systemInfo = systemInfo;
         this.userAccount = userAccount;
     }
