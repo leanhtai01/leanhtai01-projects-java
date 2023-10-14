@@ -6,13 +6,14 @@ import com.leanhtai01.archinstall.menu.SingleChoiceMenu;
 public class MainMenu extends SingleChoiceMenu {
     public MainMenu() {
         super();
-        addOption(new Option("Install System (full)", new InstallSystem(), false));
-        addOption(new Option("Install System (selective)", new InstallSystemSelective(), false));
-        addOption(new Option("Configure System", new ConfigureSystem(), false));
-        addOption(new Option("Configure As A VirtualBox Guest", new ConfigureAsVBGuest(null, null), false));
-        addOption(new Option("Enable DNSCryptProxy", new EnableDNSCryptProxy(), false));
-        addOption(new Option("Disable DNSCryptProxy", new DisableDNSCryptProxy(), false));
-        addOption(new Option("Encrypt Disk", new EncryptDisk(), false));
-        addOption(new Option("Erase Disk", new EraseDisk(), false));
+        addOption(new Option("Install System Full (live system)", new InstallSystem(), false));
+        addOption(new Option("Install System Selective (live system)", new InstallSystemSelective(), false));
+        addOption(new Option("Install Game (installed system, sudo)", new InstallGame(), false));
+        addOption(new Option("Configure GNOME (installed system with GNOME DE)", new ConfigureSystem(), false));
+        addOption(new Option("Configure As A VirtualBox Guest (sudo)", new ConfigureAsVBGuest(null, null), false));
+        addOption(new Option("Enable DNSCryptProxy (installed system, sudo)", new EnableDNSCryptProxy(), false));
+        addOption(new Option("Disable DNSCryptProxy (installed system, sudo)", new DisableDNSCryptProxy(), false));
+        addOption(new Option("Encrypt Disk (live/installed system, sudo)", new EncryptDisk(), false));
+        addOption(new Option("Erase Disk (live/installed system, sudo)", new EraseDisk(), false));
     }
 }

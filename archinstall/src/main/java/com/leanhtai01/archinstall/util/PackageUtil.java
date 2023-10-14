@@ -193,6 +193,14 @@ public final class PackageUtil {
         return optionalDeps;
     }
 
+    public static void installMainReposPkgsWithOptionalDeps(List<String> packages, String chrootDir)
+            throws InterruptedException, IOException {
+        installMainReposPkgs(packages, chrootDir);
+        for (String pkg : packages) {
+            installMainReposPkgs(getOptionalDependencies(pkg, chrootDir), chrootDir);
+        }
+    }
+
     private static List<String> getPackagesFromFile(String fileName) {
         return new BufferedReader(new InputStreamReader(
                 Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName))).lines().toList();
