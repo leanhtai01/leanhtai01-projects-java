@@ -43,7 +43,10 @@ public class InstallSystem implements Runnable {
 
             System.console().printf("%n");
             getInstallSummary();
-            confirmAndInstall();
+
+            if (isAnswerYes(getConfirmation(":: Proceed with installation? [Y/n] "))) {
+                install();
+            }
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -108,15 +111,13 @@ public class InstallSystem implements Runnable {
         System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
     }
 
-    private void confirmAndInstall() throws InterruptedException, IOException {
-        if (isAnswerYes(getConfirmation(":: Proceed with installation? [Y/n] "))) {
-            NetworkUtil.connectToWifi();
-            baseSystem.install();
-            desktopEnvironmentMenu.doAction();
-            driverMenu.doAction();
-            programmingMenu.doAction();
-            toolMenu.doAction();
-            virtualMachineMenu.doAction();
-        }
+    private void install() throws InterruptedException, IOException {
+        NetworkUtil.connectToWifi();
+        baseSystem.install();
+        desktopEnvironmentMenu.doAction();
+        driverMenu.doAction();
+        programmingMenu.doAction();
+        toolMenu.doAction();
+        virtualMachineMenu.doAction();
     }
 }
