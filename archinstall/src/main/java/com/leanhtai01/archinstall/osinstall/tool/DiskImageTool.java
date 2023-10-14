@@ -1,7 +1,9 @@
 package com.leanhtai01.archinstall.osinstall.tool;
 
-import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
 import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
+import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChroot;
+import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunSudo;
+import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,7 +28,12 @@ public class DiskImageTool implements Installable {
 
     @Override
     public int config() throws IOException, InterruptedException {
-        enableService("cdemu-daemon.service", chrootDir);
+        List<String> loadDriversCommand = List.of("modprobe", "-a", "sg", "sr_mod", "vhba");
+
+        runVerbose(chrootDir != null
+                ? getCommandRunChroot(loadDriversCommand, chrootDir)
+                : getCommandRunSudo(loadDriversCommand));
+
         return 0;
     }
 }

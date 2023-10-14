@@ -47,7 +47,8 @@ public class GNOME implements Installable {
                 "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "gnome-todo",
                 "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
                 "seahorse", "seahorse-nautilus", "gnome-browser-connector", "xdg-desktop-portal",
-                "xdg-desktop-portal-gnome", "gnome-remote-desktop", "gnome-disk-utility"), chrootDir);
+                "xdg-desktop-portal-gnome", "gnome-remote-desktop", "gnome-disk-utility", "libappindicator-gtk3"),
+                chrootDir);
 
         return 0;
     }
