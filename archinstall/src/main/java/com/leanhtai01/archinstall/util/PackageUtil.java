@@ -3,13 +3,18 @@ package com.leanhtai01.archinstall.util;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChroot;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChrootAsUser;
 import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunSudo;
+import static com.leanhtai01.archinstall.util.ShellUtil.runGetOutput;
 import static com.leanhtai01.archinstall.util.ShellUtil.runSilent;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -161,6 +166,31 @@ public final class PackageUtil {
     public static int installPackageFromFile(String filename, String chrootDir)
             throws InterruptedException, IOException {
         return installMainReposPkgs(getPackagesFromFile(filename), chrootDir);
+    }
+
+    public static List<String> getOptionalDependencies(String packageName, String chrootDir) throws IOException {
+        List<String> getInfoCommand = List.of(PACMAN, "-Qi", packageName);
+        String rawInfo = runGetOutput(chrootDir != null
+                ? getCommandRunChroot(getInfoCommand, chrootDir)
+                : getInfoCommand);
+        Pattern pattern = Pattern.compile("Optional Deps.*Required By", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(rawInfo);
+        List<String> optionalDeps = new ArrayList<>();
+
+        if (matcher.find()) {
+            rawInfo = matcher.group(0)
+                    .replaceAll("^Optional Deps\\s+:", "")
+                    .replaceAll("Required By$", "");
+            optionalDeps = Arrays.stream(rawInfo.split("\\n")).map(line -> {
+                if (line.contains(":")) {
+                    return line.trim().replaceAll(":\\s+.+$", "");
+                } else {
+                    return line.trim().replaceAll("\\s.+$", "");
+                }
+            }).toList();
+        }
+
+        return optionalDeps;
     }
 
     private static List<String> getPackagesFromFile(String fileName) {
