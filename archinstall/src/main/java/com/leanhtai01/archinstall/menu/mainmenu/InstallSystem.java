@@ -25,7 +25,27 @@ public class InstallSystem implements Runnable {
     private SystemInfo systemInfo;
     private UserAccount userAccount;
 
-    private void getInfo() throws IOException, InterruptedException {
+    private BaseSystem baseSystem;
+
+    protected DesktopEnvironmentMenu desktopEnvironmentMenu;
+    protected DriverMenu driverMenu;
+    protected ProgrammingMenu programmingMenu;
+    protected ToolMenu toolMenu;
+    protected VirtualMachineMenu virtualMachineMenu;
+
+    @Override
+    public void run() {
+        try {
+            getSystemInfo();
+            getInstallInfo();
+            getInstallSummary();
+            confirmAndInstall();
+        } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void getSystemInfo() throws IOException, InterruptedException {
         String[] mirrorsArray = new String[3];
         Arrays.fill(mirrorsArray, "Server = https://mirror.xtom.com.hk/archlinux/$repo/os/$arch");
         List<String> mirrors = Arrays.asList(mirrorsArray);
@@ -53,48 +73,46 @@ public class InstallSystem implements Runnable {
         userAccount = new UserAccount(realName, username, userPassword);
     }
 
-    @Override
-    public void run() {
-        try {
-            getInfo();
+    private void getInstallInfo() {
+        final String chrootDir = "/mnt";
 
-            final String chrootDir = "/mnt";
-            BaseSystem baseSystem = new BaseSystem(systemInfo, userAccount);
+        baseSystem = new BaseSystem(systemInfo, userAccount);
+        desktopEnvironmentMenu = new DesktopEnvironmentMenu(chrootDir, userAccount);
+        driverMenu = new DriverMenu(chrootDir, userAccount);
+        programmingMenu = new ProgrammingMenu(chrootDir, userAccount);
+        toolMenu = new ToolMenu(chrootDir, userAccount);
+        virtualMachineMenu = new VirtualMachineMenu(chrootDir, userAccount);
 
-            DesktopEnvironmentMenu desktopEnvironmentMenu = new DesktopEnvironmentMenu(chrootDir, userAccount);
-            desktopEnvironmentMenu.setOptions(Set.of(0));
+        selectInstallSoftwares();
+    }
 
-            DriverMenu driverMenu = new DriverMenu(chrootDir, userAccount);
-            driverMenu.selectAll();
+    protected void selectInstallSoftwares() {
+        desktopEnvironmentMenu.setOptions(Set.of(0));
+        driverMenu.selectAll();
+        programmingMenu.selectAll();
+        toolMenu.selectAll();
+        virtualMachineMenu.selectAll();
+    }
 
-            ProgrammingMenu programmingMenu = new ProgrammingMenu(chrootDir, userAccount);
-            programmingMenu.selectAll();
+    private void getInstallSummary() {
+        System.console().printf("Install summary:%n");
+        System.console().printf("%s%n", "[Base System]");
+        System.console().printf("%s%n", desktopEnvironmentMenu.getActionSummary());
+        System.console().printf("%s%n", driverMenu.getActionSummary());
+        System.console().printf("%s%n", programmingMenu.getActionSummary());
+        System.console().printf("%s%n", toolMenu.getActionSummary());
+        System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
+    }
 
-            ToolMenu toolMenu = new ToolMenu(chrootDir, userAccount);
-            toolMenu.selectAll();
-
-            VirtualMachineMenu virtualMachineMenu = new VirtualMachineMenu(chrootDir, userAccount);
-            virtualMachineMenu.selectAll();
-
-            System.console().printf("Install summary:%n");
-            System.console().printf("%s%n", "[Base System]");
-            System.console().printf("%s%n", desktopEnvironmentMenu.getActionSummary());
-            System.console().printf("%s%n", driverMenu.getActionSummary());
-            System.console().printf("%s%n", programmingMenu.getActionSummary());
-            System.console().printf("%s%n", toolMenu.getActionSummary());
-            System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
-
-            if (isAnswerYes(getConfirmation(":: Proceed with installation? [Y/n] "))) {
-                NetworkUtil.connectToWifi();
-                baseSystem.install();
-                desktopEnvironmentMenu.doAction();
-                driverMenu.doAction();
-                programmingMenu.doAction();
-                toolMenu.doAction();
-                virtualMachineMenu.doAction();
-            }
-        } catch (IOException | InterruptedException e) {
-            Thread.currentThread().interrupt();
+    private void confirmAndInstall() throws InterruptedException, IOException {
+        if (isAnswerYes(getConfirmation(":: Proceed with installation? [Y/n] "))) {
+            NetworkUtil.connectToWifi();
+            baseSystem.install();
+            desktopEnvironmentMenu.doAction();
+            driverMenu.doAction();
+            programmingMenu.doAction();
+            toolMenu.doAction();
+            virtualMachineMenu.doAction();
         }
     }
 }
