@@ -10,6 +10,8 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Install System (selective)", new InstallSystemSelective(), false));
         addOption(new Option("Configure System", new ConfigureSystem(), false));
         addOption(new Option("Configure As A VirtualBox Guest", new ConfigureAsVBGuest(null, null), false));
+        addOption(new Option("Enable DNSCryptProxy", new EnableDNSCryptProxy(), false));
+        addOption(new Option("Disable DNSCryptProxy", new DisableDNSCryptProxy(), false));
         addOption(new Option("Encrypt Disk", new EncryptDisk(), false));
         addOption(new Option("Erase Disk", new EraseDisk(), false));
     }

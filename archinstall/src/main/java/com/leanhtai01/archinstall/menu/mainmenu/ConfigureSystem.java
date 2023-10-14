@@ -2,7 +2,6 @@ package com.leanhtai01.archinstall.menu.mainmenu;
 
 import static com.leanhtai01.archinstall.util.IOUtil.getConfirmation;
 import static com.leanhtai01.archinstall.util.IOUtil.isAnswerYes;
-import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
 import static com.leanhtai01.archinstall.util.PackageUtil.installFlatpakPackages;
 
 import java.io.IOException;
@@ -18,11 +17,7 @@ public class ConfigureSystem implements Runnable {
         System.console().printf("Username: ");
         final String username = System.console().readLine();
 
-        final String userPassword = readPassword(
-                "User's password: ",
-                "Re-enter User's password: ");
-
-        userAccount = new UserAccount(null, username, userPassword);
+        userAccount = new UserAccount(null, username, null);
     }
 
     @Override

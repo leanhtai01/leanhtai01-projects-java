@@ -27,6 +27,10 @@ public final class ConfigUtil {
         Files.copy(Paths.get(path), Paths.get(path + "_" + LocalDateTime.now()), StandardCopyOption.REPLACE_EXISTING);
     }
 
+    public static void backupFile(String path, String newPath) throws IOException {
+        Files.copy(Paths.get(path), Paths.get(newPath), StandardCopyOption.REPLACE_EXISTING);
+    }
+
     public static void findAndReplaceInLine(String path, String linePattern, String target, String replacement)
             throws IOException {
         Pattern pattern = Pattern.compile(linePattern);
@@ -64,6 +68,10 @@ public final class ConfigUtil {
 
     public static int disableService(String service, String chrootDir) throws InterruptedException, IOException {
         return manageSystemService("disable", service, chrootDir);
+    }
+
+    public static int restartService(String service, String chrootDir) throws InterruptedException, IOException {
+        return manageSystemService("restart", service, chrootDir);
     }
 
     private static int manageSystemService(String action, String service, String chrootDir)
