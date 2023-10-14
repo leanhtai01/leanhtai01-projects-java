@@ -35,9 +35,13 @@ public class InstallSystem implements Runnable {
 
     @Override
     public void run() {
+        System.console().printf("%n");
+
         try {
             getSystemInfo();
             getInstallInfo();
+
+            System.console().printf("%n");
             getInstallSummary();
             confirmAndInstall();
         } catch (IOException | InterruptedException e) {
