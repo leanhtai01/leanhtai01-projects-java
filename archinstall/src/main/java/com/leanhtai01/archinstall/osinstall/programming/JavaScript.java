@@ -1,19 +1,17 @@
 package com.leanhtai01.archinstall.osinstall.programming;
 
-import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
-import static com.leanhtai01.archinstall.util.ShellUtil.getCommandRunChroot;
-import static com.leanhtai01.archinstall.util.ShellUtil.runAppendOutputToFile;
-import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
+import com.leanhtai01.archinstall.osinstall.Installable;
+import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.leanhtai01.archinstall.osinstall.Installable;
-import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
+import static com.leanhtai01.archinstall.util.ShellUtil.runAppendOutputToFile;
 
 public class JavaScript implements Installable {
-    private String chrootDir;
-    private UserAccount userAccount;
+    private final String chrootDir;
+    private final UserAccount userAccount;
 
     public JavaScript(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;
@@ -29,11 +27,9 @@ public class JavaScript implements Installable {
     @Override
     public int config() throws IOException, InterruptedException {
         String bashrcPath = chrootDir + "/home/%s/.bashrc".formatted(userAccount.getUsername());
-        List<String> changeBashrcOwner = List.of(
-                "chown", "%s:%s".formatted(userAccount.getUsername(), userAccount.getUsername()), bashrcPath);
 
+        runAppendOutputToFile(List.of("echo", "\n# nvm configuration\n"), bashrcPath);
         runAppendOutputToFile(List.of("echo", "source /usr/share/nvm/init-nvm.sh"), bashrcPath);
-        runVerbose(chrootDir != null ? getCommandRunChroot(changeBashrcOwner, chrootDir) : changeBashrcOwner);
 
         return 0;
     }
