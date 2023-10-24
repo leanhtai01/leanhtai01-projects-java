@@ -129,7 +129,7 @@ public final class DiskUtil {
         openLUKSContainer(linuxLUKSPartition, luksMapperName, luksPassword);
 
         wipeDeviceSignature(LUKS_MAPPER_DEVICE_PATH);
-        formatEXT4(LUKS_MAPPER_DEVICE_PATH);
+        formatEXT4(LUKS_MAPPER_DEVICE_PATH, luksMapperName);
 
         runVerbose(List.of(CRYPTSETUP, "close", luksMapperName));
 
@@ -152,6 +152,10 @@ public final class DiskUtil {
 
     public static void formatEXT4(String pathToDevice) throws InterruptedException, IOException {
         runVerbose(List.of("mkfs.ext4", pathToDevice));
+    }
+
+    public static void formatEXT4(String pathToDevice, String label) throws IOException, InterruptedException {
+        runVerbose(List.of("mkfs.ext4", pathToDevice, "-L", label));
     }
 
     public static String getPathToDisk(String diskName) {
