@@ -1,13 +1,13 @@
 package com.leanhtai01.archinstall.osinstall.programming;
 
-import com.leanhtai01.archinstall.osinstall.Installable;
-import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
+import static com.leanhtai01.archinstall.util.ShellUtil.runAppendOutputToFile;
 
 import java.io.IOException;
 import java.util.List;
 
-import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
-import static com.leanhtai01.archinstall.util.ShellUtil.runAppendOutputToFile;
+import com.leanhtai01.archinstall.osinstall.Installable;
+import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class JavaScript implements Installable {
     private final String chrootDir;
