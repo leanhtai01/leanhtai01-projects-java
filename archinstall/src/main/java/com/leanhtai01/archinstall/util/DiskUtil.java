@@ -15,6 +15,7 @@ import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
 public final class DiskUtil {
     private static final String CRYPTSETUP = "cryptsetup";
+
     private DiskUtil() {
     }
 

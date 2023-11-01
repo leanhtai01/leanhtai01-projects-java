@@ -18,7 +18,8 @@ public class SingleChoiceMenu extends Menu {
                     clearAll();
                     options.get(choice).setMarked(true);
                 } else {
-                    System.console().printf("Invalid choice. Choice must be in range [%d, %d]%n", MIN_CHOICE, getMaxChoice());
+                    System.console().printf("Invalid choice. Choice must be in range [%d, %d]%n",
+                            MIN_CHOICE, getMaxChoice());
                 }
             } catch (NumberFormatException e) {
                 System.console().printf("Invalid input format!%n");
