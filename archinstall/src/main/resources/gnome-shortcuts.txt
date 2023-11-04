@@ -4,3 +4,4 @@ google-chrome, Google Chrome, <Primary><Alt>c, google-chrome-stable
 firefox-developer-edition, Firefox Developer Edition, <Primary><Alt>f, firefox-developer-edition
 keepassxc, KeePassXC, <Primary><Alt>p, keepassxc
 emacs, Emacs, <Primary><Alt>e, emacs
+krusader, Krusader, <Primary><Alt>k, krusader
