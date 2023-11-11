@@ -122,7 +122,7 @@ public final class PackageUtil {
         }
     }
 
-    private static void installYayAURHelper(UserAccount userAccount, String chrootDir)
+    public static void installYayAURHelper(UserAccount userAccount, String chrootDir)
             throws InterruptedException, IOException {
         if (isPackageInstalled("yay", chrootDir)) {
             return;
@@ -158,9 +158,13 @@ public final class PackageUtil {
                 + "cd /home/%s/tmp/yay;"
                 + "makepkg -sri --noconfirm").formatted(userAccount.getPassword(), userAccount.getUsername(),
                         userAccount.getUsername()));
+        List<String> installPkgCmdNonChroot = List.of("bash", "-c",
+                "export GOCACHE=\"/home/%s/.cache/go-build\";".formatted(userAccount.getUsername())
+                + "cd /home/%s/tmp/yay;".formatted(userAccount.getUsername())
+                + "makepkg -sri --noconfirm");
         runVerbose(chrootDir != null
                 ? getCommandRunChrootAsUser(installPkgCmd, userAccount.getUsername(), chrootDir)
-                : installPkgCmd);
+                : installPkgCmdNonChroot);
     }
 
     public static int installPackageFromFile(String filename, String chrootDir)

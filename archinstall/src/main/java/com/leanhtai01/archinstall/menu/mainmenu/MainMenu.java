@@ -14,5 +14,6 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Disable DNSCryptProxy (installed system, sudo)", new DisableDNSCryptProxy(), false));
         addOption(new Option("Encrypt Disk (live/installed system, sudo)", new EncryptDisk(), false));
         addOption(new Option("Erase Disk (live/installed system, sudo)", new EraseDisk(), false));
+        addOption(new Option("Install Yay AUR Helper", new InstallYayAURHelper(), false));
     }
 }
