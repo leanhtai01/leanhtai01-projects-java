@@ -22,7 +22,7 @@ public class KDEPlasma implements Installable {
                 "gwenview", "bluedevil", "khotkeys", "kinfocenter", "kscreen", "plasma-firewall", "plasma-nm",
                 "plasma-pa", "plasma-systemmonitor", "powerdevil", "sddm-kcm", "okular", "kcalc", "yakuake", "cryfs",
                 "plasma-vault", "discover", "breeze-gtk", "kde-gtk-config", "gnome-keyring", "krusader",
-                "kwalletmanager", "krename", "khelpcenter"), chrootDir);
+                "kwalletmanager", "krename", "khelpcenter", "gtk2"), chrootDir);
 
         return 0;
     }
