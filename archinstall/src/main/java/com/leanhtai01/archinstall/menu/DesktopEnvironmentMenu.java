@@ -8,6 +8,6 @@ public class DesktopEnvironmentMenu extends MultiChoiceMenu {
     public DesktopEnvironmentMenu(String chrootDir, UserAccount userAccount) {
         super();
         addOption(new Option("GNOME", new GNOME(chrootDir, userAccount), false));
-        addOption(new Option("KDE Plasma", new KDEPlasma(chrootDir), false));
+        addOption(new Option("KDE Plasma", new KDEPlasma(chrootDir, userAccount), false));
     }
 }
