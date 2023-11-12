@@ -23,7 +23,7 @@ public class CoreTool implements Installable {
         installPkgs(List.of("keepassxc", "expect", "pacman-contrib", "dosfstools", "p7zip", "unarchiver",
                 "bash-completion", "flatpak", "tree", "archiso", "rclone", "rsync", "transmission-gtk", "lm_sensors",
                 "ntfs-3g", "gparted", "exfatprogs", "pdftk", "youtube-dl", "ufw", "ufw-extras", "filezilla",
-                "texlive-most", "krusader", "ibus-bamboo", "gptfdisk", "ventoy-bin", "steam", "steam-native-runtime",
+                "texlive-most", "krusader", "gptfdisk", "ventoy-bin", "steam", "steam-native-runtime",
                 "wesnoth", "minecraft-launcher"), userAccount, chrootDir);
         installMainReposPkgsWithOptionalDeps(List.of("lutris", "wine"), chrootDir);
 

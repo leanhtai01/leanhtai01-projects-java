@@ -30,6 +30,8 @@ public class GNOME implements Installable {
     private static final String SCHEMA_TO_ITEM = "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding";
     private static final String PATH_TO_CUSTOM_KEY = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom";
 
+    private static final String IBUS_BAMBOO_PACKAGE = "ibus-bamboo";
+
     private String chrootDir;
     private UserAccount userAccount;
 
@@ -49,6 +51,7 @@ public class GNOME implements Installable {
                 "seahorse", "seahorse-nautilus", "gnome-browser-connector", "xdg-desktop-portal",
                 "xdg-desktop-portal-gnome", "gnome-remote-desktop", "gnome-disk-utility", "libappindicator-gtk3"),
                 chrootDir);
+        installPkgs(List.of(IBUS_BAMBOO_PACKAGE), userAccount, chrootDir);
 
         return 0;
     }
@@ -80,8 +83,8 @@ public class GNOME implements Installable {
     }
 
     public void configureIbusBamboo() throws InterruptedException, IOException {
-        if (!isPackageInstalled("ibus-bamboo", chrootDir)) {
-            installPkgs(List.of("ibus-bamboo"), userAccount, chrootDir);
+        if (!isPackageInstalled(IBUS_BAMBOO_PACKAGE, chrootDir)) {
+            installPkgs(List.of(IBUS_BAMBOO_PACKAGE), userAccount, chrootDir);
             System.console().printf("Please restart then run the configure for ibus-bamboo again.");
             return;
         }
