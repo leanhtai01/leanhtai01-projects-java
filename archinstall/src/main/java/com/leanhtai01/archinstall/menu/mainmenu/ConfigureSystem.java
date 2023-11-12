@@ -43,6 +43,6 @@ public class ConfigureSystem implements Runnable {
     }
 
     public void installFlatpakPkgs() throws InterruptedException, IOException {
-        installFlatpakPackages(List.of("org.goldendict.GoldenDict", "com.belmoussaoui.Authenticator"));
+        installFlatpakPackages(List.of("org.goldendict.GoldenDict"));
     }
 }
