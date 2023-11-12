@@ -49,7 +49,7 @@ public class KDEPlasma implements Installable {
                 : createEnvironmentDirCmd);
 
         List<String> createFcitx5ConfigCmd = List.of("bash", "-c",
-                "printf \"GTK_IM_MODULE=fcitx\nQT_IM_MODULE=fcitx\nXMODIFIERS=@im=fcitx\n\""
+                "printf \"XMODIFIERS=@im=fcitx\n\""
                 + " > /home/%s/.config/environment.d/fcitx5.conf".formatted(userAccount.getUsername()));
         runVerbose(chrootDir != null
                 ? getCommandRunChrootAsUser(createFcitx5ConfigCmd, userAccount.getUsername(), chrootDir)
