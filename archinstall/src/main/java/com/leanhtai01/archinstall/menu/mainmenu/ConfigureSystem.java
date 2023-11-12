@@ -42,7 +42,7 @@ public class ConfigureSystem implements Runnable {
         gnomeInstall.enableExtension("appindicatorsupport@rgcjonas.gmail.com");
     }
 
-    public void installFlatpakPkgs() throws InterruptedException, IOException {
+    public static void installFlatpakPkgs() throws InterruptedException, IOException {
         installFlatpakPackages(List.of("org.goldendict.GoldenDict"));
     }
 }
