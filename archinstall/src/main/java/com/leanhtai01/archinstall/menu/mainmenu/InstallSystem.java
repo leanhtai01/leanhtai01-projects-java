@@ -7,7 +7,6 @@ import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import com.leanhtai01.archinstall.menu.DesktopEnvironmentMenu;
 import com.leanhtai01.archinstall.menu.DriverMenu;
@@ -94,7 +93,7 @@ public class InstallSystem implements Runnable {
     }
 
     protected void selectInstallSoftwares() {
-        desktopEnvironmentMenu.setOptions(Set.of(0));
+        desktopEnvironmentMenu.selectOption();
         driverMenu.selectAll();
         programmingMenu.selectAll();
         toolMenu.selectAll();
