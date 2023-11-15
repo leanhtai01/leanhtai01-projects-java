@@ -1,5 +1,6 @@
 package com.leanhtai01.archinstall.osinstall.tool;
 
+import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
 import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgsWithOptionalDeps;
 import static com.leanhtai01.archinstall.util.PackageUtil.installPkgs;
 
@@ -27,6 +28,12 @@ public class CoreTool implements Installable {
                 "wesnoth", "minecraft-launcher"), userAccount, chrootDir);
         installMainReposPkgsWithOptionalDeps(List.of("lutris", "wine"), chrootDir);
 
+        return 0;
+    }
+
+    @Override
+    public int config() throws IOException, InterruptedException {
+        enableService("ufw", chrootDir);
         return 0;
     }
 }
