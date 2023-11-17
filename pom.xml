@@ -11,6 +11,7 @@
     <modules>
         <module>shared-library</module>
         <module>archinstall</module>
+        <module>learn-apache-poi</module>
     </modules>
 
     <properties>
