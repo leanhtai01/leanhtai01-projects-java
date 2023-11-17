@@ -17,6 +17,6 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Install Yay AUR Helper (installed system)", new InstallYayAURHelper(), false));
         addOption(new Option("Install fcitx5-bamboo (installed system)", new InstallFcitx5Bamboo(), false));
         addOption(new Option("Install flatpak packages (installed system)", new InstallFlatpakPackages(), false));
-        addOption(new Option("Install Lutris", new InstallLutris(), false));
+        addOption(new Option("Install Lutris (installed system)", new InstallLutris(), false));
     }
 }
