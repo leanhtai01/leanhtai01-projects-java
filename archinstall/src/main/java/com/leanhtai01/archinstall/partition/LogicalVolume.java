@@ -5,7 +5,7 @@ import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 public class LogicalVolume implements Mountable {
     private String vgName;
     private String lvName;
-    private String mountPoint;
+    private final String mountPoint;
     private StorageDeviceSize size;
 
     public LogicalVolume(String vgName, String lvName, StorageDeviceSize size, String mountPoint) {

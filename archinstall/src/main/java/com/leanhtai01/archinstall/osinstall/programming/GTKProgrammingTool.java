@@ -8,7 +8,7 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 
 public class GTKProgrammingTool implements Installable {
-    private String chrootDir;
+    private final String chrootDir;
 
     public GTKProgrammingTool(String chrootDir) {
         this.chrootDir = chrootDir;

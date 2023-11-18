@@ -20,10 +20,10 @@ import java.io.IOException;
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
 public class LVMOnLUKS implements LVMOnLUKSPartitionLayout {
-    private String diskName;
-    private StorageDeviceSize espSize;
-    private StorageDeviceSize xbootldrSize;
-    private StorageDeviceSize swapSize;
+    private final String diskName;
+    private final StorageDeviceSize espSize;
+    private final StorageDeviceSize xbootldrSize;
+    private final StorageDeviceSize swapSize;
 
     private Partition espPartition;
     private Partition xbootldrPartition;
@@ -34,7 +34,7 @@ public class LVMOnLUKS implements LVMOnLUKSPartitionLayout {
     private static final String LUKS_MAPPER_DEVICE_PATH = "/dev/mapper/%s".formatted(LUKS_MAPPER_NAME);
     private LogicalVolume swapVolume;
     private LogicalVolume rootVolume;
-    private String password;
+    private final String password;
 
     public LVMOnLUKS(
             String diskName,

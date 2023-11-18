@@ -6,10 +6,10 @@ import java.util.List;
 import com.leanhtai01.archinstall.util.ShellUtil;
 
 public class WirelessNetwork {
-    private String ssid;
-    private String password;
-    private String device;
-    private boolean isHidden;
+    private final String ssid;
+    private final String password;
+    private final String device;
+    private final boolean isHidden;
 
     public WirelessNetwork(String ssid, String password, String device, boolean isHidden) {
         this.ssid = ssid;

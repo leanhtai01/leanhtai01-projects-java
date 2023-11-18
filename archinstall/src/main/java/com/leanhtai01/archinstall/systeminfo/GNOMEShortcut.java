@@ -1,10 +1,10 @@
 package com.leanhtai01.archinstall.systeminfo;
 
 public class GNOMEShortcut {
-    private String packageName;
-    private String name;
-    private String keybinding;
-    private String command;
+    private final String packageName;
+    private final String name;
+    private final String keybinding;
+    private final String command;
 
     public GNOMEShortcut(String packageName, String name, String keybinding, String command) {
         this.packageName = packageName;

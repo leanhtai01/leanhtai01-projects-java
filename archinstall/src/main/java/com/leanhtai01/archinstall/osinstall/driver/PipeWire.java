@@ -11,8 +11,8 @@ import com.leanhtai01.archinstall.osinstall.Installable;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class PipeWire implements Installable {
-    private String chrootDir;
-    private UserAccount userAccount;
+    private final String chrootDir;
+    private final UserAccount userAccount;
 
     public PipeWire(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;

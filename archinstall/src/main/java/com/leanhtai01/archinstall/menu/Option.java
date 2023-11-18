@@ -4,9 +4,9 @@ public class Option {
     private static final String CHECK_MARK = "[*]";
 
     private int optionNumber;
-    private String description;
+    private final String description;
     private boolean isMarked;
-    private Runnable action;
+    private final Runnable action;
 
     public Option(String description, Runnable action, boolean isMarked) {
         this.description = description;

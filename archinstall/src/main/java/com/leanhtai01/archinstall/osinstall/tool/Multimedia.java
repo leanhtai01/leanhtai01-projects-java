@@ -8,7 +8,7 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 
 public class Multimedia implements Installable {
-    private String chrootDir;
+    private final String chrootDir;
 
     public Multimedia(String chrootDir) {
         this.chrootDir = chrootDir;

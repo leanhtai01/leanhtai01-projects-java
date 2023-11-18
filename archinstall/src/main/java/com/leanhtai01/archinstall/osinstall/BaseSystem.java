@@ -33,7 +33,7 @@ public class BaseSystem {
     private static final String MKINITCPIO_HOOKS_LINE_PATTERN = "^HOOKS=\\(.*\\)$";
 
     private SystemInfo systemInfo;
-    private UserAccount userAccount;
+    private final UserAccount userAccount;
 
     public BaseSystem(SystemInfo systemInfo, UserAccount userAccount) {
         this.systemInfo = systemInfo;

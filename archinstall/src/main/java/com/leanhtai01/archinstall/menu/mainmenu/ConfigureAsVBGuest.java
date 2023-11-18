@@ -11,7 +11,7 @@ import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
 public class ConfigureAsVBGuest implements Runnable {
     private UserAccount userAccount;
-    private String chrootDir;
+    private final String chrootDir;
 
     public ConfigureAsVBGuest(UserAccount userAccount, String chrootDir) {
         this.userAccount = userAccount;

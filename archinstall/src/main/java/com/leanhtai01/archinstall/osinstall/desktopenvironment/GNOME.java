@@ -32,8 +32,8 @@ public class GNOME implements Installable {
 
     private static final String IBUS_BAMBOO_PACKAGE = "ibus-bamboo";
 
-    private String chrootDir;
-    private UserAccount userAccount;
+    private final String chrootDir;
+    private final UserAccount userAccount;
 
     public GNOME(String chrootDir, UserAccount userAccount) {
         this.chrootDir = chrootDir;

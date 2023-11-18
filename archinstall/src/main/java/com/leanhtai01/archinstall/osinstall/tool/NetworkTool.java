@@ -8,7 +8,7 @@ import java.util.List;
 import com.leanhtai01.archinstall.osinstall.Installable;
 
 public class NetworkTool implements Installable {
-    private String chrootDir;
+    private final String chrootDir;
 
     public NetworkTool(String chrootDir) {
         this.chrootDir = chrootDir;

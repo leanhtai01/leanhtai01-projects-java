@@ -16,10 +16,10 @@ import java.io.IOException;
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 
 public class Unencrypted implements PartitionLayout {
-    private String diskName;
-    private StorageDeviceSize espSize;
-    private StorageDeviceSize xbootldrSize;
-    private StorageDeviceSize swapSize;
+    private final String diskName;
+    private final StorageDeviceSize espSize;
+    private final StorageDeviceSize xbootldrSize;
+    private final StorageDeviceSize swapSize;
 
     private Partition espPartition;
     private Partition xbootldrPartition;
