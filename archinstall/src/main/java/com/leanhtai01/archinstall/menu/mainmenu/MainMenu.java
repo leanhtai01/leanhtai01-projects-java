@@ -19,5 +19,6 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Install flatpak packages (installed system)", new InstallFlatpakPackages(), false));
         addOption(new Option("Install Lutris (installed system)", new InstallLutris(), false));
         addOption(new Option("Install VirtualBox (installed system)", new InstallVirtualBox(), false));
+        addOption(new Option("Install Valve Steam (installed system)", new InstallValveSteam(), false));
     }
 }
