@@ -50,7 +50,7 @@ public class GNOME implements Installable {
                 "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
                 "seahorse", "seahorse-nautilus", "gnome-browser-connector", "xdg-desktop-portal",
                 "xdg-desktop-portal-gnome", "gnome-remote-desktop", "gnome-disk-utility", "libappindicator-gtk3",
-                "transmission-gtk", "power-profiles-daemon"),
+                "transmission-gtk", "power-profiles-daemon", "gvfs-smb"),
                 chrootDir);
         installPkgs(List.of(IBUS_BAMBOO_PACKAGE), userAccount, chrootDir);
 
