@@ -24,6 +24,7 @@
 
         <!-- utilities -->
         <lombok.version>1.18.28</lombok.version>
+        <commons-io.version>2.15.1</commons-io.version>
 
         <!-- testing -->
         <junit-bom.version>5.10.0</junit-bom.version>
@@ -76,6 +77,12 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <!-- testing -->
