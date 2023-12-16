@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.leanhtai01.archinstall.partition.LVMOnLUKS;
 import com.leanhtai01.archinstall.partition.LVMOnLUKSDualBootWindows;
+import com.leanhtai01.archinstall.partition.LVMOnLUKSDualBootWindowsAutoResize;
 import com.leanhtai01.archinstall.partition.Partition;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.partition.Unencrypted;
@@ -55,9 +56,25 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
             String password = getLUKSPassword();
             partitionLayout = new LVMOnLUKS(diskName, ESP_SIZE, XBOOTLDR_SIZE, swapSize, password);
         };
+
         Runnable setLVMOnLUKSDualBootWindows = () -> {
             String password = getLUKSPassword();
             partitionLayout = new LVMOnLUKSDualBootWindows(diskName, XBOOTLDR_SIZE, swapSize, password);
+        };
+
+        Runnable setLVMOnLUKSDualBootWindowsAutoResize = () -> {
+            String password = getLUKSPassword();
+
+            System.console().printf("Enter Windows's partition number: ");
+            int partitionNumber = Integer.parseInt(System.console().readLine());
+
+            System.console().printf("Enter Linux's system size in GiB: ");
+            StorageDeviceSize linuxSystemSize = new StorageDeviceSize(
+                    BigInteger.valueOf(Long.parseLong(System.console().readLine())), "G");
+
+            Partition windowsPartition = new Partition(diskName, partitionNumber);
+            partitionLayout = new LVMOnLUKSDualBootWindowsAutoResize(diskName, XBOOTLDR_SIZE, swapSize, password,
+                    windowsPartition, linuxSystemSize);
         };
 
         addOption(new Option("Unencrypted partition layout", setUnencrypted, false));
@@ -66,6 +83,8 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
                 setUnencryptedDualBootWindowsAutoResize, false));
         addOption(new Option("LVM on LUKS partition layout", setLVMOnLUKS, false));
         addOption(new Option("LVM on LUKS dual boot Windows partition layout", setLVMOnLUKSDualBootWindows, false));
+        addOption(new Option("LVM on LUKS dual boot Windows partition layout (auto resize)",
+                setLVMOnLUKSDualBootWindowsAutoResize, false));
     }
 
     public PartitionLayout selectPartitionLayout() {
