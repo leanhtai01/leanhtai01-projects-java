@@ -33,12 +33,29 @@ public final class DiskUtil {
             throws InterruptedException, IOException {
         runVerbose(List.of("sgdisk",
                 "-n", "0:0:" + (partition.getSize() == null ? "0"
-                        : "+%d%s".formatted(partition.getSize().getValue(), partition.getSize().getUnit())),
+                        : "+%s%s".formatted(partition.getSize().getValue(), partition.getSize().getUnit())),
                 "-t", "0:%s".formatted(partition.getType()),
                 "-c", "0:%s".formatted(partition.getGptName()),
                 partition.getPathToDisk()));
 
         return partition;
+    }
+
+    public static void resizeNTFSFilesystem(Partition partition, StorageDeviceSize size)
+            throws IOException, InterruptedException {
+        runVerbose(List.of("ntfsresize", "-f",
+                "--size", "%s%s".formatted(size.getValue(), size.getUnit()),
+                partition.getPath()));
+
+        // remove dirty flag, so the filesystem will not be checked on next Windows boot
+        runVerbose(List.of("ntfsfix", "-d", partition.getPath()));
+    }
+
+    public static void shrinkPartition(Partition partition, StorageDeviceSize size)
+            throws IOException, InterruptedException {
+        runSetInput(List.of("parted", partition.getPathToDisk(), "resizepart", "---pretend-input-tty"),
+                List.of(String.valueOf(partition.getPartitionNumber()),
+                        "-%s%s".formatted(size.getValue(), size.getUnit()), "Yes"));
     }
 
     public static Partition createEFIPartition(
@@ -95,7 +112,7 @@ public final class DiskUtil {
             throws IOException, InterruptedException {
         runVerbose(List.of("lvcreate", logicalVolume.getSize() != null ? "-L" : "-l",
                 logicalVolume.getSize() != null
-                        ? "%d%s".formatted(logicalVolume.getSize().getValue(), logicalVolume.getSize().getUnit())
+                        ? "%s%s".formatted(logicalVolume.getSize().getValue(), logicalVolume.getSize().getUnit())
                         : "+100%FREE",
                 logicalVolume.getVgName(), "-n", logicalVolume.getLvName()));
 

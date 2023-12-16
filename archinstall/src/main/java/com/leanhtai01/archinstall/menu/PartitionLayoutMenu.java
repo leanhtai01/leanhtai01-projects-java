@@ -4,6 +4,7 @@ import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import com.leanhtai01.archinstall.partition.LVMOnLUKS;
@@ -26,19 +27,24 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
         System.console().printf("Enter swap size: ");
         long swapSize = Long.parseLong(System.console().readLine());
 
-        Runnable setUnencrypted = () -> partitionLayout = new Unencrypted(diskName, new StorageDeviceSize(550L, "M"),
-                new StorageDeviceSize(550L, "M"), new StorageDeviceSize(swapSize, "G"));
+        Runnable setUnencrypted = () -> partitionLayout = new Unencrypted(diskName,
+                new StorageDeviceSize(BigInteger.valueOf(550L), "M"),
+                new StorageDeviceSize(BigInteger.valueOf(550L), "M"),
+                new StorageDeviceSize(BigInteger.valueOf(swapSize), "G"));
         Runnable setUnencryptedDualBootWindows = () -> partitionLayout = new UnencryptedDualBootWindows(diskName,
-                new StorageDeviceSize(550L, "M"), new StorageDeviceSize(swapSize, "G"));
+                new StorageDeviceSize(BigInteger.valueOf(550L), "M"),
+                new StorageDeviceSize(BigInteger.valueOf(swapSize), "G"));
         Runnable setLVMOnLUKS = () -> {
             String password = getLUKSPassword();
-            partitionLayout = new LVMOnLUKS(diskName, new StorageDeviceSize(550L, "M"),
-                    new StorageDeviceSize(550L, "M"), new StorageDeviceSize(swapSize, "G"), password);
+            partitionLayout = new LVMOnLUKS(diskName, new StorageDeviceSize(BigInteger.valueOf(550L), "M"),
+                    new StorageDeviceSize(BigInteger.valueOf(550L), "M"),
+                    new StorageDeviceSize(BigInteger.valueOf(swapSize), "G"), password);
         };
         Runnable setLVMOnLUKSDualBootWindows = () -> {
             String password = getLUKSPassword();
-            partitionLayout = new LVMOnLUKSDualBootWindows(diskName, new StorageDeviceSize(550L, "M"),
-                    new StorageDeviceSize(swapSize, "G"), password);
+            partitionLayout = new LVMOnLUKSDualBootWindows(diskName,
+                    new StorageDeviceSize(BigInteger.valueOf(550L), "M"),
+                    new StorageDeviceSize(BigInteger.valueOf(swapSize), "G"), password);
         };
 
         addOption(new Option("Unencrypted partition layout", setUnencrypted, false));
