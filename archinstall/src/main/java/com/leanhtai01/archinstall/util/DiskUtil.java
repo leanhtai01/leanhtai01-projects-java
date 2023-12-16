@@ -73,6 +73,14 @@ public final class DiskUtil {
                         "-%s%s".formatted(size.getValueInString(), size.getUnit()), "Yes"));
     }
 
+    public static void shrinkNTFSPartition(Partition partition, StorageDeviceSize size) throws IOException, InterruptedException {
+        var partitionSize = convertByteToMebibyte(getPartitionSizeInByte(partition));
+        var newPartitionSize = new StorageDeviceSize(
+                partitionSize.getValue().subtract(size.getValue().subtract(BigInteger.valueOf(1024L))), "M");
+        resizeNTFSFilesystem(partition, newPartitionSize);
+        shrinkPartition(partition, size);
+    }
+
     public static Partition createEFIPartition(
             String diskName,
             int partitionNumber,
