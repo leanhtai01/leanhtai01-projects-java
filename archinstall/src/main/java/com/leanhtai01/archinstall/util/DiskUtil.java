@@ -1,9 +1,11 @@
 package com.leanhtai01.archinstall.util;
 
+import static com.leanhtai01.archinstall.util.ShellUtil.runGetOutput;
 import static com.leanhtai01.archinstall.util.ShellUtil.runSetInput;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -33,7 +35,7 @@ public final class DiskUtil {
             throws InterruptedException, IOException {
         runVerbose(List.of("sgdisk",
                 "-n", "0:0:" + (partition.getSize() == null ? "0"
-                        : "+%s%s".formatted(partition.getSize().getValue(), partition.getSize().getUnit())),
+                        : "+%s%s".formatted(partition.getSize().getValueInString(), partition.getSize().getUnit())),
                 "-t", "0:%s".formatted(partition.getType()),
                 "-c", "0:%s".formatted(partition.getGptName()),
                 partition.getPathToDisk()));
@@ -44,18 +46,31 @@ public final class DiskUtil {
     public static void resizeNTFSFilesystem(Partition partition, StorageDeviceSize size)
             throws IOException, InterruptedException {
         runVerbose(List.of("ntfsresize", "-f",
-                "--size", "%s%s".formatted(size.getValue(), size.getUnit()),
+                "--size", "%s%s".formatted(size.getValueInString(), size.getUnit()),
                 partition.getPath()));
 
         // remove dirty flag, so the filesystem will not be checked on next Windows boot
         runVerbose(List.of("ntfsfix", "-d", partition.getPath()));
     }
 
+    public static StorageDeviceSize getPartitionSizeInByte(Partition partition) throws IOException {
+        String sizeInString = runGetOutput(List.of("blockdev", "--getsize64", partition.getPath()));
+        return new StorageDeviceSize(new BigInteger(sizeInString), "B");
+    }
+
+    public static StorageDeviceSize convertByteToMebibyte(StorageDeviceSize sizeInByte) {
+        return new StorageDeviceSize(sizeInByte.getValue().divide(BigInteger.valueOf(1024L * 1024L)), "MiB");
+    }
+
+    public static StorageDeviceSize convertGibibyteToMebibyte(String sizeInGibibyte) {
+        return new StorageDeviceSize(new BigInteger(sizeInGibibyte).multiply(BigInteger.valueOf(1024L)), "MiB");
+    }
+
     public static void shrinkPartition(Partition partition, StorageDeviceSize size)
             throws IOException, InterruptedException {
         runSetInput(List.of("parted", partition.getPathToDisk(), "resizepart", "---pretend-input-tty"),
                 List.of(String.valueOf(partition.getPartitionNumber()),
-                        "-%s%s".formatted(size.getValue(), size.getUnit()), "Yes"));
+                        "-%s%s".formatted(size.getValueInString(), size.getUnit()), "Yes"));
     }
 
     public static Partition createEFIPartition(
@@ -112,7 +127,8 @@ public final class DiskUtil {
             throws IOException, InterruptedException {
         runVerbose(List.of("lvcreate", logicalVolume.getSize() != null ? "-L" : "-l",
                 logicalVolume.getSize() != null
-                        ? "%s%s".formatted(logicalVolume.getSize().getValue(), logicalVolume.getSize().getUnit())
+                        ? "%s%s".formatted(logicalVolume.getSize().getValueInString(),
+                                logicalVolume.getSize().getUnit())
                         : "+100%FREE",
                 logicalVolume.getVgName(), "-n", logicalVolume.getLvName()));
 

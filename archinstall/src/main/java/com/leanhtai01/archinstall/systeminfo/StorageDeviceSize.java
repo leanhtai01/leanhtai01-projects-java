@@ -11,7 +11,11 @@ public class StorageDeviceSize {
         this.unit = unit;
     }
 
-    public String getValue() {
+    public BigInteger getValue() {
+        return value;
+    }
+
+    public String getValueInString() {
         return value.toString();
     }
 
