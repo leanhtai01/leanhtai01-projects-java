@@ -1,5 +1,6 @@
 package com.leanhtai01.archinstall.partition;
 
+import static com.leanhtai01.archinstall.util.DiskUtil.convertGibibyteToByte;
 import static com.leanhtai01.archinstall.util.DiskUtil.shrinkNTFSPartition;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class UnencryptedDualBootWindowsAutoResize extends UnencryptedDualBootWin
 
     @Override
     public void create() throws InterruptedException, IOException {
-        shrinkNTFSPartition(windowsPartition, linuxSystemSize);
+        shrinkNTFSPartition(windowsPartition, convertGibibyteToByte(linuxSystemSize));
         super.create();
     }
 }

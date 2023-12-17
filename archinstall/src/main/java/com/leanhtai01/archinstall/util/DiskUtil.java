@@ -43,11 +43,10 @@ public final class DiskUtil {
         return partition;
     }
 
-    public static void resizeNTFSFilesystem(Partition partition, StorageDeviceSize size)
+    public static void resizeNTFSFilesystem(Partition partition, StorageDeviceSize sizeInByte)
             throws IOException, InterruptedException {
         runVerbose(List.of("ntfsresize", "-f",
-                "--size", "%s%s".formatted(size.getValueInString(), size.getUnit()),
-                partition.getPath()));
+                "--size", "%s".formatted(sizeInByte.getValueInString()), partition.getPath()));
 
         // remove dirty flag, so the filesystem will not be checked on next Windows boot
         runVerbose(List.of("ntfsfix", "-d", partition.getPath()));
@@ -66,6 +65,11 @@ public final class DiskUtil {
         return new StorageDeviceSize(sizeInGibibyte.getValue().multiply(BigInteger.valueOf(1024L)), "MiB");
     }
 
+    public static StorageDeviceSize convertGibibyteToByte(StorageDeviceSize sizeInGibibyte) {
+        return new StorageDeviceSize(
+                sizeInGibibyte.getValue().multiply(BigInteger.valueOf(1024L * 1024L * 1024L)), "B");
+    }
+
     public static void shrinkPartition(Partition partition, StorageDeviceSize size)
             throws IOException, InterruptedException {
         runSetInput(List.of("parted", partition.getPathToDisk(), "resizepart", "---pretend-input-tty"),
@@ -73,12 +77,13 @@ public final class DiskUtil {
                         "-%s%s".formatted(size.getValueInString(), size.getUnit()), "Yes"));
     }
 
-    public static void shrinkNTFSPartition(Partition partition, StorageDeviceSize size) throws IOException, InterruptedException {
-        var partitionSize = convertByteToMebibyte(getPartitionSizeInByte(partition));
+    public static void shrinkNTFSPartition(Partition partition, StorageDeviceSize sizeInByte)
+            throws IOException, InterruptedException {
+        var partitionSize = getPartitionSizeInByte(partition);
         var newPartitionSize = new StorageDeviceSize(
-                partitionSize.getValue().subtract(size.getValue().subtract(BigInteger.valueOf(1024L))), "M");
+                partitionSize.getValue().subtract(sizeInByte.getValue().subtract(BigInteger.valueOf(1024L))), "B");
         resizeNTFSFilesystem(partition, newPartitionSize);
-        shrinkPartition(partition, size);
+        shrinkPartition(partition, sizeInByte);
     }
 
     public static Partition createEFIPartition(

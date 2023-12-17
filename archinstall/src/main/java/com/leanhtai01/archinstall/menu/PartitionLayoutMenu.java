@@ -45,7 +45,7 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
 
             System.console().printf("Enter Linux's system size in GiB: ");
             StorageDeviceSize linuxSystemSize = new StorageDeviceSize(
-                    BigInteger.valueOf(Long.parseLong(System.console().readLine())), "G");
+                    BigInteger.valueOf(Long.parseLong(System.console().readLine())), "GiB");
 
             Partition windowsPartition = new Partition(diskName, partitionNumber);
             partitionLayout = new UnencryptedDualBootWindowsAutoResize(diskName, XBOOTLDR_SIZE, swapSize,
@@ -70,7 +70,7 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
 
             System.console().printf("Enter Linux's system size in GiB: ");
             StorageDeviceSize linuxSystemSize = new StorageDeviceSize(
-                    BigInteger.valueOf(Long.parseLong(System.console().readLine())), "G");
+                    BigInteger.valueOf(Long.parseLong(System.console().readLine())), "GiB");
 
             Partition windowsPartition = new Partition(diskName, partitionNumber);
             partitionLayout = new LVMOnLUKSDualBootWindowsAutoResize(diskName, XBOOTLDR_SIZE, swapSize, password,
