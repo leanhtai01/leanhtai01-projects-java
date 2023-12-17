@@ -80,8 +80,7 @@ public final class DiskUtil {
     public static void shrinkNTFSPartition(Partition partition, StorageDeviceSize sizeInByte)
             throws IOException, InterruptedException {
         var partitionSize = getPartitionSizeInByte(partition);
-        var newPartitionSize = new StorageDeviceSize(
-                partitionSize.getValue().subtract(sizeInByte.getValue().subtract(BigInteger.valueOf(1024L))), "B");
+        var newPartitionSize = new StorageDeviceSize(partitionSize.getValue().subtract(sizeInByte.getValue()), "B");
         resizeNTFSFilesystem(partition, newPartitionSize);
         shrinkPartition(partition, sizeInByte);
     }
