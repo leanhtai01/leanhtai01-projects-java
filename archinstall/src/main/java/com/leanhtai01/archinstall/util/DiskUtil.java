@@ -62,8 +62,8 @@ public final class DiskUtil {
         return new StorageDeviceSize(sizeInByte.getValue().divide(BigInteger.valueOf(1024L * 1024L)), "MiB");
     }
 
-    public static StorageDeviceSize convertGibibyteToMebibyte(String sizeInGibibyte) {
-        return new StorageDeviceSize(new BigInteger(sizeInGibibyte).multiply(BigInteger.valueOf(1024L)), "MiB");
+    public static StorageDeviceSize convertGibibyteToMebibyte(StorageDeviceSize sizeInGibibyte) {
+        return new StorageDeviceSize(sizeInGibibyte.getValue().multiply(BigInteger.valueOf(1024L)), "MiB");
     }
 
     public static void shrinkPartition(Partition partition, StorageDeviceSize size)
