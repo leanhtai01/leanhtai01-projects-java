@@ -67,6 +67,17 @@ public final class PackageUtil {
         return 0;
     }
 
+    public static int installAutoAnswerYes(List<String> packages, String chrootDir)
+            throws InterruptedException, IOException {
+        if (packages.isEmpty()) {
+            return 0;
+        }
+
+        List<String> command = Stream.concat(
+                List.of(PACMAN, "-S", "--ask", "4").stream(), packages.stream()).toList();
+        return runSilent(chrootDir != null ? getCommandRunChroot(command, chrootDir) : getCommandRunSudo(command));
+    }
+
     public static int installMainReposPkgs(List<String> packages, String chrootDir)
             throws InterruptedException, IOException {
         if (packages.isEmpty()) {

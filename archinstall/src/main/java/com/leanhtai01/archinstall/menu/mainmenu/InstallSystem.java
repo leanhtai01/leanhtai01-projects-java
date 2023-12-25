@@ -94,7 +94,7 @@ public class InstallSystem implements Runnable {
 
     protected void selectInstallSoftwares() {
         desktopEnvironmentMenu.selectOption();
-        driverMenu.selectAll();
+        driverMenu.selectOption();
         programmingMenu.selectAll();
         toolMenu.selectAll();
         virtualMachineMenu.selectAll();

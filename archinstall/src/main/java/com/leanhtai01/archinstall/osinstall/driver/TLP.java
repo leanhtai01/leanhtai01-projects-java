@@ -2,7 +2,7 @@ package com.leanhtai01.archinstall.osinstall.driver;
 
 import static com.leanhtai01.archinstall.util.ConfigUtil.enableService;
 import static com.leanhtai01.archinstall.util.ConfigUtil.startService;
-import static com.leanhtai01.archinstall.util.PackageUtil.installMainReposPkgs;
+import static com.leanhtai01.archinstall.util.PackageUtil.installAutoAnswerYes;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +18,7 @@ public class TLP implements Installable {
 
     @Override
     public int install() throws InterruptedException, IOException {
-        installMainReposPkgs(List.of("tlp"), chrootDir);
+        installAutoAnswerYes(List.of("tlp"), chrootDir);
         return 0;
     }
 
