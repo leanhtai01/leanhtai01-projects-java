@@ -12,7 +12,7 @@ public class InstallLutris implements Runnable {
     public void run() {
         if (isAnswerYes(getConfirmation(":: Proceed with installation? [Y/n] "))) {
             try {
-                installMainReposPkgsWithOptionalDeps(List.of("lutris", "wine"), null);
+                installMainReposPkgsWithOptionalDeps(List.of("lutris", "wine", "winetricks"), null);
             } catch (InterruptedException | IOException e) {
                 Thread.currentThread().interrupt();
             }
