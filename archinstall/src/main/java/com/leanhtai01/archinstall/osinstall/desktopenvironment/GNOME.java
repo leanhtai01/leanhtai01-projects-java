@@ -47,7 +47,7 @@ public class GNOME implements Installable {
                 "gnome-font-viewer", "gnome-keyring", "gnome-screenshot", "gnome-shell-extensions",
                 "gnome-system-monitor", "gnome-terminal", "gnome-themes-extra", "gnome-video-effects", "nautilus",
                 "sushi", "gnome-tweaks", "totem", "xdg-user-dirs-gtk", "gnome-usage", "endeavour", "dconf-editor",
-                "gnome-shell-extension-appindicator", "alacarte", "gedit", "gedit-plugins", "gnome-sound-recorder",
+                "gnome-shell-extension-appindicator", "alacarte", "gnome-text-editor", "gnome-sound-recorder",
                 "seahorse", "seahorse-nautilus", "gnome-browser-connector", "xdg-desktop-portal",
                 "xdg-desktop-portal-gnome", "gnome-remote-desktop", "gnome-disk-utility", "libappindicator-gtk3",
                 "transmission-gtk", "power-profiles-daemon", "gvfs-smb", "gvfs-google", "gvfs-mtp", "gvfs-nfs",
