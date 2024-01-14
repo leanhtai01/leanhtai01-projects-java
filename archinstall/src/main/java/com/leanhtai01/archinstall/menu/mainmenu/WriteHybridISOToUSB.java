@@ -1,5 +1,7 @@
 package com.leanhtai01.archinstall.menu.mainmenu;
 
+import static com.leanhtai01.archinstall.util.DiskUtil.createPartition;
+import static com.leanhtai01.archinstall.util.DiskUtil.eraseDisk;
 import static com.leanhtai01.archinstall.util.ShellUtil.runVerbose;
 
 import java.io.IOException;
@@ -8,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import com.leanhtai01.archinstall.partition.Partition;
-import com.leanhtai01.archinstall.util.DiskUtil;
 
 public class WriteHybridISOToUSB implements Runnable {
     @Override
@@ -27,8 +28,8 @@ public class WriteHybridISOToUSB implements Runnable {
             }
 
             Partition usbPartition = new Partition(usbName, "8309", "boot-usb");
-            DiskUtil.wipeDeviceSignature(usbPartition.getPathToDisk());
-            DiskUtil.createPartition(usbPartition);
+            eraseDisk(usbPartition.getPathToDisk());
+            createPartition(usbPartition);
             runVerbose(List.of("dd", "if=%s".formatted(isoPath),
                     "of=%s".formatted(usbPartition.getPathToDisk()), "bs=4M", "conv=sync"));
 
