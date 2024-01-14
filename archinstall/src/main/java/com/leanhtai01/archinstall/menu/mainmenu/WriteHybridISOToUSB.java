@@ -23,7 +23,7 @@ public class WriteHybridISOToUSB implements Runnable {
             final String isoPath = System.console().readLine();
 
             if (!Files.exists(Paths.get(isoPath)) || Files.isDirectory(Paths.get(isoPath))) {
-                System.console().printf("File not found!\n");
+                System.console().printf("File not found!%n");
                 return;
             }
 
@@ -34,6 +34,9 @@ public class WriteHybridISOToUSB implements Runnable {
                     "of=%s".formatted(usbPartition.getPathToDisk()), "bs=4M", "conv=sync", "status=progress"));
 
             Thread.sleep(30000);
+            runVerbose(List.of("udisksctl", "power-off", "-b", usbPartition.getPathToDisk()));
+            System.console().printf("Succcessfully wrote %s to %s%n".formatted(isoPath, usbPartition.getPathToDisk()));
+            System.console().printf("Please unplug the USB.%n");
         } catch (InterruptedException | IOException e) {
             Thread.currentThread().interrupt();
         }
