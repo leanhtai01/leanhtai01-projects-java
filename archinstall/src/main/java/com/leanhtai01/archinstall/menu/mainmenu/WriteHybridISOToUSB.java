@@ -31,7 +31,7 @@ public class WriteHybridISOToUSB implements Runnable {
             eraseDisk(usbPartition.getPathToDisk());
             createPartition(usbPartition);
             runVerbose(List.of("dd", "if=%s".formatted(isoPath),
-                    "of=%s".formatted(usbPartition.getPathToDisk()), "bs=4M", "conv=sync"));
+                    "of=%s".formatted(usbPartition.getPathToDisk()), "bs=4M", "conv=sync", "status=progress"));
 
             Thread.sleep(30000);
         } catch (InterruptedException | IOException e) {
