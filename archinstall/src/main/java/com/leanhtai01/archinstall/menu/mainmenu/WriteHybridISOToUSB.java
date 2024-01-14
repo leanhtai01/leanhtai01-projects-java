@@ -36,7 +36,7 @@ public class WriteHybridISOToUSB implements Runnable {
             Thread.sleep(30000);
             runVerbose(List.of("udisksctl", "power-off", "-b", usbPartition.getPathToDisk()));
             System.console().printf("Succcessfully wrote %s to %s%n".formatted(isoPath, usbPartition.getPathToDisk()));
-            System.console().printf("Please unplug the USB.%n");
+            System.console().printf("Please unplug the USB!%n");
         } catch (InterruptedException | IOException e) {
             Thread.currentThread().interrupt();
         }
