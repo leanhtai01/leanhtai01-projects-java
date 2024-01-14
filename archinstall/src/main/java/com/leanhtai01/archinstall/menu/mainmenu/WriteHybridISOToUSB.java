@@ -14,6 +14,7 @@ public class WriteHybridISOToUSB implements Runnable {
     @Override
     public void run() {
         try {
+            runVerbose(List.of("lsblk"));
             System.console().printf("Enter USB's name(e.g. sdb, sdc,...): ");
             final String usbName = System.console().readLine();
 

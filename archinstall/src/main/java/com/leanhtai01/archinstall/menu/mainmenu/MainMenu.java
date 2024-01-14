@@ -12,8 +12,8 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Configure As A VirtualBox Guest (sudo)", new ConfigureAsVBGuest(null, null), false));
         addOption(new Option("Enable DNSCryptProxy (installed system, sudo)", new EnableDNSCryptProxy(), false));
         addOption(new Option("Disable DNSCryptProxy (installed system, sudo)", new DisableDNSCryptProxy(), false));
-        addOption(new Option("Encrypt Disk (live/installed system, sudo)", new EncryptDisk(), false));
-        addOption(new Option("Erase Disk (live/installed system, sudo)", new EraseDisk(), false));
+        addOption(new Option("Encrypt Disk (sudo)", new EncryptDisk(), false));
+        addOption(new Option("Erase Disk (sudo)", new EraseDisk(), false));
         addOption(new Option("Install Yay AUR Helper (installed system)", new InstallYayAURHelper(), false));
         addOption(new Option("Install fcitx5-bamboo (installed system)", new InstallFcitx5Bamboo(), false));
         addOption(new Option("Install flatpak packages (installed system)", new InstallFlatpakPackages(), false));
@@ -22,6 +22,6 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Install Valve Steam (installed system)", new InstallValveSteam(), false));
         addOption(new Option("Make Retail Windows ISO (installed system)", new MakeRetailWindowsISO(), false));
         addOption(new Option("Install Postfix (installed system, sudo)", new InstallPostfix(), false));
-        addOption(new Option("Write Hybrid ISO to USB", new WriteHybridISOToUSB(), false));
+        addOption(new Option("Write Hybrid ISO to USB (sudo)", new WriteHybridISOToUSB(), false));
     }
 }
