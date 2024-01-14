@@ -93,7 +93,8 @@ public class Partition implements Mountable {
 
     @Override
     public String getPath() {
-        return diskName.startsWith("nvme") ? "%sp%d".formatted(getPathToDisk(), partitionNumber)
+        return diskName.startsWith("nvme") || diskName.startsWith("mmcblk")
+                ? "%sp%d".formatted(getPathToDisk(), partitionNumber)
                 : getPathToDisk() + partitionNumber;
     }
 }
