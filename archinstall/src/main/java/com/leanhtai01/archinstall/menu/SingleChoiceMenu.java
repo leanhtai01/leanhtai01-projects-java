@@ -6,6 +6,13 @@ public class SingleChoiceMenu extends Menu {
         return "==> Enter your choice, -1 to quit%n==> ";
     }
 
+    public void setOption(int choice) {
+        if (isValidChoice(choice)) {
+            clearAll();
+            options.get(choice).setMarked(true);
+        }
+    }
+
     @Override
     public void selectOption() {
         displayMenu();
