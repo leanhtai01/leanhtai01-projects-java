@@ -27,6 +27,12 @@ public class Partition implements Mountable {
         this.size = size;
     }
 
+    public Partition(String diskName, String type, String gptName) {
+        this.diskName = diskName;
+        this.type = type;
+        this.gptName = gptName;
+    }
+
     public Partition(
             String diskName,
             int partitionNumber,

@@ -22,5 +22,6 @@ public class MainMenu extends SingleChoiceMenu {
         addOption(new Option("Install Valve Steam (installed system)", new InstallValveSteam(), false));
         addOption(new Option("Make Retail Windows ISO (installed system)", new MakeRetailWindowsISO(), false));
         addOption(new Option("Install Postfix (installed system, sudo)", new InstallPostfix(), false));
+        addOption(new Option("Write Hybrid ISO to USB", new WriteHybridISOToUSB(), false));
     }
 }
