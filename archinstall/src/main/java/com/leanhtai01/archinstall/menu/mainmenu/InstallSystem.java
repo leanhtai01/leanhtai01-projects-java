@@ -5,8 +5,12 @@ import static com.leanhtai01.archinstall.util.IOUtil.isAnswerYes;
 import static com.leanhtai01.archinstall.util.IOUtil.readPassword;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.xml.xpath.XPathExpressionException;
 
 import com.leanhtai01.archinstall.menu.DesktopEnvironmentMenu;
 import com.leanhtai01.archinstall.menu.DriverMenu;
@@ -18,6 +22,7 @@ import com.leanhtai01.archinstall.osinstall.BaseSystem;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.archinstall.util.ConfigReader;
 import com.leanhtai01.archinstall.util.NetworkUtil;
 
 public class InstallSystem implements Runnable {
@@ -37,8 +42,15 @@ public class InstallSystem implements Runnable {
         System.console().printf("%n");
 
         try {
-            getSystemInfo();
+            if (Files.exists(Paths.get("config.xml"))) {
+                ConfigReader configReader = new ConfigReader("config.xml");
+                getSystemInfoFromFile(configReader);
+            } else {
+                getSystemInfo();
+            }
+
             getInstallInfo();
+            selectInstallSoftwares();
 
             System.console().printf("%n");
             getInstallSummary();
@@ -46,9 +58,17 @@ public class InstallSystem implements Runnable {
             if (isAnswerYes(getConfirmation(":: Proceed with installation? [Y/n] "))) {
                 install();
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    private void getSystemInfoFromFile(ConfigReader configReader)
+            throws XPathExpressionException, IOException, InterruptedException {
+        systemInfo = configReader.getSystemInfo();
+        systemInfo.setPartitionLayout(new PartitionLayoutMenu().selectPartitionLayout());
+
+        userAccount = configReader.getUserAccount();
     }
 
     private void getSystemInfo() throws IOException, InterruptedException {
@@ -88,8 +108,6 @@ public class InstallSystem implements Runnable {
         programmingMenu = new ProgrammingMenu(chrootDir, userAccount);
         toolMenu = new ToolMenu(chrootDir, userAccount);
         virtualMachineMenu = new VirtualMachineMenu(chrootDir, userAccount);
-
-        selectInstallSoftwares();
     }
 
     protected void selectInstallSoftwares() {

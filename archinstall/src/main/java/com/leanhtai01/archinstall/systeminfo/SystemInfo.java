@@ -13,6 +13,12 @@ public class SystemInfo {
     public SystemInfo() {
     }
 
+    public SystemInfo(String hostname, String rootPassword, List<String> mirrors) {
+        this.hostname = hostname;
+        this.rootPassword = rootPassword;
+        this.mirrors = mirrors;
+    }
+
     public SystemInfo(String hostname, String rootPassword, List<String> mirrors, PartitionLayout partitionLayout) {
         this.hostname = hostname;
         this.rootPassword = rootPassword;
