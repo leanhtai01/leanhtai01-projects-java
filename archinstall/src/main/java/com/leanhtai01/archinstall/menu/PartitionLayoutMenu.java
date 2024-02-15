@@ -12,6 +12,7 @@ import com.leanhtai01.archinstall.partition.LVMOnLUKSDualBootWindows;
 import com.leanhtai01.archinstall.partition.LVMOnLUKSDualBootWindowsAutoResize;
 import com.leanhtai01.archinstall.partition.Partition;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
+import com.leanhtai01.archinstall.partition.PartitionLayoutInfo;
 import com.leanhtai01.archinstall.partition.Unencrypted;
 import com.leanhtai01.archinstall.partition.UnencryptedDualBootWindows;
 import com.leanhtai01.archinstall.partition.UnencryptedDualBootWindowsAutoResize;
@@ -77,6 +78,40 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
                     windowsPartition, linuxSystemSize);
         };
 
+        addOptions(setUnencrypted, setUnencryptedDualBootWindows, setUnencryptedDualBootWindowsAutoResize, setLVMOnLUKS,
+                setLVMOnLUKSDualBootWindows, setLVMOnLUKSDualBootWindowsAutoResize);
+    }
+
+    public PartitionLayoutMenu(PartitionLayoutInfo info) {
+        super();
+
+        Runnable setUnencrypted = () -> partitionLayout = new Unencrypted(info.getDiskName(), ESP_SIZE, XBOOTLDR_SIZE,
+                info.getSwapSize());
+
+        Runnable setUnencryptedDualBootWindows = () -> partitionLayout = new UnencryptedDualBootWindows(
+                info.getDiskName(), XBOOTLDR_SIZE, info.getSwapSize());
+
+        Runnable setUnencryptedDualBootWindowsAutoResize = () -> partitionLayout = new UnencryptedDualBootWindowsAutoResize(
+                info.getDiskName(), XBOOTLDR_SIZE, info.getSwapSize(), info.getWindowsPartition(),
+                info.getRootSize());
+
+        Runnable setLVMOnLUKS = () -> partitionLayout = new LVMOnLUKS(info.getDiskName(), ESP_SIZE, XBOOTLDR_SIZE,
+                info.getSwapSize(), info.getPassword());
+
+        Runnable setLVMOnLUKSDualBootWindows = () -> partitionLayout = new LVMOnLUKSDualBootWindows(info.getDiskName(),
+                XBOOTLDR_SIZE, info.getSwapSize(), info.getPassword());
+
+        Runnable setLVMOnLUKSDualBootWindowsAutoResize = () -> partitionLayout = new LVMOnLUKSDualBootWindowsAutoResize(
+                info.getDiskName(), XBOOTLDR_SIZE, info.getSwapSize(), info.getPassword(), info.getWindowsPartition(),
+                info.getRootSize());
+
+        addOptions(setUnencrypted, setUnencryptedDualBootWindows, setUnencryptedDualBootWindowsAutoResize, setLVMOnLUKS,
+                setLVMOnLUKSDualBootWindows, setLVMOnLUKSDualBootWindowsAutoResize);
+    }
+
+    private void addOptions(Runnable setUnencrypted, Runnable setUnencryptedDualBootWindows,
+            Runnable setUnencryptedDualBootWindowsAutoResize, Runnable setLVMOnLUKS,
+            Runnable setLVMOnLUKSDualBootWindows, Runnable setLVMOnLUKSDualBootWindowsAutoResize) {
         addOption(new Option("Unencrypted partition layout", setUnencrypted, false));
         addOption(new Option("Unencrypted dual boot Windows partition layout", setUnencryptedDualBootWindows, false));
         addOption(new Option("Unencrypted dual boot Windows partition layout (auto resize)",
@@ -89,6 +124,12 @@ public class PartitionLayoutMenu extends SingleChoiceMenu {
 
     public PartitionLayout selectPartitionLayout() {
         selectOption();
+        doAction();
+        return partitionLayout;
+    }
+
+    public PartitionLayout setPartitionLayout(int option) {
+        setOption(option);
         doAction();
         return partitionLayout;
     }

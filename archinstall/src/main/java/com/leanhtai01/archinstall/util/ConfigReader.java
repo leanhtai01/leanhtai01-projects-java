@@ -1,6 +1,7 @@
 package com.leanhtai01.archinstall.util;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,9 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.xml.sax.SAXException;
 
+import com.leanhtai01.archinstall.partition.Partition;
+import com.leanhtai01.archinstall.partition.PartitionLayoutInfo;
+import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 
@@ -43,5 +47,19 @@ public class ConfigReader {
         }
 
         return new UserAccount(realName, username, password, groups);
+    }
+
+    public PartitionLayoutInfo getPartitionLayoutInfo() throws XPathExpressionException {
+        String diskName = xmlReader.getValue("//partitionLayout/diskName");
+        StorageDeviceSize swapSize = new StorageDeviceSize(
+                BigInteger.valueOf(Long.parseLong(xmlReader.getValue("//partitionLayout/swapSize"))), "G");
+        StorageDeviceSize rootSize = new StorageDeviceSize(
+                BigInteger.valueOf(Long.parseLong(xmlReader.getValue("//partitionLayout/rootSize"))), "G");
+        String password = xmlReader.getValue("//partitionLayout/password");
+        Partition windowsPartition = new Partition(diskName,
+                Integer.parseInt(xmlReader.getValue("//partitionLayout/windowsPartNumber")));
+        int option = Integer.parseInt(xmlReader.getValue("//partitionLayout/option"));
+
+        return new PartitionLayoutInfo(diskName, swapSize, rootSize, password, windowsPartition, option);
     }
 }

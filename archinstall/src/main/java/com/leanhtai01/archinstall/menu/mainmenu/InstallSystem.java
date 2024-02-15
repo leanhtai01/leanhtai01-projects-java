@@ -20,6 +20,7 @@ import com.leanhtai01.archinstall.menu.ToolMenu;
 import com.leanhtai01.archinstall.menu.VirtualMachineMenu;
 import com.leanhtai01.archinstall.osinstall.BaseSystem;
 import com.leanhtai01.archinstall.partition.PartitionLayout;
+import com.leanhtai01.archinstall.partition.PartitionLayoutInfo;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
 import com.leanhtai01.archinstall.util.ConfigReader;
@@ -63,10 +64,12 @@ public class InstallSystem implements Runnable {
         }
     }
 
-    private void getSystemInfoFromFile(ConfigReader configReader)
-            throws XPathExpressionException, IOException, InterruptedException {
+    private void getSystemInfoFromFile(ConfigReader configReader) throws XPathExpressionException {
+        PartitionLayoutInfo partitionLayoutInfo = configReader.getPartitionLayoutInfo();
+
         systemInfo = configReader.getSystemInfo();
-        systemInfo.setPartitionLayout(new PartitionLayoutMenu().selectPartitionLayout());
+        systemInfo.setPartitionLayout(
+                new PartitionLayoutMenu(partitionLayoutInfo).setPartitionLayout(partitionLayoutInfo.getOption()));
 
         userAccount = configReader.getUserAccount();
     }
