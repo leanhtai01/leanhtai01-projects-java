@@ -51,6 +51,10 @@ public class ConfigReader {
         return new UserAccount(realName, username, password, groups);
     }
 
+    public String getUsername() throws XPathExpressionException {
+        return xmlReader.getValue("//account/username");
+    }
+
     public PartitionLayoutInfo getPartitionLayoutInfo() throws XPathExpressionException {
         String diskName = xmlReader.getValue("//partitionLayout/diskName");
         StorageDeviceSize swapSize = new StorageDeviceSize(

@@ -7,15 +7,28 @@ import static com.leanhtai01.archinstall.util.PackageUtil.installFlatpakPackages
 import java.io.IOException;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+
+import org.xml.sax.SAXException;
+
 import com.leanhtai01.archinstall.osinstall.desktopenvironment.GNOME;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.archinstall.util.ConfigReader;
 
 public class ConfigureSystem implements Runnable {
     private UserAccount userAccount;
 
     private void getInfo() {
-        System.console().printf("Username: ");
-        final String username = System.console().readLine();
+        String username = null;
+
+        try {
+            ConfigReader configReader = new ConfigReader("config.xml");
+            username = configReader.getUsername();
+        } catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
+            System.console().printf("Username: ");
+            username = System.console().readLine();
+        }
 
         userAccount = new UserAccount(null, username, null);
     }
