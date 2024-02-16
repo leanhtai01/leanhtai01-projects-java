@@ -27,6 +27,7 @@ import com.leanhtai01.archinstall.util.ConfigReader;
 import com.leanhtai01.archinstall.util.NetworkUtil;
 
 public class InstallSystem implements Runnable {
+    private static final String CONFIG_XML = "config.xml";
     private SystemInfo systemInfo;
     private UserAccount userAccount;
 
@@ -43,15 +44,21 @@ public class InstallSystem implements Runnable {
         System.console().printf("%n");
 
         try {
-            if (Files.exists(Paths.get("config.xml"))) {
-                ConfigReader configReader = new ConfigReader("config.xml");
+            if (Files.exists(Paths.get(CONFIG_XML))) {
+                ConfigReader configReader = new ConfigReader(CONFIG_XML);
                 getSystemInfoFromFile(configReader);
             } else {
                 getSystemInfo();
             }
 
             getInstallInfo();
-            selectInstallSoftwares();
+
+            if (Files.exists(Paths.get(CONFIG_XML))) {
+                ConfigReader configReader = new ConfigReader(CONFIG_XML);
+                selectInstallSoftwareFromFile(configReader);
+            } else {
+                selectInstallSoftwares();
+            }
 
             System.console().printf("%n");
             getInstallSummary();
@@ -116,6 +123,14 @@ public class InstallSystem implements Runnable {
     protected void selectInstallSoftwares() {
         desktopEnvironmentMenu.selectOption();
         driverMenu.selectOption();
+        programmingMenu.selectAll();
+        toolMenu.selectAll();
+        virtualMachineMenu.selectAll();
+    }
+
+    protected void selectInstallSoftwareFromFile(ConfigReader configReader) throws NumberFormatException, XPathExpressionException {
+        desktopEnvironmentMenu.setOptions(configReader.getDesktopEnvironmentOptions());
+        driverMenu.setOptions(configReader.getDriverOptions());
         programmingMenu.selectAll();
         toolMenu.selectAll();
         virtualMachineMenu.selectAll();

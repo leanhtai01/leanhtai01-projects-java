@@ -3,7 +3,9 @@ package com.leanhtai01.archinstall.util;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,5 +63,25 @@ public class ConfigReader {
         int option = Integer.parseInt(xmlReader.getValue("//partitionLayout/option"));
 
         return new PartitionLayoutInfo(diskName, swapSize, rootSize, password, windowsPartition, option);
+    }
+
+    public Set<Integer> getDriverOptions() throws NumberFormatException, XPathExpressionException {
+        Set<Integer> options = new HashSet<>();
+        for (int i = 0; i < Integer.parseInt(xmlReader.getValue("count(//drivers/driver)")); i++) {
+            options.add(Integer.parseInt(xmlReader.getValue("//drivers/driver[%d]/option".formatted(i + 1))));
+        }
+
+        return options;
+    }
+
+    public Set<Integer> getDesktopEnvironmentOptions() throws NumberFormatException, XPathExpressionException {
+        Set<Integer> options = new HashSet<>();
+        for (int i = 0; i < Integer
+                .parseInt(xmlReader.getValue("count(//desktopEnvironments/desktopEnvironment)")); i++) {
+            options.add(Integer.parseInt(
+                    xmlReader.getValue("//desktopEnvironments/desktopEnvironment[%d]/option".formatted(i + 1))));
+        }
+
+        return options;
     }
 }
