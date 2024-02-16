@@ -128,7 +128,8 @@ public class InstallSystem implements Runnable {
         virtualMachineMenu.selectAll();
     }
 
-    protected void selectInstallSoftwareFromFile(ConfigReader configReader) throws NumberFormatException, XPathExpressionException {
+    protected void selectInstallSoftwareFromFile(ConfigReader configReader)
+            throws NumberFormatException, XPathExpressionException {
         desktopEnvironmentMenu.setOptions(configReader.getDesktopEnvironmentOptions());
         driverMenu.setOptions(configReader.getDriverOptions());
         programmingMenu.selectAll();
