@@ -18,6 +18,7 @@ import com.leanhtai01.archinstall.partition.PartitionLayoutInfo;
 import com.leanhtai01.archinstall.systeminfo.StorageDeviceSize;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.archinstall.systeminfo.WirelessNetwork;
 
 public class ConfigReader {
     private final XMLReader xmlReader;
@@ -87,5 +88,14 @@ public class ConfigReader {
         }
 
         return options;
+    }
+
+    public WirelessNetwork getWirelessNetwork() throws XPathExpressionException {
+        String ssid = xmlReader.getValue("//wirelessNetwork/ssid");
+        String password = xmlReader.getValue("//wirelessNetwork/password");
+        String interfaceName = xmlReader.getValue("//wirelessNetwork/interfaceName");
+        boolean isHidden = Boolean.parseBoolean(xmlReader.getValue("//wirelessNetwork/isHidden"));
+
+        return new WirelessNetwork(ssid, password, interfaceName, isHidden);
     }
 }

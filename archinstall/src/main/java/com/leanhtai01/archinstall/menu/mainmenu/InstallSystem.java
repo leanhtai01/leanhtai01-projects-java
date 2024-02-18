@@ -10,7 +10,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+
+import org.xml.sax.SAXException;
 
 import com.leanhtai01.archinstall.menu.DesktopEnvironmentMenu;
 import com.leanhtai01.archinstall.menu.DriverMenu;
@@ -23,6 +26,7 @@ import com.leanhtai01.archinstall.partition.PartitionLayout;
 import com.leanhtai01.archinstall.partition.PartitionLayoutInfo;
 import com.leanhtai01.archinstall.systeminfo.SystemInfo;
 import com.leanhtai01.archinstall.systeminfo.UserAccount;
+import com.leanhtai01.archinstall.systeminfo.WirelessNetwork;
 import com.leanhtai01.archinstall.util.ConfigReader;
 import com.leanhtai01.archinstall.util.NetworkUtil;
 
@@ -147,8 +151,18 @@ public class InstallSystem implements Runnable {
         System.console().printf("%s%n", virtualMachineMenu.getActionSummary());
     }
 
-    private void install() throws InterruptedException, IOException {
-        NetworkUtil.connectToWifi();
+    private void install() throws InterruptedException, IOException, XPathExpressionException, SAXException,
+            ParserConfigurationException {
+        if (!NetworkUtil.isConnectedToInternet()) {
+            if (Files.exists(Paths.get(CONFIG_XML))) {
+                ConfigReader configReader = new ConfigReader(CONFIG_XML);
+                WirelessNetwork network = configReader.getWirelessNetwork();
+                NetworkUtil.connectToWifi(network);
+            } else {
+                NetworkUtil.connectToWifi();
+            }
+        }
+
         baseSystem.install();
         desktopEnvironmentMenu.doAction();
         driverMenu.doAction();

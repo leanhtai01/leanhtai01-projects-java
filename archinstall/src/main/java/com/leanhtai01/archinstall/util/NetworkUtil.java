@@ -39,6 +39,17 @@ public final class NetworkUtil {
         }
     }
 
+    public static void connectToWifi(WirelessNetwork network) throws InterruptedException, IOException {
+        network.connect();
+        TimeUnit.SECONDS.sleep(5);
+        if (!isConnectedToInternet()) {
+            System.console().printf("Cannot connect to Internet!%n");
+            System.exit(1);
+        } else {
+            System.console().printf("Successfully connected to Internet!%n");
+        }
+    }
+
     public static boolean isConnectedToInternet() throws IOException, InterruptedException {
         return runSilent(List.of("ping", "-c", "3", "www.google.com")) == 0;
     }

@@ -8,18 +8,18 @@ import com.leanhtai01.archinstall.util.ShellUtil;
 public class WirelessNetwork {
     private final String ssid;
     private final String password;
-    private final String device;
+    private final String interfaceName;
     private final boolean isHidden;
 
-    public WirelessNetwork(String ssid, String password, String device, boolean isHidden) {
+    public WirelessNetwork(String ssid, String password, String interfaceName, boolean isHidden) {
         this.ssid = ssid;
         this.password = password;
-        this.device = device;
+        this.interfaceName = interfaceName;
         this.isHidden = isHidden;
     }
 
     public void connect() throws InterruptedException, IOException {
-        ShellUtil.runVerbose(List.of("iwctl", "--passphrase=%s".formatted(password), "station", device,
+        ShellUtil.runVerbose(List.of("iwctl", "--passphrase=%s".formatted(password), "station", interfaceName,
                 isHidden ? "connect-hidden" : "connect", ssid));
     }
 }
